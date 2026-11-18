@@ -3,7 +3,7 @@
     <picture>
       <source srcset="assets/openspec_pixel_dark.svg" media="(prefers-color-scheme: dark)">
       <source srcset="assets/openspec_pixel_light.svg" media="(prefers-color-scheme: light)">
-      <img src="assets/openspec_pixel_light.svg" alt="WeaveAI logo" height="64">
+      <img src="assets/openspec_pixel_light.svg" alt="KeaveAI logo" height="64">
     </picture>
   </a>
   
@@ -19,24 +19,24 @@
 </p>
 
 <p align="center">
-  <img src="assets/openspec_dashboard.png" alt="WeaveAI dashboard preview" width="90%">
+  <img src="assets/openspec_dashboard.png" alt="KeaveAI dashboard preview" width="90%">
 </p>
 
 <p align="center">
-  Follow <a href="https://x.com/0xTab">@0xTab on X</a> for updates · Join the <a href="https://discord.gg/YctCnvvshC">WeaveAI Discord</a> for help and questions.
+  Follow <a href="https://x.com/0xTab">@0xTab on X</a> for updates · Join the <a href="https://discord.gg/YctCnvvshC">KeaveAI Discord</a> for help and questions.
 </p>
 
 <p align="center">
   <sub>🧪 <strong>New:</strong> <a href="docs/opsx.md">OPSX Workflow</a> — schema-driven, hackable, fluid. Iterate on workflows without code changes.</sub>
 </p>
 
-# WeaveAI
+# KeaveAI
 
-WeaveAI aligns humans and AI coding assistants with spec-driven development so you agree on what to build before any code is written. **No API keys required.**
+KeaveAI aligns humans and AI coding assistants with spec-driven development so you agree on what to build before any code is written. **No API keys required.**
 
-## Why WeaveAI?
+## Why KeaveAI?
 
-AI coding assistants are powerful but unpredictable when requirements live in chat history. WeaveAI adds a lightweight specification workflow that locks intent before implementation, giving you deterministic, reviewable outputs.
+AI coding assistants are powerful but unpredictable when requirements live in chat history. KeaveAI adds a lightweight specification workflow that locks intent before implementation, giving you deterministic, reviewable outputs.
 
 Key outcomes:
 - Human and AI stakeholders agree on specs before work begins.
@@ -44,14 +44,14 @@ Key outcomes:
 - Shared visibility into what's proposed, active, or archived.
 - Works with the AI tools you already use: custom slash commands where supported, context rules everywhere else.
 
-## How WeaveAI compares (at a glance)
+## How KeaveAI compares (at a glance)
 
 - **Lightweight**: simple workflow, no API keys, minimal setup.
-- **Brownfield-first**: works great beyond 0→1. WeaveAI separates the source of truth from proposals: `openspec/specs/` (current truth) and `openspec/changes/` (proposed updates). This keeps diffs explicit and manageable across features.
+- **Brownfield-first**: works great beyond 0→1. KeaveAI separates the source of truth from proposals: `openspec/specs/` (current truth) and `openspec/changes/` (proposed updates). This keeps diffs explicit and manageable across features.
 - **Change tracking**: proposals, tasks, and spec deltas live together; archiving merges the approved updates back into specs.
-- **Compared to spec-kit & Kiro**: those shine for brand-new features (0→1). WeaveAI also excels when modifying existing behavior (1→n), especially when updates span multiple specs.
+- **Compared to spec-kit & Kiro**: those shine for brand-new features (0→1). KeaveAI also excels when modifying existing behavior (1→n), especially when updates span multiple specs.
 
-See the full comparison in [How WeaveAI Compares](#how-openspec-compares).
+See the full comparison in [How KeaveAI Compares](#how-openspec-compares).
 
 ## How It Works
 
@@ -92,7 +92,7 @@ See the full comparison in [How WeaveAI Compares](#how-openspec-compares).
 <details>
 <summary><strong>Native Slash Commands</strong> (click to expand)</summary>
 
-These tools have built-in WeaveAI commands. Select the WeaveAI integration when prompted.
+These tools have built-in KeaveAI commands. Select the KeaveAI integration when prompted.
 
 | Tool | Commands |
 |------|----------|
@@ -125,7 +125,7 @@ Kilo Code discovers team workflows automatically. Save the generated files under
 <details>
 <summary><strong>AGENTS.md Compatible</strong> (click to expand)</summary>
 
-These tools automatically read workflow instructions from `openspec/AGENTS.md`. Ask them to follow the WeaveAI workflow if they need a reminder. Learn more about the [AGENTS.md convention](https://agents.md/).
+These tools automatically read workflow instructions from `openspec/AGENTS.md`. Ask them to follow the KeaveAI workflow if they need a reminder. Learn more about the [AGENTS.md convention](https://agents.md/).
 
 | Tools |
 |-------|
@@ -153,7 +153,7 @@ openspec --version
 
 **Option B: Using Nix (NixOS and Nix package manager)**
 
-Run WeaveAI directly without installation:
+Run KeaveAI directly without installation:
 ```bash
 nix run github:Fission-AI/WeaveAI -- init
 ```
@@ -184,7 +184,7 @@ Verify installation:
 openspec --version
 ```
 
-#### Step 2: Initialize WeaveAI in your project
+#### Step 2: Initialize KeaveAI in your project
 
 Navigate to your project directory:
 ```bash
@@ -198,7 +198,7 @@ openspec init
 
 **What happens during initialization:**
 - You'll be prompted to pick any natively supported AI tools (Claude Code, CodeBuddy, Cursor, OpenCode, Qoder,etc.); other assistants always rely on the shared `AGENTS.md` stub
-- WeaveAI automatically configures slash commands for the tools you choose and always writes a managed `AGENTS.md` hand-off at the project root
+- KeaveAI automatically configures slash commands for the tools you choose and always writes a managed `AGENTS.md` hand-off at the project root
 - A new `openspec/` directory structure is created in your project
 
 **After setup:**
@@ -220,16 +220,16 @@ Use `openspec/project.md` to define project-level conventions, standards, archit
 
 ### Create Your First Change
 
-Here's a real example showing the complete WeaveAI workflow. This works with any AI tool. Those with native slash commands will recognize the shortcuts automatically.
+Here's a real example showing the complete KeaveAI workflow. This works with any AI tool. Those with native slash commands will recognize the shortcuts automatically.
 
 #### 1. Draft the Proposal
 Start by asking your AI to create a change proposal:
 
 ```text
-You: Create an WeaveAI change proposal for adding profile search filters by role and team
+You: Create an KeaveAI change proposal for adding profile search filters by role and team
      (Shortcut for tools with slash commands: /openspec:proposal Add profile search filters)
 
-AI:  I'll create an WeaveAI change proposal for profile filters.
+AI:  I'll create an KeaveAI change proposal for profile filters.
      *Scaffolds openspec/changes/add-profile-filters/ with proposal.md, tasks.md, spec deltas.*
 ```
 
@@ -283,7 +283,7 @@ Or run the command yourself in terminal:
 $ openspec archive add-profile-filters --yes  # Archive the completed change without prompts
 ```
 
-**Note:** Tools with native slash commands (Claude Code, CodeBuddy, Cursor, Codex, Qoder, RooCode) can use the shortcuts shown. All other tools work with natural language requests to "create an WeaveAI proposal", "apply the WeaveAI change", or "archive the change".
+**Note:** Tools with native slash commands (Claude Code, CodeBuddy, Cursor, Codex, Qoder, RooCode) can use the shortcuts shown. All other tools work with natural language requests to "create an KeaveAI proposal", "apply the KeaveAI change", or "archive the change".
 
 ## Command Reference
 
@@ -295,7 +295,7 @@ openspec validate <change>  # Check spec formatting and structure
 openspec archive <change> [--yes|-y]   # Move a completed change into archive/ (non-interactive with --yes)
 ```
 
-## Example: How AI Creates WeaveAI Files
+## Example: How AI Creates KeaveAI Files
 
 When you ask your AI assistant to "add two-factor authentication", it creates:
 
@@ -364,7 +364,7 @@ The system MUST require a second factor during login.
 
 **Important:** You don't create these files manually. Your AI assistant generates them based on your requirements and the existing codebase.
 
-## Understanding WeaveAI Files
+## Understanding KeaveAI Files
 
 ### Delta Format
 
@@ -379,27 +379,27 @@ Deltas are "patches" that show how specs change:
 - Every requirement needs at least one `#### Scenario:` block
 - Use SHALL/MUST in requirement text
 
-## How WeaveAI Compares
+## How KeaveAI Compares
 
 ### vs. spec-kit
-WeaveAI’s two-folder model (`openspec/specs/` for the current truth, `openspec/changes/` for proposed updates) keeps state and diffs separate. This scales when you modify existing features or touch multiple specs. spec-kit is strong for greenfield/0→1 but provides less structure for cross-spec updates and evolving features.
+KeaveAI’s two-folder model (`openspec/specs/` for the current truth, `openspec/changes/` for proposed updates) keeps state and diffs separate. This scales when you modify existing features or touch multiple specs. spec-kit is strong for greenfield/0→1 but provides less structure for cross-spec updates and evolving features.
 
 ### vs. Kiro.dev
-WeaveAI groups every change for a feature in one folder (`openspec/changes/feature-name/`), making it easy to track related specs, tasks, and designs together. Kiro spreads updates across multiple spec folders, which can make feature tracking harder.
+KeaveAI groups every change for a feature in one folder (`openspec/changes/feature-name/`), making it easy to track related specs, tasks, and designs together. Kiro spreads updates across multiple spec folders, which can make feature tracking harder.
 
 ### vs. No Specs
-Without specs, AI coding assistants generate code from vague prompts, often missing requirements or adding unwanted features. WeaveAI brings predictability by agreeing on the desired behavior before any code is written.
+Without specs, AI coding assistants generate code from vague prompts, often missing requirements or adding unwanted features. KeaveAI brings predictability by agreeing on the desired behavior before any code is written.
 
 ## Team Adoption
 
-1. **Initialize WeaveAI** – Run `openspec init` in your repo.
+1. **Initialize KeaveAI** – Run `openspec init` in your repo.
 2. **Start with new features** – Ask your AI to capture upcoming work as change proposals.
 3. **Grow incrementally** – Each change archives into living specs that document your system.
 4. **Stay flexible** – Different teammates can use Claude Code, CodeBuddy, Cursor, or any AGENTS.md-compatible tool while sharing the same specs.
 
 Run `openspec update` whenever someone switches tools so your agents pick up the latest instructions and slash-command bindings.
 
-## Updating WeaveAI
+## Updating KeaveAI
 
 1. **Upgrade the package**
    ```bash
@@ -447,11 +447,11 @@ You can always go back:
 </details>
 
 <details>
-<summary><strong>Telemetry</strong> – WeaveAI collects anonymous usage stats (opt-out: <code>WEAVEAI_TELEMETRY=0</code>)</summary>
+<summary><strong>Telemetry</strong> – KeaveAI collects anonymous usage stats (opt-out: <code>KEAVEAI_TELEMETRY=0</code>)</summary>
 
 We collect only command names and version to understand usage patterns. No arguments, paths, content, or PII. Automatically disabled in CI.
 
-**Opt-out:** `export WEAVEAI_TELEMETRY=0` or `export DO_NOT_TRACK=1`
+**Opt-out:** `export KEAVEAI_TELEMETRY=0` or `export DO_NOT_TRACK=1`
 
 </details>
 

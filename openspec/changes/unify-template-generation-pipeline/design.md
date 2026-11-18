@@ -1,6 +1,6 @@
 ## Context
 
-WeaveAI currently has strong building blocks (workflow templates, command adapters, generation helpers), but orchestration concerns are distributed:
+KeaveAI currently has strong building blocks (workflow templates, command adapters, generation helpers), but orchestration concerns are distributed:
 
 - Workflow definitions and projection lists are maintained separately
 - Tool support is represented in multiple places with partial overlap

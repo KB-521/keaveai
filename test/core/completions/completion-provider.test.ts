@@ -10,7 +10,7 @@ describe('CompletionProvider', () => {
   let provider: CompletionProvider;
 
   beforeEach(async () => {
-    testDir = path.join(os.tmpdir(), `weaveai-test-${randomUUID()}`);
+    testDir = path.join(os.tmpdir(), `keaveai-test-${randomUUID()}`);
     await fs.mkdir(testDir, { recursive: true });
     provider = new CompletionProvider(2000, testDir);
   });
@@ -26,7 +26,7 @@ describe('CompletionProvider', () => {
     });
 
     it('should return active change IDs', async () => {
-      // Create weaveai/changes directory structure
+      // Create keaveai/changes directory structure
       const changesDir = path.join(testDir, 'openspec', 'changes');
       await fs.mkdir(changesDir, { recursive: true });
 

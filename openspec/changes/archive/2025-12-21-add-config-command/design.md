@@ -1,6 +1,6 @@
 ## Context
 
-The `global-config` spec defines how WeaveAI reads/writes `config.json`, but users currently must edit it by hand. This command provides a CLI interface to that config.
+The `global-config` spec defines how KeaveAI reads/writes `config.json`, but users currently must edit it by hand. This command provides a CLI interface to that config.
 
 ## Goals / Non-Goals
 

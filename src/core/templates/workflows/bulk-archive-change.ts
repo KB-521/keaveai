@@ -20,7 +20,7 @@ This skill allows you to batch-archive changes, handling spec conflicts intellig
 
 1. **Get active changes**
 
-   Run \`weaveai list --json\` to get all active changes.
+   Run \`keaveai list --json\` to get all active changes.
 
    If no active changes exist, inform user and stop.
 
@@ -37,7 +37,7 @@ This skill allows you to batch-archive changes, handling spec conflicts intellig
 
    For each selected change, collect:
 
-   a. **Artifact status** - Run \`weaveai status --change "<name>" --json\`
+   a. **Artifact status** - Run \`keaveai status --change "<name>" --json\`
       - Parse \`schemaName\` and \`artifacts\` list
       - Note which artifacts are \`done\` vs other states
 
@@ -267,7 +267,7 @@ This skill allows you to batch-archive changes, handling spec conflicts intellig
 
 1. **Get active changes**
 
-   Run \`weaveai list --json\` to get all active changes.
+   Run \`keaveai list --json\` to get all active changes.
 
    If no active changes exist, inform user and stop.
 
@@ -284,7 +284,7 @@ This skill allows you to batch-archive changes, handling spec conflicts intellig
 
    For each selected change, collect:
 
-   a. **Artifact status** - Run \`weaveai status --change "<name>" --json\`
+   a. **Artifact status** - Run \`keaveai status --change "<name>" --json\`
       - Parse \`schemaName\` and \`artifacts\` list
       - Note which artifacts are \`done\` vs other states
 

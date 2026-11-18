@@ -20,7 +20,7 @@ openspec
 ├── dist/           # Compiled JavaScript
 ├── src/            # TypeScript source
 │   ├── cli/        # Command implementations
-│   ├── core/       # Core WeaveAI logic
+│   ├── core/       # Core KeaveAI logic
 │   └── utils/      # Shared utilities
 ├── package.json
 ├── tsconfig.json

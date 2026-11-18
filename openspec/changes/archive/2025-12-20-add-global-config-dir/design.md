@@ -1,6 +1,6 @@
 ## Context
 
-WeaveAI needs a standard location for user-level configuration that works across platforms and follows established conventions. This will serve as the foundation for settings, feature flags, and future artifacts like workflows or templates.
+KeaveAI needs a standard location for user-level configuration that works across platforms and follows established conventions. This will serve as the foundation for settings, feature flags, and future artifacts like workflows or templates.
 
 ## Goals / Non-Goals
 

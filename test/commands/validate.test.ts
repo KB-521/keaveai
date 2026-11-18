@@ -42,7 +42,7 @@ describe('top-level validate command', () => {
       '',
       '#### Scenario: Apply alpha delta',
       '- **GIVEN** the test change delta',
-      '- **WHEN** weaveai validate runs',
+      '- **WHEN** keaveai validate runs',
       '- **THEN** the validator reports the change as valid',
     ].join('\n');
     const c1DeltaDir = path.join(changesDir, 'c1', 'specs', 'alpha');
@@ -119,7 +119,7 @@ describe('top-level validate command', () => {
       '',
       '#### Scenario: Validate CRLF change',
       '- **GIVEN** a change proposal saved with CRLF line endings',
-      '- **WHEN** a developer runs weaveai validate on the proposal',
+      '- **WHEN** a developer runs keaveai validate on the proposal',
       '- **THEN** validation succeeds without section errors',
     ]);
 

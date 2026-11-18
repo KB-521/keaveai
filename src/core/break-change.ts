@@ -12,14 +12,14 @@ import ora from 'ora';
 import { FileSystemUtils } from '../utils/file-system.js';
 import { ensureAgentConfigFile } from './agent-config.js';
 import {
-  WEAVEAI_DATABASE_GLOBAL_SKILLS_DIR,
+  KEAVEAI_DATABASE_GLOBAL_SKILLS_DIR,
   copyDatabaseRootContents,
   copyLegacyGlobalSkillsToCodex,
   getBundledDatabaseDir,
 } from './database-assets.js';
 
-const WEAVEAI_SDD_DIR = path.join('weaveai', 'sdd');
-const WEAVEAI_ROOT_DIR = 'weaveai';
+const KEAVEAI_SDD_DIR = path.join('keaveai', 'sdd');
+const KEAVEAI_ROOT_DIR = 'keaveai';
 const ROOT_SDD_DIR = 'sdd';
 const AI_WORKFLOW_SDD_DIR = path.join('ai-workflow', 'sdd');
 const GITIGNORE_FILE = '.gitignore';
@@ -28,12 +28,12 @@ const MANAGED_ROOT_PATHS = [
   '.codex',
   '.cursor',
   '.agents',
-  WEAVEAI_ROOT_DIR,
+  KEAVEAI_ROOT_DIR,
   '.claude',
   'AGENTS.md',
-  WEAVEAI_DATABASE_GLOBAL_SKILLS_DIR,
+  KEAVEAI_DATABASE_GLOBAL_SKILLS_DIR,
 ];
-const DATABASE_COPY_EXCLUDES = new Set(['.git', ROOT_SDD_DIR, WEAVEAI_DATABASE_GLOBAL_SKILLS_DIR, WEAVEAI_ROOT_DIR]);
+const DATABASE_COPY_EXCLUDES = new Set(['.git', ROOT_SDD_DIR, KEAVEAI_DATABASE_GLOBAL_SKILLS_DIR, KEAVEAI_ROOT_DIR]);
 
 export class BreakChangeCommand {
   async execute(projectPath: string): Promise<void> {
@@ -58,13 +58,13 @@ export class BreakChangeCommand {
       return existingMigratedSddDir;
     }
 
-    const weaveaiSddDir = path.join(projectPath, WEAVEAI_SDD_DIR);
-    if (await FileSystemUtils.directoryExists(weaveaiSddDir)) {
-      return weaveaiSddDir;
+    const keaveaiSddDir = path.join(projectPath, KEAVEAI_SDD_DIR);
+    if (await FileSystemUtils.directoryExists(keaveaiSddDir)) {
+      return keaveaiSddDir;
     }
 
     throw new Error(
-      `No ${WEAVEAI_SDD_DIR} or ${AI_WORKFLOW_SDD_DIR} directory found. Run 'weaveai init' first.`
+      `No ${KEAVEAI_SDD_DIR} or ${AI_WORKFLOW_SDD_DIR} directory found. Run 'keaveai init' first.`
     );
   }
 
@@ -101,7 +101,7 @@ export class BreakChangeCommand {
     const entries = await fs.promises.readdir(databaseDir);
     const contentEntries = entries.filter((entry) => entry !== '.git');
     if (contentEntries.length === 0) {
-      throw new Error('Bundled WeaveAI database is empty.');
+      throw new Error('Bundled KeaveAI database is empty.');
     }
   }
 

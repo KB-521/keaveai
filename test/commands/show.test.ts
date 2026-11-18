@@ -8,7 +8,7 @@ describe('top-level show command', () => {
   const testDir = path.join(projectRoot, 'test-show-command-tmp');
   const changesDir = path.join(testDir, 'openspec', 'changes');
   const specsDir = path.join(testDir, 'openspec', 'specs');
-  const openspecBin = path.join(projectRoot, 'bin', 'weaveai.js');
+  const openspecBin = path.join(projectRoot, 'bin', 'keaveai.js');
 
 
   beforeEach(async () => {
@@ -42,9 +42,9 @@ describe('top-level show command', () => {
       expect(err.status).not.toBe(0);
       const stderr = err.stderr.toString();
       expect(stderr).toContain('Nothing to show.');
-      expect(stderr).toContain('weaveai show <item>');
-      expect(stderr).toContain('weaveai change show');
-      expect(stderr).toContain('weaveai spec show');
+      expect(stderr).toContain('keaveai show <item>');
+      expect(stderr).toContain('keaveai change show');
+      expect(stderr).toContain('keaveai spec show');
     } finally {
       process.chdir(originalCwd);
       process.env = originalEnv;

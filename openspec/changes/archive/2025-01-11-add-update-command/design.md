@@ -4,7 +4,7 @@
 
 ### Simplicity First
 - No version tracking - always update when commanded
-- Full replacement for WeaveAI-managed files only (e.g., `openspec/README.md`)
+- Full replacement for KeaveAI-managed files only (e.g., `openspec/README.md`)
 - Marker-based updates for user-owned files (e.g., `CLAUDE.md`)
 - Templates bundled with package - no network required
 - Minimal error handling - only check prerequisites
@@ -13,7 +13,7 @@
 - Use existing template utilities
   - `readmeTemplate` from `src/core/templates/readme-template.ts` for `openspec/README.md`
   - `TemplateManager.getClaudeTemplate()` for `CLAUDE.md`
-- Directory name is fixed to `openspec` (from `WEAVEAI_DIR_NAME`)
+- Directory name is fixed to `openspec` (from `KEAVEAI_DIR_NAME`)
 
 ### File Operations
 - Use async utilities for consistency
@@ -28,12 +28,12 @@
 ```typescript
 export class UpdateCommand {
   async execute(projectPath: string): Promise<void> {
-    const openspecDirName = WEAVEAI_DIR_NAME;
+    const openspecDirName = KEAVEAI_DIR_NAME;
     const openspecPath = path.join(projectPath, openspecDirName);
 
     // 1. Check openspec directory exists
     if (!await FileSystemUtils.directoryExists(openspecPath)) {
-      throw new Error(`No WeaveAI directory found. Run 'openspec init' first.`);
+      throw new Error(`No KeaveAI directory found. Run 'openspec init' first.`);
     }
 
     // 2. Update README.md (full replacement)
@@ -46,12 +46,12 @@ export class UpdateCommand {
     await FileSystemUtils.updateFileWithMarkers(
       claudePath,
       claudeContent,
-      WEAVEAI_MARKERS.start,
-      WEAVEAI_MARKERS.end
+      KEAVEAI_MARKERS.start,
+      KEAVEAI_MARKERS.end
     );
 
     // 4. Success message (ASCII-safe, checkmark optional by terminal)
-    console.log('Updated WeaveAI instructions');
+    console.log('Updated KeaveAI instructions');
   }
 }
 ```
@@ -66,7 +66,7 @@ export class UpdateCommand {
 
 ### Trade-offs Accepted
 - No version tracking (unnecessary complexity)
-- Full overwrite only for WeaveAI-managed files
+- Full overwrite only for KeaveAI-managed files
 - Marker-managed updates for user-owned files
 
 ## Error Handling
@@ -81,6 +81,6 @@ Manual smoke tests are sufficient initially:
 1. Run `openspec init` in a test project
 2. Modify both files (including custom content around markers in `CLAUDE.md`)
 3. Run `openspec update`
-4. Verify `openspec/README.md` fully replaced; `CLAUDE.md` WeaveAI block updated without altering user content outside markers
+4. Verify `openspec/README.md` fully replaced; `CLAUDE.md` KeaveAI block updated without altering user content outside markers
 5. Run the command twice to verify idempotency and no duplicate markers
 6. Test with missing `openspec` directory (expect failure)

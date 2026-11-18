@@ -31,13 +31,13 @@ const COMMON_FLAGS = {
 const VISIBLE_COMMAND_NAMES = new Set(['init', 'update', 'break-change', 'database-update', 'issue']);
 
 /**
- * Registry of all WeaveAI CLI commands with their flags and metadata.
+ * Registry of all KeaveAI CLI commands with their flags and metadata.
  * This registry is used to generate shell completion scripts.
  */
 const ALL_COMMAND_REGISTRY: CommandDefinition[] = [
   {
     name: 'init',
-    description: 'Initialize WeaveAI in your project',
+    description: 'Initialize KeaveAI in your project',
     acceptsPositional: true,
     positionalType: 'path',
     flags: [
@@ -60,32 +60,32 @@ const ALL_COMMAND_REGISTRY: CommandDefinition[] = [
   },
   {
     name: 'update',
-    description: 'Update WeaveAI database assets from bundled content',
+    description: 'Update KeaveAI database assets from bundled content',
     acceptsPositional: true,
     positionalType: 'path',
     flags: [],
   },
   {
     name: 'break-change',
-    description: 'Migrate initialized WeaveAI content to the bundled breaking layout',
+    description: 'Migrate initialized KeaveAI content to the bundled breaking layout',
     acceptsPositional: true,
     positionalType: 'path',
     flags: [],
   },
   {
     name: 'database-update',
-    description: 'Refresh bundled weaveai-database assets',
+    description: 'Refresh bundled keaveai-database assets',
     acceptsPositional: true,
     positionalType: 'path',
     flags: [
       {
         name: 'repo',
-        description: 'WeaveAI database repository URL',
+        description: 'KeaveAI database repository URL',
         takesValue: true,
       },
       {
         name: 'branch',
-        description: 'WeaveAI database repository branch',
+        description: 'KeaveAI database repository branch',
         takesValue: true,
       },
     ],
@@ -132,7 +132,7 @@ const ALL_COMMAND_REGISTRY: CommandDefinition[] = [
       COMMON_FLAGS.jsonValidation,
       {
         name: 'concurrency',
-        description: 'Max concurrent validations (defaults to env WEAVEAI_CONCURRENCY or 6)',
+        description: 'Max concurrent validations (defaults to env KEAVEAI_CONCURRENCY or 6)',
         takesValue: true,
       },
       COMMON_FLAGS.noInteractive,
@@ -194,7 +194,7 @@ const ALL_COMMAND_REGISTRY: CommandDefinition[] = [
   },
   {
     name: 'feedback',
-    description: 'Submit feedback about WeaveAI',
+    description: 'Submit feedback about KeaveAI',
     acceptsPositional: true,
     flags: [
       {
@@ -206,7 +206,7 @@ const ALL_COMMAND_REGISTRY: CommandDefinition[] = [
   },
   {
     name: 'issue',
-    description: 'Push initialized WeaveAI content as a GitLab merge request',
+    description: 'Push initialized KeaveAI content as a GitLab merge request',
     flags: [
       {
         name: 'remote',
@@ -251,7 +251,7 @@ const ALL_COMMAND_REGISTRY: CommandDefinition[] = [
   },
   {
     name: 'change',
-    description: 'Manage WeaveAI change proposals (deprecated)',
+    description: 'Manage KeaveAI change proposals (deprecated)',
     flags: [],
     subcommands: [
       {
@@ -298,7 +298,7 @@ const ALL_COMMAND_REGISTRY: CommandDefinition[] = [
   },
   {
     name: 'spec',
-    description: 'Manage WeaveAI specifications',
+    description: 'Manage KeaveAI specifications',
     flags: [],
     subcommands: [
       {
@@ -351,7 +351,7 @@ const ALL_COMMAND_REGISTRY: CommandDefinition[] = [
   },
   {
     name: 'completion',
-    description: 'Manage shell completions for WeaveAI CLI',
+    description: 'Manage shell completions for KeaveAI CLI',
     flags: [],
     subcommands: [
       {
@@ -390,7 +390,7 @@ const ALL_COMMAND_REGISTRY: CommandDefinition[] = [
   },
   {
     name: 'config',
-    description: 'View and modify global WeaveAI configuration',
+    description: 'View and modify global KeaveAI configuration',
     flags: [
       {
         name: 'scope',

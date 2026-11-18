@@ -2,7 +2,7 @@
 
 ## Context
 
-WeaveAI currently has a fixed schema resolution order:
+KeaveAI currently has a fixed schema resolution order:
 1. `--schema` CLI flag
 2. `.openspec.yaml` in change directory
 3. Hardcoded default: `"spec-driven"`
@@ -20,7 +20,7 @@ The proposal introduces `openspec/config.yaml` as a lightweight customization la
 - Config is project-level only (no global/user-level config)
 
 **Key stakeholders:**
-- WeaveAI users who need light customization without forking
+- KeaveAI users who need light customization without forking
 - Teams sharing workflow conventions via committed config
 
 ## Goals / Non-Goals
@@ -62,7 +62,7 @@ The proposal introduces `openspec/config.yaml` as a lightweight customization la
 **Rationale:**
 - Co-located with `openspec/schemas/` (project-local-schemas)
 - Keeps project root clean
-- Natural namespace for WeaveAI configuration
+- Natural namespace for KeaveAI configuration
 - Mirrors structure used by other tools (e.g., `.github/`)
 
 **Alternatives considered:**
@@ -134,7 +134,7 @@ rules:
 **Decision:** Log warning and fall back to defaults (don't halt commands)
 
 **Rationale:**
-- Syntax errors in config shouldn't break all of WeaveAI
+- Syntax errors in config shouldn't break all of KeaveAI
 - User can fix config incrementally
 - Commands remain usable during config development
 
@@ -165,9 +165,9 @@ import { findProjectRoot } from '../utils/path-utils';
  * 3. Runtime validation - uses safeParse() for resilient field-by-field validation
  *
  * Why Zod over manual validation:
- * - Helps understand WeaveAI's data interfaces at a glance
+ * - Helps understand KeaveAI's data interfaces at a glance
  * - Single source of truth for type and validation
- * - Consistent with other WeaveAI schemas
+ * - Consistent with other KeaveAI schemas
  */
 export const ProjectConfigSchema = z.object({
   schema: z.string().min(1).describe('The workflow schema to use (e.g., "spec-driven", "tdd")'),
@@ -619,7 +619,7 @@ export function readProjectConfig(): ProjectConfig | null {
 **[Risk]** Context grows too large, pollutes all artifact instructions
 → **Mitigation:** Document recommended size (< 500 chars). If this becomes an issue, add per-artifact context override later.
 
-**[Risk]** YAML parsing errors break WeaveAI commands
+**[Risk]** YAML parsing errors break KeaveAI commands
 → **Mitigation:** Catch parse errors, log warning, fall back to defaults. Commands remain functional.
 
 **[Risk]** Config cached incorrectly across commands

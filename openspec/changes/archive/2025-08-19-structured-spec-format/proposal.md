@@ -1,6 +1,6 @@
 ## Why
 
-WeaveAI specifications lack a consistent structure that makes sections visually identifiable and programmatically parseable across different specs. This makes it harder to maintain consistency and build tooling.
+KeaveAI specifications lack a consistent structure that makes sections visually identifiable and programmatically parseable across different specs. This makes it harder to maintain consistency and build tooling.
 
 ## What Changes
 

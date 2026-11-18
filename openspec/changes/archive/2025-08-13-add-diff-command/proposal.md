@@ -1,4 +1,4 @@
-# Add Diff Command to WeaveAI CLI
+# Add Diff Command to KeaveAI CLI
 
 ## Why
 

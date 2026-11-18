@@ -1,7 +1,7 @@
 ## ADDED Requirements
 
 ### Requirement: Stack-Aware Change Planning Conventions
-WeaveAI conventions SHALL define optional metadata fields for sequencing and decomposition across concurrent changes.
+KeaveAI conventions SHALL define optional metadata fields for sequencing and decomposition across concurrent changes.
 
 #### Scenario: Declaring change dependencies
 - **WHEN** authors need to sequence related changes

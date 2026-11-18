@@ -1,4 +1,4 @@
-# Add List Command to WeaveAI CLI
+# Add List Command to KeaveAI CLI
 
 ## Why
 

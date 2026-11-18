@@ -89,7 +89,7 @@ Add a top-level `apply` field to schema definitions:
 ```yaml
 name: spec-driven
 version: 1
-description: Default WeaveAI workflow
+description: Default KeaveAI workflow
 
 artifacts:
   # ... existing artifacts ...

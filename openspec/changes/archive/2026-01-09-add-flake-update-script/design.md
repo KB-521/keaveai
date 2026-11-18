@@ -25,7 +25,7 @@ This is tedious and error-prone, especially for maintainers unfamiliar with Nix.
 
 - Automatically commit changes (maintainer decides when to commit)
 - Support non-pnpm package managers
-- Handle complex Nix configurations beyond WeaveAI's use case
+- Handle complex Nix configurations beyond KeaveAI's use case
 
 ## Decisions
 

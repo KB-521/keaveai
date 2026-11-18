@@ -1,10 +1,10 @@
 ## MODIFIED Requirements
 
 ### Requirement: Project Structure
-An WeaveAI project SHALL maintain a consistent directory structure for specifications and changes.
+An KeaveAI project SHALL maintain a consistent directory structure for specifications and changes.
 
 #### Scenario: Initializing project structure
-- **WHEN** an WeaveAI project is initialized
+- **WHEN** an KeaveAI project is initialized
 - **THEN** it SHALL have this structure:
 ```
 openspec/

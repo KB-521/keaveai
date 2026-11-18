@@ -156,5 +156,5 @@ opencode.json
 
 # Codex
 .codex/
-!weaveai-database/.codex/
-!weaveai-database/.codex/**
+!keaveai-database/.codex/
+!keaveai-database/.codex/**

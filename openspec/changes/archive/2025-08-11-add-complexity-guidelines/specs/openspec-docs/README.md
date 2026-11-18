@@ -1,10 +1,10 @@
-# WeaveAI Instructions
+# KeaveAI Instructions
 
-This document provides instructions for AI coding assistants on how to use WeaveAI conventions for spec-driven development. Follow these rules precisely when working on WeaveAI-enabled projects.
+This document provides instructions for AI coding assistants on how to use KeaveAI conventions for spec-driven development. Follow these rules precisely when working on KeaveAI-enabled projects.
 
 ## Core Principle
 
-WeaveAI is an AI-native system for change-driven development where:
+KeaveAI is an AI-native system for change-driven development where:
 - **Specs** (`specs/`) reflect what IS currently built and deployed
 - **Changes** (`changes/`) contain proposals for what SHOULD be changed
 - **AI drives the process** - You generate proposals, humans review and approve
@@ -32,7 +32,7 @@ When triggered, document the specific justification in your change proposal.
 ```
 openspec/
 ├── project.md              # Project-specific context (tech stack, conventions)
-├── README.md               # This file - WeaveAI instructions
+├── README.md               # This file - KeaveAI instructions
 ├── specs/                  # Current truth - what IS built
 │   ├── [capability]/       # Single, focused capability
 │   │   ├── spec.md         # WHAT the capability does and WHY
@@ -389,7 +389,7 @@ Default to creating a proposal. It's easier to skip an unnecessary proposal than
 
 ### AI Workflow Adaptations
 
-Task tracking with WeaveAI:
+Task tracking with KeaveAI:
 - Track exploration tasks separately from implementation
 - Document proposal creation steps as you go
 - Keep implementation tasks separate until proposal approved

@@ -95,10 +95,10 @@ export class ValidateCommand {
 
   private printNonInteractiveHint(): void {
     console.error('Nothing to validate. Try one of:');
-    console.error('  weaveai validate --all');
-    console.error('  weaveai validate --changes');
-    console.error('  weaveai validate --specs');
-    console.error('  weaveai validate <item-name>');
+    console.error('  keaveai validate --all');
+    console.error('  keaveai validate --changes');
+    console.error('  keaveai validate --specs');
+    console.error('  keaveai validate <item-name>');
     console.error('Or run in an interactive terminal.');
   }
 
@@ -119,7 +119,7 @@ export class ValidateCommand {
 
     if (!opts.typeOverride && isChange && isSpec) {
       console.error(`Ambiguous item '${itemName}' matches both a change and a spec.`);
-      console.error('Pass --type change|spec, or use: weaveai change validate / weaveai spec validate');
+      console.error('Pass --type change|spec, or use: keaveai change validate / keaveai spec validate');
       process.exitCode = 1;
       return;
     }
@@ -171,7 +171,7 @@ export class ValidateCommand {
     if (type === 'change') {
       bullets.push('- Ensure change has deltas in specs/: use headers ## ADDED/MODIFIED/REMOVED/RENAMED Requirements');
       bullets.push('- Each requirement MUST include at least one #### Scenario: block');
-      bullets.push('- Debug parsed deltas: weaveai change show <id> --json --deltas-only');
+      bullets.push('- Debug parsed deltas: keaveai change show <id> --json --deltas-only');
     } else {
       bullets.push('- Ensure spec includes ## Purpose and ## Requirements sections');
       bullets.push('- Each requirement MUST include at least one #### Scenario: block');
@@ -190,7 +190,7 @@ export class ValidateCommand {
 
     const DEFAULT_CONCURRENCY = 6;
     const maxSuggestions = 5; // used by nearestMatches
-    const concurrency = normalizeConcurrency(opts.concurrency) ?? normalizeConcurrency(process.env.WEAVEAI_CONCURRENCY) ?? DEFAULT_CONCURRENCY;
+    const concurrency = normalizeConcurrency(opts.concurrency) ?? normalizeConcurrency(process.env.KEAVEAI_CONCURRENCY) ?? DEFAULT_CONCURRENCY;
     const validator = new Validator(opts.strict);
     const queue: Array<() => Promise<BulkItemResult>> = [];
 

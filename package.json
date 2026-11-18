@@ -9,13 +9,13 @@
     "ai",
     "development"
   ],
-  "homepage": "https://github.com/Fission-AI/WeaveAI",
+  "homepage": "https://github.com/KB-521/keaveai",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Fission-AI/WeaveAI.git"
+    "url": "git+https://github.com/KB-521/keaveai.git"
   },
   "license": "MIT",
-  "author": "WeaveAI Contributors",
+  "author": "KeaveAI Contributors",
   "type": "module",
   "publishConfig": {
     "access": "public",
@@ -28,34 +28,23 @@
     }
   },
   "bin": {
-    "weaveai": "bin/weaveai.js"
+    "keaveai": "bin/keaveai.js"
   },
   "files": [
     "dist",
     "bin",
     "schemas",
-    "weaveai-database",
+    "keaveai-database",
     "scripts/postinstall.js",
     "!dist/**/*.test.js",
     "!dist/**/__tests__",
     "!dist/**/*.map"
   ],
-  "bundleDependencies": [
-    "@inquirer/core",
-    "@inquirer/prompts",
-    "chalk",
-    "commander",
-    "fast-glob",
-    "ora",
-    "posthog-node",
-    "yaml",
-    "zod"
-  ],
   "scripts": {
     "lint": "eslint src/",
     "build": "node build.js",
     "dev": "tsc --watch",
-    "dev:cli": "pnpm build && node bin/weaveai.js",
+    "dev:cli": "pnpm build && node bin/keaveai.js",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:ui": "vitest --ui",

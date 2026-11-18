@@ -7,7 +7,7 @@ import type { CommandContent, ToolCommandAdapter } from '../../../src/core/comma
 describe('command-generation/generator', () => {
   const sampleContent: CommandContent = {
     id: 'explore',
-    name: 'WeaveAI Explore',
+    name: 'KeaveAI Explore',
     description: 'Enter explore mode',
     category: 'Workflow',
     tags: ['workflow'],
@@ -20,7 +20,7 @@ describe('command-generation/generator', () => {
 
       expect(result.path).toContain('.claude');
       expect(result.path).toContain('explore.md');
-      expect(result.fileContent).toContain('name: WeaveAI Explore');
+      expect(result.fileContent).toContain('name: KeaveAI Explore');
       expect(result.fileContent).toContain('Command body here.');
     });
 
@@ -51,7 +51,7 @@ describe('command-generation/generator', () => {
       const result = generateCommand(sampleContent, customAdapter);
 
       expect(result.path).toBe('.custom/explore.txt');
-      expect(result.fileContent).toBe('# WeaveAI Explore\n\nCommand body here.');
+      expect(result.fileContent).toBe('# KeaveAI Explore\n\nCommand body here.');
     });
   });
 

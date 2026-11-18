@@ -9,8 +9,8 @@ import type { SkillTemplate, CommandTemplate } from '../types.js';
 export function getApplyChangeSkillTemplate(): SkillTemplate {
   return {
     name: 'openspec-apply-change',
-    description: 'Implement tasks from an WeaveAI change. Use when the user wants to start implementing, continue implementation, or work through tasks.',
-    instructions: `Implement tasks from an WeaveAI change.
+    description: 'Implement tasks from an KeaveAI change. Use when the user wants to start implementing, continue implementation, or work through tasks.',
+    instructions: `Implement tasks from an KeaveAI change.
 
 **Input**: Optionally specify a change name. If omitted, check if it can be inferred from conversation context. If vague or ambiguous you MUST prompt for available changes.
 
@@ -21,13 +21,13 @@ export function getApplyChangeSkillTemplate(): SkillTemplate {
    If a name is provided, use it. Otherwise:
    - Infer from conversation context if the user mentioned a change
    - Auto-select if only one active change exists
-   - If ambiguous, run \`weaveai list --json\` to get available changes and use the **AskUserQuestion tool** to let the user select
+   - If ambiguous, run \`keaveai list --json\` to get available changes and use the **AskUserQuestion tool** to let the user select
 
    Always announce: "Using change: <name>" and how to override (e.g., \`/opsx:apply <other>\`).
 
 2. **Check status to understand the schema**
    \`\`\`bash
-   weaveai status --change "<name>" --json
+   keaveai status --change "<name>" --json
    \`\`\`
    Parse the JSON to understand:
    - \`schemaName\`: The workflow being used (e.g., "spec-driven")
@@ -36,7 +36,7 @@ export function getApplyChangeSkillTemplate(): SkillTemplate {
 3. **Get apply instructions**
 
    \`\`\`bash
-   weaveai instructions apply --change "<name>" --json
+   keaveai instructions apply --change "<name>" --json
    \`\`\`
 
    This returns:
@@ -164,10 +164,10 @@ This skill supports the "actions on a change" model:
 export function getOpsxApplyCommandTemplate(): CommandTemplate {
   return {
     name: 'OPSX: Apply',
-    description: 'Implement tasks from an WeaveAI change (Experimental)',
+    description: 'Implement tasks from an KeaveAI change (Experimental)',
     category: 'Workflow',
     tags: ['workflow', 'artifacts', 'experimental'],
-    content: `Implement tasks from an WeaveAI change.
+    content: `Implement tasks from an KeaveAI change.
 
 **Input**: Optionally specify a change name (e.g., \`/opsx:apply add-auth\`). If omitted, check if it can be inferred from conversation context. If vague or ambiguous you MUST prompt for available changes.
 
@@ -178,13 +178,13 @@ export function getOpsxApplyCommandTemplate(): CommandTemplate {
    If a name is provided, use it. Otherwise:
    - Infer from conversation context if the user mentioned a change
    - Auto-select if only one active change exists
-   - If ambiguous, run \`weaveai list --json\` to get available changes and use the **AskUserQuestion tool** to let the user select
+   - If ambiguous, run \`keaveai list --json\` to get available changes and use the **AskUserQuestion tool** to let the user select
 
    Always announce: "Using change: <name>" and how to override (e.g., \`/opsx:apply <other>\`).
 
 2. **Check status to understand the schema**
    \`\`\`bash
-   weaveai status --change "<name>" --json
+   keaveai status --change "<name>" --json
    \`\`\`
    Parse the JSON to understand:
    - \`schemaName\`: The workflow being used (e.g., "spec-driven")
@@ -193,7 +193,7 @@ export function getOpsxApplyCommandTemplate(): CommandTemplate {
 3. **Get apply instructions**
 
    \`\`\`bash
-   weaveai instructions apply --change "<name>" --json
+   keaveai instructions apply --change "<name>" --json
    \`\`\`
 
    This returns:

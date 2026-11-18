@@ -30,8 +30,8 @@ async function createDatabaseRepo(parentDir: string): Promise<string> {
 
   git(repoDir, ['init']);
   git(repoDir, ['checkout', '-b', 'main']);
-  git(repoDir, ['config', 'user.name', 'WeaveAI Test']);
-  git(repoDir, ['config', 'user.email', 'weaveai-test@example.com']);
+  git(repoDir, ['config', 'user.name', 'KeaveAI Test']);
+  git(repoDir, ['config', 'user.email', 'keaveai-test@example.com']);
 
   await writeFile(path.join(repoDir, 'ai-workflow', 'README.md'), '# Fresh Database\n');
   await writeFile(path.join(repoDir, '.codex', 'skills', 'init', 'SKILL.md'), '# Init Skill\n');
@@ -53,7 +53,7 @@ describe('DatabaseUpdateCommand', () => {
   });
 
   it('refreshes bundled database contents into the requested path', async () => {
-    const testDir = path.join(os.tmpdir(), `weaveai-database-update-test-${randomUUID()}`);
+    const testDir = path.join(os.tmpdir(), `keaveai-database-update-test-${randomUUID()}`);
     createdDirs.push(testDir);
     await fs.mkdir(testDir, { recursive: true });
     const repoDir = await createDatabaseRepo(testDir);

@@ -7,7 +7,7 @@ describe('validate command enriched human output', () => {
   const projectRoot = process.cwd();
   const testDir = path.join(projectRoot, 'test-validate-enriched-tmp');
   const changesDir = path.join(testDir, 'openspec', 'changes');
-  const bin = path.join(projectRoot, 'bin', 'weaveai.js');
+  const bin = path.join(projectRoot, 'bin', 'keaveai.js');
 
 
   beforeEach(async () => {
@@ -39,7 +39,7 @@ describe('validate command enriched human output', () => {
       expect(code).not.toBe(0);
       expect(stderr).toContain('has issues');
       expect(stderr).toContain('Next steps:');
-      expect(stderr).toContain('weaveai change show');
+      expect(stderr).toContain('keaveai change show');
     } finally {
       process.chdir(originalCwd);
     }

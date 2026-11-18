@@ -1,6 +1,6 @@
 ## MODIFIED Requirements
 ### Requirement: AI Tool Configuration
-The command SHALL configure AI coding assistants with WeaveAI instructions using a grouped selection experience so teams can enable native integrations while always provisioning guidance for other assistants.
+The command SHALL configure AI coding assistants with KeaveAI instructions using a grouped selection experience so teams can enable native integrations while always provisioning guidance for other assistants.
 
 #### Scenario: Prompting for AI tool selection
 - **WHEN** run interactively
@@ -16,13 +16,13 @@ The command SHALL configure AI coding assistants with WeaveAI instructions using
 `openspec init` SHALL treat extend mode without new native tool selections as a successful refresh.
 
 #### Scenario: Allowing empty extend runs
-- **WHEN** WeaveAI is already initialized and the user selects no additional natively supported tools
+- **WHEN** KeaveAI is already initialized and the user selects no additional natively supported tools
 - **THEN** complete successfully while refreshing the root `AGENTS.md` stub
 - **AND** exit with code 0
 
 ## ADDED Requirements
 ### Requirement: Root instruction stub
-`openspec init` SHALL always scaffold the root-level `AGENTS.md` hand-off so every teammate finds the primary WeaveAI instructions.
+`openspec init` SHALL always scaffold the root-level `AGENTS.md` hand-off so every teammate finds the primary KeaveAI instructions.
 
 #### Scenario: Creating root `AGENTS.md`
 - **GIVEN** the project may or may not already contain an `AGENTS.md` file

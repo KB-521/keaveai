@@ -12,7 +12,7 @@
 export interface CommandContent {
   /** Command identifier (e.g., 'explore', 'apply', 'new') */
   id: string;
-  /** Human-readable name (e.g., 'WeaveAI Explore') */
+  /** Human-readable name (e.g., 'KeaveAI Explore') */
   name: string;
   /** Brief description of command purpose */
   description: string;

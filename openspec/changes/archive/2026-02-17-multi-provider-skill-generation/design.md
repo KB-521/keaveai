@@ -72,9 +72,9 @@ interface AIToolOption {
 // Tool-agnostic command data
 interface CommandContent {
   id: string;           // e.g., 'explore', 'new', 'apply'
-  name: string;         // e.g., 'WeaveAI Explore'
+  name: string;         // e.g., 'KeaveAI Explore'
   description: string;  // e.g., 'Enter explore mode...'
-  category: string;     // e.g., 'WeaveAI'
+  category: string;     // e.g., 'KeaveAI'
   tags: string[];       // e.g., ['openspec', 'explore']
   body: string;         // The command instructions
 }

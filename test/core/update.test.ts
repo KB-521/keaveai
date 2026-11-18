@@ -8,13 +8,13 @@ import { UpdateCommand } from '../../src/core/update.js';
 
 const ENV_KEYS = [
   'VITEST',
-  'WEAVEAI_INIT_REPO_URL',
-  'WEAVEAI_INIT_REPO_BRANCH',
-  'WEAVEAI_INIT_SKIP_REMOTE_SYNC',
-  'WEAVEAI_DATABASE_SOURCE_DIR',
-  'WEAVEAI_UPDATE_REPO_URL',
-  'WEAVEAI_UPDATE_REPO_BRANCH',
-  'WEAVEAI_UPDATE_SKIP_REMOTE_SYNC',
+  'KEAVEAI_INIT_REPO_URL',
+  'KEAVEAI_INIT_REPO_BRANCH',
+  'KEAVEAI_INIT_SKIP_REMOTE_SYNC',
+  'KEAVEAI_DATABASE_SOURCE_DIR',
+  'KEAVEAI_UPDATE_REPO_URL',
+  'KEAVEAI_UPDATE_REPO_BRANCH',
+  'KEAVEAI_UPDATE_SKIP_REMOTE_SYNC',
 ];
 
 async function writeFile(filePath: string, content: string): Promise<void> {
@@ -26,14 +26,14 @@ function git(cwd: string, args: string[]): void {
   execFileSync('git', args, { cwd, stdio: 'pipe' });
 }
 
-async function createWeaveAIDatabaseRepo(parentDir: string): Promise<string> {
-  const repoDir = path.join(parentDir, 'weaveai-database');
+async function createKeaveAIDatabaseRepo(parentDir: string): Promise<string> {
+  const repoDir = path.join(parentDir, 'keaveai-database');
   await fs.mkdir(repoDir, { recursive: true });
 
   git(repoDir, ['init']);
   git(repoDir, ['checkout', '-b', 'main']);
-  git(repoDir, ['config', 'user.name', 'WeaveAI Test']);
-  git(repoDir, ['config', 'user.email', 'weaveai-test@example.com']);
+  git(repoDir, ['config', 'user.name', 'KeaveAI Test']);
+  git(repoDir, ['config', 'user.email', 'keaveai-test@example.com']);
 
   await writeFile(path.join(repoDir, 'ai-workflow', 'README.md'), '# Remote AI Workflow\n');
   await writeFile(path.join(repoDir, '.codex', 'skills', 'init', 'SKILL.md'), '# Remote Init Skill\n');
@@ -41,7 +41,7 @@ async function createWeaveAIDatabaseRepo(parentDir: string): Promise<string> {
   await writeFile(path.join(repoDir, '.codex', 'skills', 'draft.txt'), 'not a skill directory\n');
 
   git(repoDir, ['add', '.']);
-  git(repoDir, ['commit', '-m', 'seed weaveai database']);
+  git(repoDir, ['commit', '-m', 'seed keaveai database']);
 
   return repoDir;
 }
@@ -51,7 +51,7 @@ describe('UpdateCommand', () => {
   let savedEnv: Map<string, string | undefined>;
 
   beforeEach(async () => {
-    testDir = path.join(os.tmpdir(), `weaveai-update-test-${randomUUID()}`);
+    testDir = path.join(os.tmpdir(), `keaveai-update-test-${randomUUID()}`);
     await fs.mkdir(testDir, { recursive: true });
 
     savedEnv = new Map(ENV_KEYS.map((key) => [key, process.env[key]]));
@@ -78,32 +78,32 @@ describe('UpdateCommand', () => {
     await fs.mkdir(path.join(testDir, 'openspec'), { recursive: true });
 
     await expect(new UpdateCommand().execute(testDir)).rejects.toThrow(
-      "No WeaveAI workflow directory found. Run 'weaveai init' first."
+      "No KeaveAI workflow directory found. Run 'keaveai init' first."
     );
   });
 
   it('can validate an ai-workflow project without remote writes when sync is skipped', async () => {
     await fs.mkdir(path.join(testDir, 'ai-workflow'), { recursive: true });
-    process.env.WEAVEAI_UPDATE_SKIP_REMOTE_SYNC = '1';
+    process.env.KEAVEAI_UPDATE_SKIP_REMOTE_SYNC = '1';
     const consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
 
     await expect(new UpdateCommand().execute(testDir)).resolves.toBeUndefined();
 
     expect(consoleSpy).toHaveBeenCalledWith(
-      expect.stringContaining('Skipped WeaveAI database sync.')
+      expect.stringContaining('Skipped KeaveAI database sync.')
     );
     await expect(fs.readFile(path.join(testDir, 'agent.config'), 'utf-8'))
       .resolves.toBe('');
   });
 
   it('syncs ai-workflow content and detected tool skills from the database repository', async () => {
-    const databaseRepo = await createWeaveAIDatabaseRepo(testDir);
+    const databaseRepo = await createKeaveAIDatabaseRepo(testDir);
     const projectDir = path.join(testDir, 'project');
     await fs.mkdir(path.join(projectDir, 'ai-workflow'), { recursive: true });
     await fs.mkdir(path.join(projectDir, '.codex'), { recursive: true });
     await writeFile(path.join(projectDir, 'ai-workflow', 'README.md'), '# Local AI Workflow\n');
 
-    process.env.WEAVEAI_DATABASE_SOURCE_DIR = databaseRepo;
+    process.env.KEAVEAI_DATABASE_SOURCE_DIR = databaseRepo;
 
     await new UpdateCommand().execute(projectDir);
 

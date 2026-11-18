@@ -15,8 +15,8 @@ export class PowerShellInstaller {
    * Markers for PowerShell profile configuration management
    */
   private readonly PROFILE_MARKERS = {
-    start: '# WEAVEAI:START',
-    end: '# WEAVEAI:END',
+    start: '# KEAVEAI:START',
+    end: '# KEAVEAI:END',
   };
 
   constructor(homeDir: string = os.homedir()) {
@@ -77,7 +77,7 @@ export class PowerShellInstaller {
   getInstallationPath(): string {
     const profilePath = this.getProfilePath();
     const profileDir = path.dirname(profilePath);
-    return path.join(profileDir, 'WeaveAICompletion.ps1');
+    return path.join(profileDir, 'KeaveAICompletion.ps1');
   }
 
   /**
@@ -108,7 +108,7 @@ export class PowerShellInstaller {
    */
   private generateProfileConfig(scriptPath: string): string {
     return [
-      '# WeaveAI shell completions configuration',
+      '# KeaveAI shell completions configuration',
       `if (Test-Path "${scriptPath}") {`,
       `    . "${scriptPath}"`,
       '}',
@@ -144,12 +144,12 @@ export class PowerShellInstaller {
           continue; // Already configured, skip
         }
 
-        // Add WeaveAI completion configuration with markers
+        // Add KeaveAI completion configuration with markers
         const openspecBlock = [
           '',
-          '# WEAVEAI:START - WeaveAI completion (managed block, do not edit manually)',
+          '# KEAVEAI:START - KeaveAI completion (managed block, do not edit manually)',
           scriptLine,
-          '# WEAVEAI:END',
+          '# KEAVEAI:END',
           '',
         ].join('\n');
 
@@ -185,13 +185,13 @@ export class PowerShellInstaller {
           continue; // Profile doesn't exist, nothing to remove
         }
 
-        // Remove WEAVEAI:START -> WEAVEAI:END block
-        const startMarker = '# WEAVEAI:START';
-        const endMarker = '# WEAVEAI:END';
+        // Remove KEAVEAI:START -> KEAVEAI:END block
+        const startMarker = '# KEAVEAI:START';
+        const endMarker = '# KEAVEAI:END';
         const startIndex = profileContent.indexOf(startMarker);
 
         if (startIndex === -1) {
-          continue; // No WeaveAI block found
+          continue; // No KeaveAI block found
         }
 
         const endIndex = profileContent.indexOf(endMarker, startIndex);
@@ -308,7 +308,7 @@ export class PowerShellInstaller {
       '',
       `To enable completions, add the following to your PowerShell profile (${profilePath}):`,
       '',
-      '  # Source WeaveAI completions',
+      '  # Source KeaveAI completions',
       `  if (Test-Path "${installedPath}") {`,
       `      . "${installedPath}"`,
       '  }',

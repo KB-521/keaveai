@@ -14,7 +14,7 @@ async function runConfigCommand(args: string[]): Promise<void> {
   const { registerConfigCommand } = await import('../../src/commands/config.js');
   const program = new Command();
   registerConfigCommand(program);
-  await program.parseAsync(['node', 'weaveai', 'config', ...args]);
+  await program.parseAsync(['node', 'keaveai', 'config', ...args]);
 }
 
 async function getPromptMocks(): Promise<{

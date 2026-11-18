@@ -1,11 +1,11 @@
-export const WEAVEAI_DIR_NAME = 'openspec';
+export const KEAVEAI_DIR_NAME = 'openspec';
 
-export const WEAVEAI_MARKERS = {
-  start: '<!-- WEAVEAI:START -->',
-  end: '<!-- WEAVEAI:END -->'
+export const KEAVEAI_MARKERS = {
+  start: '<!-- KEAVEAI:START -->',
+  end: '<!-- KEAVEAI:END -->'
 };
 
-export interface WeaveAIConfig {
+export interface KeaveAIConfig {
   aiTools: string[];
 }
 

@@ -24,15 +24,15 @@ describe('BashGenerator', () => {
       const commands: CommandDefinition[] = [
         {
           name: 'init',
-          description: 'Initialize WeaveAI',
+          description: 'Initialize KeaveAI',
           flags: [],
         },
       ];
 
       const script = generator.generate(commands);
 
-      expect(script).toContain('# Bash completion script for WeaveAI CLI');
-      expect(script).toContain('_weaveai_completion() {');
+      expect(script).toContain('# Bash completion script for KeaveAI CLI');
+      expect(script).toContain('_keaveai_completion() {');
       expect(script).toContain('local cur prev words cword');
       expect(script).toContain('_init_completion -n : || return');
     });
@@ -41,7 +41,7 @@ describe('BashGenerator', () => {
       const commands: CommandDefinition[] = [
         {
           name: 'init',
-          description: 'Initialize WeaveAI',
+          description: 'Initialize KeaveAI',
           flags: [],
         },
         {
@@ -262,7 +262,7 @@ describe('BashGenerator', () => {
 
       const script = generator.generate(commands);
 
-      expect(script).toContain('_weaveai_complete_changes');
+      expect(script).toContain('_keaveai_complete_changes');
     });
 
     it('should handle positional arguments for spec-id', () => {
@@ -278,7 +278,7 @@ describe('BashGenerator', () => {
 
       const script = generator.generate(commands);
 
-      expect(script).toContain('_weaveai_complete_specs');
+      expect(script).toContain('_keaveai_complete_specs');
     });
 
     it('should handle positional arguments for change-or-spec-id', () => {
@@ -294,7 +294,7 @@ describe('BashGenerator', () => {
 
       const script = generator.generate(commands);
 
-      expect(script).toContain('_weaveai_complete_items');
+      expect(script).toContain('_keaveai_complete_items');
     });
 
     it('should handle positional arguments for shell', () => {
@@ -320,7 +320,7 @@ describe('BashGenerator', () => {
       const commands: CommandDefinition[] = [
         {
           name: 'init',
-          description: 'Initialize WeaveAI',
+          description: 'Initialize KeaveAI',
           acceptsPositional: true,
           positionalType: 'path',
           flags: [],
@@ -345,8 +345,8 @@ describe('BashGenerator', () => {
 
       const script = generator.generate(commands);
 
-      expect(script).toContain('_weaveai_complete_changes() {');
-      expect(script).toContain('weaveai __complete changes 2>/dev/null');
+      expect(script).toContain('_keaveai_complete_changes() {');
+      expect(script).toContain('keaveai __complete changes 2>/dev/null');
       expect(script).toContain('cut -f1');
       expect(script).toContain('COMPREPLY=');
     });
@@ -364,8 +364,8 @@ describe('BashGenerator', () => {
 
       const script = generator.generate(commands);
 
-      expect(script).toContain('_weaveai_complete_specs() {');
-      expect(script).toContain('weaveai __complete specs 2>/dev/null');
+      expect(script).toContain('_keaveai_complete_specs() {');
+      expect(script).toContain('keaveai __complete specs 2>/dev/null');
       expect(script).toContain('cut -f1');
     });
 
@@ -382,9 +382,9 @@ describe('BashGenerator', () => {
 
       const script = generator.generate(commands);
 
-      expect(script).toContain('_weaveai_complete_items() {');
-      expect(script).toContain('weaveai __complete changes 2>/dev/null');
-      expect(script).toContain('weaveai __complete specs 2>/dev/null');
+      expect(script).toContain('_keaveai_complete_items() {');
+      expect(script).toContain('keaveai __complete changes 2>/dev/null');
+      expect(script).toContain('keaveai __complete specs 2>/dev/null');
     });
 
     it('should handle complex nested subcommands with flags', () => {
@@ -420,7 +420,7 @@ describe('BashGenerator', () => {
       expect(script).toContain('validate');
       expect(script).toContain('--strict');
       expect(script).toContain('--json');
-      expect(script).toContain('_weaveai_complete_specs');
+      expect(script).toContain('_keaveai_complete_specs');
     });
 
     it('should generate script that ends with complete registration', () => {
@@ -434,7 +434,7 @@ describe('BashGenerator', () => {
 
       const script = generator.generate(commands);
 
-      expect(script.trim().endsWith('complete -F _weaveai_completion weaveai')).toBe(true);
+      expect(script.trim().endsWith('complete -F _keaveai_completion keaveai')).toBe(true);
     });
 
     it('should handle empty command list', () => {
@@ -443,8 +443,8 @@ describe('BashGenerator', () => {
       const script = generator.generate(commands);
 
       expect(script).toContain('# Bash completion script');
-      expect(script).toContain('_weaveai_completion() {');
-      expect(script).toContain('complete -F _weaveai_completion weaveai');
+      expect(script).toContain('_keaveai_completion() {');
+      expect(script).toContain('complete -F _keaveai_completion keaveai');
     });
 
     it('should handle commands with no flags', () => {

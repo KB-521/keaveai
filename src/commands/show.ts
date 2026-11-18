@@ -99,7 +99,7 @@ export class ShowCommand {
 
     if (!params.typeOverride && isChange && isSpec) {
       console.error(`Ambiguous item '${itemName}' matches both a change and a spec.`);
-      console.error('Pass --type change|spec, or use: weaveai change show / weaveai spec show');
+      console.error('Pass --type change|spec, or use: keaveai change show / keaveai spec show');
       process.exitCode = 1;
       return;
     }
@@ -116,9 +116,9 @@ export class ShowCommand {
 
   private printNonInteractiveHint(): void {
     console.error('Nothing to show. Try one of:');
-    console.error('  weaveai show <item>');
-    console.error('  weaveai change show');
-    console.error('  weaveai spec show');
+    console.error('  keaveai show <item>');
+    console.error('  keaveai change show');
+    console.error('  keaveai spec show');
     console.error('Or run in an interactive terminal.');
   }
 

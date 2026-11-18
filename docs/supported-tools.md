@@ -1,21 +1,21 @@
 # Supported Tools
 
-WeaveAI works with many AI coding assistants. When you run `weaveai init`, WeaveAI configures selected tools using your active profile/workflow selection and delivery mode.
+KeaveAI works with many AI coding assistants. When you run `keaveai init`, KeaveAI configures selected tools using your active profile/workflow selection and delivery mode.
 
 ## How It Works
 
-For each selected tool, WeaveAI can install:
+For each selected tool, KeaveAI can install:
 
 1. **Skills** (if delivery includes skills): `.../skills/openspec-*/SKILL.md`
 2. **Commands** (if delivery includes commands): tool-specific `opsx-*` command files
 
-By default, WeaveAI uses the `core` profile, which includes:
+By default, KeaveAI uses the `core` profile, which includes:
 - `propose`
 - `explore`
 - `apply`
 - `archive`
 
-You can enable expanded workflows (`new`, `continue`, `ff`, `verify`, `sync`, `bulk-archive`, `onboard`) via `weaveai config profile`, then run `weaveai update`.
+You can enable expanded workflows (`new`, `continue`, `ff`, `verify`, `sync`, `bulk-archive`, `onboard`) via `keaveai config profile`, then run `keaveai update`.
 
 ## Tool Directory Reference
 
@@ -56,23 +56,23 @@ For CI/CD or scripted setup, use `--tools` (and optionally `--profile`):
 
 ```bash
 # Configure specific tools
-weaveai init --tools claude,cursor
+keaveai init --tools claude,cursor
 
 # Configure all supported tools
-weaveai init --tools all
+keaveai init --tools all
 
 # Skip tool configuration
-weaveai init --tools none
+keaveai init --tools none
 
 # Override profile for this init run
-weaveai init --profile core
+keaveai init --profile core
 ```
 
 **Available tool IDs (`--tools`):** `amazon-q`, `antigravity`, `auggie`, `claude`, `cline`, `codex`, `codebuddy`, `continue`, `costrict`, `crush`, `cursor`, `factory`, `gemini`, `github-copilot`, `iflow`, `kilocode`, `kiro`, `opencode`, `pi`, `qoder`, `qwen`, `roocode`, `trae`, `windsurf`
 
 ## Workflow-Dependent Installation
 
-WeaveAI installs workflow artifacts based on selected workflows:
+KeaveAI installs workflow artifacts based on selected workflows:
 
 - **Core profile (default):** `propose`, `explore`, `apply`, `archive`
 - **Custom selection:** any subset of all workflow IDs:
@@ -82,7 +82,7 @@ In other words, skill/command counts are profile-dependent and delivery-dependen
 
 ## Generated Skill Names
 
-When selected by profile/workflow config, WeaveAI generates these skills:
+When selected by profile/workflow config, KeaveAI generates these skills:
 
 - `openspec-propose`
 - `openspec-explore`

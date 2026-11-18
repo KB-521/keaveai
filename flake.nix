@@ -1,5 +1,5 @@
 {
-  description = "WeaveAI - AI-native system for spec-driven development";
+  description = "KeaveAI - AI-native system for spec-driven development";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -35,7 +35,7 @@
                 ./src
                 ./bin
                 ./schemas
-                ./weaveai-database
+                ./keaveai-database
                 ./scripts
                 ./test
                 ./package.json
@@ -74,7 +74,7 @@
 
             meta = with pkgs.lib; {
               description = "AI-native system for spec-driven development";
-              homepage = "https://github.com/Fission-AI/WeaveAI";
+              homepage = "https://github.com/KB-521/keaveai";
               license = licenses.mit;
               maintainers = [ ];
               mainProgram = "openspec";
@@ -103,7 +103,7 @@
             ];
 
             shellHook = ''
-              echo "WeaveAI development environment"
+              echo "KeaveAI development environment"
               echo "Node version: $(node --version)"
               echo "pnpm version: $(pnpm --version)"
               echo "Run 'pnpm install' to install dependencies"

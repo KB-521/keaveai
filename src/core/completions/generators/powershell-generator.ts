@@ -2,7 +2,7 @@ import { CompletionGenerator, CommandDefinition, FlagDefinition } from '../types
 import { POWERSHELL_DYNAMIC_HELPERS } from '../templates/powershell-templates.js';
 
 /**
- * Generates PowerShell completion scripts for the WeaveAI CLI.
+ * Generates PowerShell completion scripts for the KeaveAI CLI.
  * Uses Register-ArgumentCompleter for command completion.
  */
 export class PowerShellGenerator implements CompletionGenerator {
@@ -41,11 +41,11 @@ export class PowerShellGenerator implements CompletionGenerator {
     const helpers = POWERSHELL_DYNAMIC_HELPERS;
 
     // Assemble final script with template literal
-    return `# PowerShell completion script for WeaveAI CLI
+    return `# PowerShell completion script for KeaveAI CLI
 # Auto-generated - do not edit manually
 
 ${helpers}
-$weaveaiCompleter = {
+$keaveaiCompleter = {
     param($wordToComplete, $commandAst, $cursorPosition)
 
     $tokens = $commandAst.ToString() -split "\\s+"
@@ -69,7 +69,7 @@ ${commandCases}
     }
 }
 
-Register-ArgumentCompleter -CommandName weaveai -ScriptBlock $weaveaiCompleter
+Register-ArgumentCompleter -CommandName keaveai -ScriptBlock $keaveaiCompleter
 `;
   }
 
@@ -182,17 +182,17 @@ Register-ArgumentCompleter -CommandName weaveai -ScriptBlock $weaveaiCompleter
 
     switch (positionalType) {
       case 'change-id':
-        lines.push(`${indent}Get-WeaveAIChanges | Where-Object { $_ -like "$wordToComplete*" } | ForEach-Object {`);
+        lines.push(`${indent}Get-KeaveAIChanges | Where-Object { $_ -like "$wordToComplete*" } | ForEach-Object {`);
         lines.push(`${indent}    [System.Management.Automation.CompletionResult]::new($_, $_, "ParameterValue", "Change: $_")`);
         lines.push(`${indent}}`);
         break;
       case 'spec-id':
-        lines.push(`${indent}Get-WeaveAISpecs | Where-Object { $_ -like "$wordToComplete*" } | ForEach-Object {`);
+        lines.push(`${indent}Get-KeaveAISpecs | Where-Object { $_ -like "$wordToComplete*" } | ForEach-Object {`);
         lines.push(`${indent}    [System.Management.Automation.CompletionResult]::new($_, $_, "ParameterValue", "Spec: $_")`);
         lines.push(`${indent}}`);
         break;
       case 'change-or-spec-id':
-        lines.push(`${indent}$items = @(Get-WeaveAIChanges) + @(Get-WeaveAISpecs)`);
+        lines.push(`${indent}$items = @(Get-KeaveAIChanges) + @(Get-KeaveAISpecs)`);
         lines.push(`${indent}$items | Where-Object { $_ -like "$wordToComplete*" } | ForEach-Object {`);
         lines.push(`${indent}    [System.Management.Automation.CompletionResult]::new($_, $_, "ParameterValue", $_)`);
         lines.push(`${indent}}`);

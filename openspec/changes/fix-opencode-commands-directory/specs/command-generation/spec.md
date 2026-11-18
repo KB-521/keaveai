@@ -59,5 +59,5 @@ The legacy cleanup module SHALL detect and remove old OpenCode command files fro
 
 - **WHEN** a user runs `openspec init` in non-interactive mode (e.g., CI) and legacy artifacts are detected
 - **THEN** the system SHALL auto-cleanup legacy artifacts without requiring `--force`
-- **AND** legacy slash command files (100% WeaveAI-managed) SHALL be removed
-- **AND** config file cleanup SHALL only remove WeaveAI markers (never delete user files)
+- **AND** legacy slash command files (100% KeaveAI-managed) SHALL be removed
+- **AND** config file cleanup SHALL only remove KeaveAI markers (never delete user files)

@@ -1,6 +1,6 @@
 # Commands
 
-This is the reference for WeaveAI's slash commands. These commands are invoked in your AI coding assistant's chat interface (e.g., Claude Code, Cursor, Windsurf).
+This is the reference for KeaveAI's slash commands. These commands are invoked in your AI coding assistant's chat interface (e.g., Claude Code, Cursor, Windsurf).
 
 For workflow patterns and when to use each command, see [Workflows](workflows.md). For CLI commands, see [CLI](cli.md).
 
@@ -27,7 +27,7 @@ For workflow patterns and when to use each command, see [Workflows](workflows.md
 | `/opsx:bulk-archive` | Archive multiple changes at once |
 | `/opsx:onboard` | Guided tutorial through the complete workflow |
 
-The default global profile is `core`. To enable expanded workflow commands, run `weaveai config profile`, select workflows, then run `weaveai update` in your project.
+The default global profile is `core`. To enable expanded workflow commands, run `keaveai config profile`, select workflows, then run `keaveai update` in your project.
 
 ---
 
@@ -550,7 +550,7 @@ AI:  ✓ Archived add-dark-mode
 
 ### `/opsx:onboard`
 
-Guided onboarding through the complete WeaveAI workflow. An interactive tutorial using your actual codebase.
+Guided onboarding through the complete KeaveAI workflow. An interactive tutorial using your actual codebase.
 
 **Syntax:**
 ```
@@ -582,7 +582,7 @@ Guided onboarding through the complete WeaveAI workflow. An interactive tutorial
 ```
 You: /opsx:onboard
 
-AI:  Welcome to WeaveAI!
+AI:  Welcome to KeaveAI!
 
      I'll walk you through the complete workflow using your actual codebase.
      We'll find something small to improve, create a proper change for it,
@@ -654,7 +654,7 @@ The command couldn't identify which change to work on.
 
 **Solutions:**
 - Specify the change name explicitly: `/opsx:apply add-dark-mode`
-- Check that the change folder exists: `weaveai list`
+- Check that the change folder exists: `keaveai list`
 - Verify you're in the right project directory
 
 ### "No artifacts ready"
@@ -662,7 +662,7 @@ The command couldn't identify which change to work on.
 All artifacts are either complete or blocked by missing dependencies.
 
 **Solutions:**
-- Run `weaveai status --change <name>` to see what's blocking
+- Run `keaveai status --change <name>` to see what's blocking
 - Check if required artifacts exist
 - Create missing dependency artifacts first
 
@@ -671,17 +671,17 @@ All artifacts are either complete or blocked by missing dependencies.
 The specified schema doesn't exist.
 
 **Solutions:**
-- List available schemas: `weaveai schemas`
+- List available schemas: `keaveai schemas`
 - Check spelling of schema name
-- Create the schema if it's custom: `weaveai schema init <name>`
+- Create the schema if it's custom: `keaveai schema init <name>`
 
 ### Commands not recognized
 
-The AI tool doesn't recognize WeaveAI commands.
+The AI tool doesn't recognize KeaveAI commands.
 
 **Solutions:**
-- Ensure WeaveAI is initialized: `weaveai init`
-- Regenerate skills: `weaveai update`
+- Ensure KeaveAI is initialized: `keaveai init`
+- Regenerate skills: `keaveai update`
 - Check that `.claude/skills/` directory exists (for Claude Code)
 - Restart your AI tool to pick up new skills
 

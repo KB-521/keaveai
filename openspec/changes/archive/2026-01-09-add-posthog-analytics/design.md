@@ -1,6 +1,6 @@
 ## Context
 
-WeaveAI needs usage analytics to understand adoption and inform product decisions. PostHog provides a privacy-conscious analytics platform suitable for open source projects.
+KeaveAI needs usage analytics to understand adoption and inform product decisions. PostHog provides a privacy-conscious analytics platform suitable for open source projects.
 
 ## Goals / Non-Goals
 
@@ -23,7 +23,7 @@ WeaveAI needs usage analytics to understand adoption and inform product decision
 **Decision:** Telemetry enabled by default, opt-out via environment variable.
 
 ```bash
-WEAVEAI_TELEMETRY=0    # Disable telemetry
+KEAVEAI_TELEMETRY=0    # Disable telemetry
 DO_NOT_TRACK=1          # Industry standard, also respected
 ```
 
@@ -49,7 +49,7 @@ Auto-disabled when `CI=true` is detected.
   event: 'command_executed',
   properties: {
     command: 'init',      // Command name only
-    version: '1.2.3'      // WeaveAI version
+    version: '1.2.3'      // KeaveAI version
   }
 }
 ```
@@ -142,7 +142,7 @@ program
 **Decision:** One-liner on first command ever, stored "seen" flag in config.
 
 ```
-Note: WeaveAI collects anonymous usage stats. Opt out: WEAVEAI_TELEMETRY=0
+Note: KeaveAI collects anonymous usage stats. Opt out: KEAVEAI_TELEMETRY=0
 ```
 
 **Rationale:**

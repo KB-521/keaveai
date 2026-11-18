@@ -85,7 +85,7 @@ export class ListCommand {
       try {
         await fs.access(changesDir);
       } catch {
-        throw new Error("No WeaveAI changes directory found. Run 'weaveai init' first.");
+        throw new Error("No KeaveAI changes directory found. Run 'keaveai init' first.");
       }
 
       // Get all directories in changes (excluding archive)

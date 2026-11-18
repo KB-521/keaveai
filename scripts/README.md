@@ -1,6 +1,6 @@
-# WeaveAI Scripts
+# KeaveAI Scripts
 
-Utility scripts for WeaveAI maintenance and development.
+Utility scripts for KeaveAI maintenance and development.
 
 ## update-flake.sh
 

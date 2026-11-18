@@ -5,12 +5,12 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { FileSystemUtils } from '../utils/file-system.js';
 
-export const WEAVEAI_DATABASE_DIR = 'weaveai-database';
-export const WEAVEAI_DATABASE_CONTENT_DIR = 'ai-workflow';
-export const WEAVEAI_DATABASE_CODEX_SKILLS_DIR = path.join('.codex', 'skills');
-export const WEAVEAI_DATABASE_GLOBAL_SKILLS_DIR = 'global';
-export const DEFAULT_WEAVEAI_DATABASE_REPO = 'http://gitlab.metac-inc.com/front/weaveai-database.git';
-export const DEFAULT_WEAVEAI_DATABASE_BRANCH = 'main';
+export const KEAVEAI_DATABASE_DIR = 'keaveai-database';
+export const KEAVEAI_DATABASE_CONTENT_DIR = 'ai-workflow';
+export const KEAVEAI_DATABASE_CODEX_SKILLS_DIR = path.join('.codex', 'skills');
+export const KEAVEAI_DATABASE_GLOBAL_SKILLS_DIR = 'global';
+export const DEFAULT_KEAVEAI_DATABASE_REPO = 'http://gitlab.metac-inc.com/front/weaveai-database.git';
+export const DEFAULT_KEAVEAI_DATABASE_BRANCH = 'main';
 
 export type SkillTargetTool = {
   value: string;
@@ -30,15 +30,15 @@ export function getPackageRoot(): string {
 }
 
 export function getBundledDatabaseDir(): string {
-  return process.env.WEAVEAI_DATABASE_SOURCE_DIR
-    ? path.resolve(process.env.WEAVEAI_DATABASE_SOURCE_DIR)
-    : path.join(getPackageRoot(), WEAVEAI_DATABASE_DIR);
+  return process.env.KEAVEAI_DATABASE_SOURCE_DIR
+    ? path.resolve(process.env.KEAVEAI_DATABASE_SOURCE_DIR)
+    : path.join(getPackageRoot(), KEAVEAI_DATABASE_DIR);
 }
 
 export async function ensureBundledDatabaseExists(sourceDir = getBundledDatabaseDir()): Promise<void> {
-  const workflowDir = path.join(sourceDir, WEAVEAI_DATABASE_CONTENT_DIR);
+  const workflowDir = path.join(sourceDir, KEAVEAI_DATABASE_CONTENT_DIR);
   if (!(await FileSystemUtils.directoryExists(workflowDir))) {
-    throw new Error(`Bundled WeaveAI database is missing '${WEAVEAI_DATABASE_CONTENT_DIR}/' at ${sourceDir}`);
+    throw new Error(`Bundled KeaveAI database is missing '${KEAVEAI_DATABASE_CONTENT_DIR}/' at ${sourceDir}`);
   }
 }
 
@@ -49,9 +49,9 @@ export async function copyBundledDatabaseAssets(
 ): Promise<void> {
   await ensureBundledDatabaseExists(sourceDir);
 
-  const sourceWeaveAIDir = path.join(sourceDir, WEAVEAI_DATABASE_CONTENT_DIR);
-  const targetWeaveAIDir = path.join(projectPath, WEAVEAI_DATABASE_CONTENT_DIR);
-  await fs.promises.cp(sourceWeaveAIDir, targetWeaveAIDir, { recursive: true, force: true });
+  const sourceKeaveAIDir = path.join(sourceDir, KEAVEAI_DATABASE_CONTENT_DIR);
+  const targetKeaveAIDir = path.join(projectPath, KEAVEAI_DATABASE_CONTENT_DIR);
+  await fs.promises.cp(sourceKeaveAIDir, targetKeaveAIDir, { recursive: true, force: true });
 
   await syncGlobalSkills(sourceDir, projectPath, tools);
 }
@@ -93,12 +93,12 @@ export async function syncGlobalSkills(
 }
 
 export async function resolveSkillsSourceDir(sourceDir: string): Promise<string> {
-  const codexSkillsDir = path.join(sourceDir, WEAVEAI_DATABASE_CODEX_SKILLS_DIR);
+  const codexSkillsDir = path.join(sourceDir, KEAVEAI_DATABASE_CODEX_SKILLS_DIR);
   if (await FileSystemUtils.directoryExists(codexSkillsDir)) {
     return codexSkillsDir;
   }
 
-  return path.join(sourceDir, WEAVEAI_DATABASE_GLOBAL_SKILLS_DIR);
+  return path.join(sourceDir, KEAVEAI_DATABASE_GLOBAL_SKILLS_DIR);
 }
 
 export async function copyDatabaseRootContents(
@@ -123,12 +123,12 @@ export async function copyDatabaseRootContents(
 }
 
 export async function copyLegacyGlobalSkillsToCodex(sourceDir: string, projectPath: string): Promise<void> {
-  const globalDir = path.join(sourceDir, WEAVEAI_DATABASE_GLOBAL_SKILLS_DIR);
+  const globalDir = path.join(sourceDir, KEAVEAI_DATABASE_GLOBAL_SKILLS_DIR);
   if (!(await FileSystemUtils.directoryExists(globalDir))) {
     return;
   }
 
-  const targetSkillsDir = path.join(projectPath, WEAVEAI_DATABASE_CODEX_SKILLS_DIR);
+  const targetSkillsDir = path.join(projectPath, KEAVEAI_DATABASE_CODEX_SKILLS_DIR);
   await fs.promises.mkdir(targetSkillsDir, { recursive: true });
 
   const entries = await fs.promises.readdir(globalDir, { withFileTypes: true });
@@ -144,18 +144,18 @@ export async function copyLegacyGlobalSkillsToCodex(sourceDir: string, projectPa
 export async function refreshBundledDatabaseAssets(
   options: RefreshBundledDatabaseOptions = {}
 ): Promise<string> {
-  const repoUrl = options.repoUrl ?? process.env.WEAVEAI_DATABASE_REPO_URL ?? DEFAULT_WEAVEAI_DATABASE_REPO;
-  const branch = options.branch ?? process.env.WEAVEAI_DATABASE_REPO_BRANCH ?? DEFAULT_WEAVEAI_DATABASE_BRANCH;
+  const repoUrl = options.repoUrl ?? process.env.KEAVEAI_DATABASE_REPO_URL ?? DEFAULT_KEAVEAI_DATABASE_REPO;
+  const branch = options.branch ?? process.env.KEAVEAI_DATABASE_REPO_BRANCH ?? DEFAULT_KEAVEAI_DATABASE_BRANCH;
   const targetDir = path.resolve(options.targetDir ?? getBundledDatabaseDir());
-  const tempRoot = await fs.promises.mkdtemp(path.join(os.tmpdir(), 'weaveai-database-refresh-'));
-  const cloneDir = path.join(tempRoot, WEAVEAI_DATABASE_DIR);
+  const tempRoot = await fs.promises.mkdtemp(path.join(os.tmpdir(), 'keaveai-database-refresh-'));
+  const cloneDir = path.join(tempRoot, KEAVEAI_DATABASE_DIR);
 
   try {
     await runGitCommand(['clone', '--depth', '1', '--branch', branch, repoUrl, cloneDir]);
 
-    const sourceWeaveAIDir = path.join(cloneDir, WEAVEAI_DATABASE_CONTENT_DIR);
-    if (!(await FileSystemUtils.directoryExists(sourceWeaveAIDir))) {
-      throw new Error(`Remote repository is missing '${WEAVEAI_DATABASE_CONTENT_DIR}/'`);
+    const sourceKeaveAIDir = path.join(cloneDir, KEAVEAI_DATABASE_CONTENT_DIR);
+    if (!(await FileSystemUtils.directoryExists(sourceKeaveAIDir))) {
+      throw new Error(`Remote repository is missing '${KEAVEAI_DATABASE_CONTENT_DIR}/'`);
     }
 
     await fs.promises.rm(targetDir, { recursive: true, force: true });

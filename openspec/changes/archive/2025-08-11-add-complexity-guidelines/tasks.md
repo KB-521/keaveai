@@ -1,6 +1,6 @@
 # Implementation Tasks
 
-## 1. Update WeaveAI README
+## 1. Update KeaveAI README
 - [x] 1.1 Add "Start Simple" section after Core Principle
 - [x] 1.2 Add complexity triggers to "When to Create Change Proposals" section
 - [x] 1.3 Update AI workflow guidance to emphasize minimal implementations

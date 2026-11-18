@@ -1,7 +1,7 @@
 # Initialize TypeScript Project
 
 ## Why
-The WeaveAI project needs a proper TypeScript foundation to build the minimal CLI that helps developers set up WeaveAI file structures and keep AI instructions updated.
+The KeaveAI project needs a proper TypeScript foundation to build the minimal CLI that helps developers set up KeaveAI file structures and keep AI instructions updated.
 
 ## What Changes
 - Create TypeScript project configuration with ESM modules (package.json, tsconfig.json)

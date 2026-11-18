@@ -9,7 +9,7 @@ import type { SkillTemplate, CommandTemplate } from '../types.js';
 export function getNewChangeSkillTemplate(): SkillTemplate {
   return {
     name: 'openspec-new-change',
-    description: 'Start a new WeaveAI change using the experimental artifact workflow. Use when the user wants to create a new feature, fix, or modification with a structured step-by-step approach.',
+    description: 'Start a new KeaveAI change using the experimental artifact workflow. Use when the user wants to create a new feature, fix, or modification with a structured step-by-step approach.',
     instructions: `Start a new change using the experimental artifact-driven approach.
 
 **Input**: The user's request should include a change name (kebab-case) OR a description of what they want to build.
@@ -31,20 +31,20 @@ export function getNewChangeSkillTemplate(): SkillTemplate {
 
    **Use a different schema only if the user mentions:**
    - A specific schema name → use \`--schema <name>\`
-   - "show workflows" or "what workflows" → run \`weaveai schemas --json\` and let them choose
+   - "show workflows" or "what workflows" → run \`keaveai schemas --json\` and let them choose
 
    **Otherwise**: Omit \`--schema\` to use the default.
 
 3. **Create the change directory**
    \`\`\`bash
-   weaveai new change "<name>"
+   keaveai new change "<name>"
    \`\`\`
    Add \`--schema <name>\` only if the user requested a specific workflow.
    This creates a scaffolded change at \`openspec/changes/<name>/\` with the selected schema.
 
 4. **Show the artifact status**
    \`\`\`bash
-   weaveai status --change "<name>"
+   keaveai status --change "<name>"
    \`\`\`
    This shows which artifacts need to be created and which are ready (dependencies satisfied).
 
@@ -52,7 +52,7 @@ export function getNewChangeSkillTemplate(): SkillTemplate {
    The first artifact depends on the schema (e.g., \`proposal\` for spec-driven).
    Check the status output to find the first artifact with status "ready".
    \`\`\`bash
-   weaveai instructions <first-artifact-id> --change "<name>"
+   keaveai instructions <first-artifact-id> --change "<name>"
    \`\`\`
    This outputs the template and context for creating the first artifact.
 
@@ -106,27 +106,27 @@ export function getOpsxNewCommandTemplate(): CommandTemplate {
 
    **Use a different schema only if the user mentions:**
    - A specific schema name → use \`--schema <name>\`
-   - "show workflows" or "what workflows" → run \`weaveai schemas --json\` and let them choose
+   - "show workflows" or "what workflows" → run \`keaveai schemas --json\` and let them choose
 
    **Otherwise**: Omit \`--schema\` to use the default.
 
 3. **Create the change directory**
    \`\`\`bash
-   weaveai new change "<name>"
+   keaveai new change "<name>"
    \`\`\`
    Add \`--schema <name>\` only if the user requested a specific workflow.
    This creates a scaffolded change at \`openspec/changes/<name>/\` with the selected schema.
 
 4. **Show the artifact status**
    \`\`\`bash
-   weaveai status --change "<name>"
+   keaveai status --change "<name>"
    \`\`\`
    This shows which artifacts need to be created and which are ready (dependencies satisfied).
 
 5. **Get instructions for the first artifact**
    The first artifact depends on the schema. Check the status output to find the first artifact with status "ready".
    \`\`\`bash
-   weaveai instructions <first-artifact-id> --change "<name>"
+   keaveai instructions <first-artifact-id> --change "<name>"
    \`\`\`
    This outputs the template and context for creating the first artifact.
 

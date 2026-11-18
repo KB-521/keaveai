@@ -1,8 +1,8 @@
-# WeaveAI Conventions Specification
+# KeaveAI Conventions Specification
 
 ## Purpose
 
-WeaveAI conventions SHALL define how system capabilities are documented, how changes are proposed and tracked, and how specifications evolve over time. This meta-specification serves as the source of truth for WeaveAI's own conventions.
+KeaveAI conventions SHALL define how system capabilities are documented, how changes are proposed and tracked, and how specifications evolve over time. This meta-specification serves as the source of truth for KeaveAI's own conventions.
 
 ## Core Principles
 
@@ -14,7 +14,7 @@ The system SHALL follow these principles:
 
 ## Directory Structure
 
-WHEN an WeaveAI project is initialized
+WHEN an KeaveAI project is initialized
 THEN it SHALL have this structure:
 ```
 openspec/

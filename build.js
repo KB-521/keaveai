@@ -11,7 +11,7 @@ const runTsc = (args = []) => {
   execFileSync(process.execPath, [tscPath, ...args], { stdio: 'inherit' });
 };
 
-console.log('🔨 Building WeaveAI...\n');
+console.log('🔨 Building KeaveAI...\n');
 
 // Clean dist directory
 if (existsSync('dist')) {

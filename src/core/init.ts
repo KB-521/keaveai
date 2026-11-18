@@ -1,7 +1,7 @@
 /**
  * Init Command
  *
- * Sets up WeaveAI with Agent Skills and /opsx:* slash commands.
+ * Sets up KeaveAI with Agent Skills and /opsx:* slash commands.
  * This is the unified setup command that replaces both the old init and experimental commands.
  */
 
@@ -14,7 +14,7 @@ import { FileSystemUtils } from '../utils/file-system.js';
 import { transformToHyphenCommands } from '../utils/command-references.js';
 import {
   AI_TOOLS,
-  WEAVEAI_DIR_NAME,
+  KEAVEAI_DIR_NAME,
   AIToolOption,
 } from './config.js';
 import { PALETTE } from './styles/palette.js';
@@ -47,12 +47,12 @@ import { getAvailableTools } from './available-tools.js';
 import { migrateIfNeeded } from './migration.js';
 import { ensureAgentConfigFile } from './agent-config.js';
 import {
-  WEAVEAI_DATABASE_CONTENT_DIR,
+  KEAVEAI_DATABASE_CONTENT_DIR,
   copyBundledDatabaseAssets,
 } from './database-assets.js';
 
 const require = createRequire(import.meta.url);
-const { version: WEAVEAI_VERSION } = require('../../package.json');
+const { version: KEAVEAI_VERSION } = require('../../package.json');
 
 // -----------------------------------------------------------------------------
 // Constants
@@ -109,10 +109,10 @@ export class InitCommand {
 
   async execute(targetPath: string): Promise<void> {
     const projectPath = path.resolve(targetPath);
-    const weaveaiPath = path.join(projectPath, WEAVEAI_DATABASE_CONTENT_DIR);
+    const keaveaiPath = path.join(projectPath, KEAVEAI_DATABASE_CONTENT_DIR);
 
     // Validation happens silently in the background
-    const extendMode = await this.validate(projectPath, weaveaiPath);
+    const extendMode = await this.validate(projectPath, keaveaiPath);
 
     // Detect available tools in the project (task 7.1)
     const detectedTools = getAvailableTools(projectPath);
@@ -125,8 +125,8 @@ export class InitCommand {
     const selectedToolIds = await this.getSelectedTools(toolStates, extendMode, detectedTools, projectPath);
     const validatedTools = this.validateTools(selectedToolIds, toolStates);
 
-    // Copy bundled WeaveAI database assets to the target project.
-    await this.syncWeaveAIDatabase(projectPath, validatedTools);
+    // Copy bundled KeaveAI database assets to the target project.
+    await this.syncKeaveAIDatabase(projectPath, validatedTools);
     await ensureAgentConfigFile(projectPath);
     this.displayDatabaseSyncSuccess(validatedTools);
   }
@@ -187,7 +187,7 @@ export class InitCommand {
 
     if (this.force || !canPrompt) {
       // --force flag or non-interactive mode: proceed with cleanup automatically.
-      // Legacy slash commands are 100% WeaveAI-managed, and config file cleanup
+      // Legacy slash commands are 100% KeaveAI-managed, and config file cleanup
       // only removes markers (never deletes files), so auto-cleanup is safe.
       await this.performLegacyCleanup(projectPath, detection);
       return;
@@ -300,7 +300,7 @@ export class InitCommand {
       .map((toolId) => AI_TOOLS.find((t) => t.value === toolId)?.name || toolId);
 
     if (configuredNames.length > 0) {
-      console.log(`WeaveAI configured: ${configuredNames.join(', ')} (pre-selected)`);
+      console.log(`KeaveAI configured: ${configuredNames.join(', ')} (pre-selected)`);
     }
 
     const detectedOnlyNames = detectedTools
@@ -445,7 +445,7 @@ export class InitCommand {
       return;
     }
 
-    const spinner = this.startSpinner('Creating WeaveAI structure...');
+    const spinner = this.startSpinner('Creating KeaveAI structure...');
 
     const directories = [
       openspecPath,
@@ -460,7 +460,7 @@ export class InitCommand {
 
     spinner.stopAndPersist({
       symbol: PALETTE.white('▌'),
-      text: PALETTE.white('WeaveAI structure created'),
+      text: PALETTE.white('KeaveAI structure created'),
     });
   }
 
@@ -516,7 +516,7 @@ export class InitCommand {
             // Generate SKILL.md content with YAML frontmatter including generatedBy
             // Use hyphen-based command references for OpenCode
             const transformer = tool.value === 'opencode' ? transformToHyphenCommands : undefined;
-            const skillContent = generateSkillContent(template, WEAVEAI_VERSION, transformer);
+            const skillContent = generateSkillContent(template, KEAVEAI_VERSION, transformer);
 
             // Write the skill file
             await FileSystemUtils.writeFile(skillFile, skillContent);
@@ -614,7 +614,7 @@ export class InitCommand {
     configStatus: 'created' | 'exists' | 'skipped'
   ): void {
     console.log();
-    console.log(chalk.bold('WeaveAI Setup Complete'));
+    console.log(chalk.bold('KeaveAI Setup Complete'));
     console.log();
 
     // Show created vs refreshed tools
@@ -665,8 +665,8 @@ export class InitCommand {
       console.log(`Config: openspec/config.yaml (schema: ${DEFAULT_SCHEMA})`);
     } else if (configStatus === 'exists') {
       // Show actual filename (config.yaml or config.yml)
-      const configYaml = path.join(projectPath, WEAVEAI_DIR_NAME, 'config.yaml');
-      const configYml = path.join(projectPath, WEAVEAI_DIR_NAME, 'config.yml');
+      const configYaml = path.join(projectPath, KEAVEAI_DIR_NAME, 'config.yaml');
+      const configYml = path.join(projectPath, KEAVEAI_DIR_NAME, 'config.yml');
       const configName = fs.existsSync(configYaml) ? 'config.yaml' : fs.existsSync(configYml) ? 'config.yml' : 'config.yaml';
       console.log(`Config: openspec/${configName} (exists)`);
     } else {
@@ -685,7 +685,7 @@ export class InitCommand {
       console.log(chalk.bold('Getting started:'));
       console.log('  Start your first change: $req-dev "your idea" (in codex)');
     } else {
-      console.log("Done. Run 'weaveai config profile' to configure your workflows.");
+      console.log("Done. Run 'keaveai config profile' to configure your workflows.");
     }
 
     // Links
@@ -715,9 +715,9 @@ export class InitCommand {
     tools: Array<{ value: string; name: string; skillsDir: string; wasConfigured: boolean }>
   ): void {
     console.log();
-    console.log(chalk.bold('WeaveAI Setup Complete'));
+    console.log(chalk.bold('KeaveAI Setup Complete'));
     console.log();
-    console.log(`Initialized: ${WEAVEAI_DATABASE_CONTENT_DIR}/`);
+    console.log(`Initialized: ${KEAVEAI_DATABASE_CONTENT_DIR}/`);
 
     if (tools.length > 0) {
       const toolDirs = [...new Set(tools.map((t) => t.skillsDir))].join(', ');
@@ -731,26 +731,26 @@ export class InitCommand {
     console.log();
   }
 
-  private async syncWeaveAIDatabase(
+  private async syncKeaveAIDatabase(
     projectPath: string,
     tools: Array<{ value: string; name: string; skillsDir: string; wasConfigured: boolean }>
   ): Promise<void> {
     if (
-      process.env.WEAVEAI_INIT_SKIP_DATABASE_SYNC === '1' ||
-      process.env.WEAVEAI_INIT_SKIP_REMOTE_SYNC === '1'
+      process.env.KEAVEAI_INIT_SKIP_DATABASE_SYNC === '1' ||
+      process.env.KEAVEAI_INIT_SKIP_REMOTE_SYNC === '1'
     ) {
       return;
     }
 
-    const spinner = ora('Installing bundled WeaveAI database...').start();
+    const spinner = ora('Installing bundled KeaveAI database...').start();
 
     try {
       await copyBundledDatabaseAssets(projectPath, tools);
-      spinner.succeed('Bundled WeaveAI database installed');
+      spinner.succeed('Bundled KeaveAI database installed');
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
-      spinner.fail(`Bundled WeaveAI database install failed: ${message}`);
-      throw new Error(`Failed to install bundled WeaveAI database: ${message}`);
+      spinner.fail(`Bundled KeaveAI database install failed: ${message}`);
+      throw new Error(`Failed to install bundled KeaveAI database: ${message}`);
     }
   }
 

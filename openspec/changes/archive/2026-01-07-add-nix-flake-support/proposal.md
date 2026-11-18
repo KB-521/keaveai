@@ -1,6 +1,6 @@
 ## Why
 
-WeaveAI users on NixOS or using the Nix package manager cannot easily install or run WeaveAI without going through npm. Adding a Nix flake makes WeaveAI a first-class citizen in the Nix ecosystem, enabling users to run `nix run github:Fission-AI/WeaveAI -- init` or include WeaveAI in their development environments declaratively.
+KeaveAI users on NixOS or using the Nix package manager cannot easily install or run KeaveAI without going through npm. Adding a Nix flake makes KeaveAI a first-class citizen in the Nix ecosystem, enabling users to run `nix run github:Fission-AI/WeaveAI -- init` or include KeaveAI in their development environments declaratively.
 
 ## What Changes
 
@@ -12,7 +12,7 @@ WeaveAI users on NixOS or using the Nix package manager cannot easily install or
 ## Capabilities
 
 ### New Capabilities
-- `nix-flake-support`: Nix flake configuration for building and running WeaveAI
+- `nix-flake-support`: Nix flake configuration for building and running KeaveAI
 
 ### Modified Capabilities
 - None

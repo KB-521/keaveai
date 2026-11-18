@@ -1,6 +1,6 @@
 # Multi-Language Guide
 
-Configure WeaveAI to generate artifacts in languages other than English.
+Configure KeaveAI to generate artifacts in languages other than English.
 
 ## Quick Setup
 
@@ -104,7 +104,7 @@ To verify your language config is working:
 
 ```bash
 # Check the instructions - should show your language context
-weaveai instructions proposal --change my-change
+keaveai instructions proposal --change my-change
 
 # Output will include your language context
 ```

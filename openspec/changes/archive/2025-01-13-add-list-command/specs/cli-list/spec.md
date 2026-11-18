@@ -51,7 +51,7 @@ IF a change directory has no `tasks.md` file
 THEN display the change with "No tasks" status
 
 IF `openspec/changes/` directory doesn't exist
-THEN display error: "No WeaveAI changes directory found. Run 'openspec init' first."
+THEN display error: "No KeaveAI changes directory found. Run 'openspec init' first."
 AND exit with code 1
 
 ### Sorting
@@ -66,4 +66,4 @@ Developers need a quick way to:
 - Understand the overall project evolution status
 - Get a bird's-eye view without opening multiple files
 
-This command provides that visibility with minimal effort, following WeaveAI's philosophy of simplicity and clarity.
+This command provides that visibility with minimal effort, following KeaveAI's philosophy of simplicity and clarity.

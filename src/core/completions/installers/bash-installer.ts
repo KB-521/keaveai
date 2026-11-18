@@ -15,8 +15,8 @@ export class BashInstaller {
    * Markers for .bashrc configuration management
    */
   private readonly BASHRC_MARKERS = {
-    start: '# WEAVEAI:START',
-    end: '# WEAVEAI:END',
+    start: '# KEAVEAI:START',
+    end: '# KEAVEAI:END',
   };
 
   constructor(homeDir: string = os.homedir()) {
@@ -61,7 +61,7 @@ export class BashInstaller {
     const localCompletionDir = path.join(this.homeDir, '.local', 'share', 'bash-completion', 'completions');
 
     // For user installation, use local directory
-    return path.join(localCompletionDir, 'weaveai');
+    return path.join(localCompletionDir, 'keaveai');
   }
 
   /**
@@ -101,7 +101,7 @@ export class BashInstaller {
    */
   private generateBashrcConfig(completionsDir: string): string {
     return [
-      '# WeaveAI shell completions configuration',
+      '# KeaveAI shell completions configuration',
       `if [ -d "${completionsDir}" ]; then`,
       `  for f in "${completionsDir}"/*; do`,
       '    [ -f "$f" ] && . "$f"',
@@ -118,7 +118,7 @@ export class BashInstaller {
    */
   async configureBashrc(completionsDir: string): Promise<boolean> {
     // Check if auto-configuration is disabled
-    if (process.env.WEAVEAI_NO_AUTO_CONFIG === '1') {
+    if (process.env.KEAVEAI_NO_AUTO_CONFIG === '1') {
       return false;
     }
 
@@ -314,7 +314,7 @@ export class BashInstaller {
       '',
       'To enable completions, add the following to your ~/.bashrc file:',
       '',
-      `  # Source WeaveAI completions`,
+      `  # Source KeaveAI completions`,
       `  if [ -d "${completionsDir}" ]; then`,
       `    for f in "${completionsDir}"/*; do`,
       '      [ -f "$f" ] && . "$f"',

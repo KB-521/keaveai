@@ -16,7 +16,7 @@ describe('InitCommand agent.config', () => {
   });
 
   it('creates an empty agent.config file in the project root when missing', async () => {
-    const projectDir = path.join(os.tmpdir(), `weaveai-init-agent-config-${randomUUID()}`);
+    const projectDir = path.join(os.tmpdir(), `keaveai-init-agent-config-${randomUUID()}`);
     createdDirs.push(projectDir);
     await fs.mkdir(projectDir, { recursive: true });
     vi.spyOn(console, 'log').mockImplementation(() => {});
@@ -28,7 +28,7 @@ describe('InitCommand agent.config', () => {
   });
 
   it('does not overwrite an existing agent.config file', async () => {
-    const projectDir = path.join(os.tmpdir(), `weaveai-init-agent-config-${randomUUID()}`);
+    const projectDir = path.join(os.tmpdir(), `keaveai-init-agent-config-${randomUUID()}`);
     createdDirs.push(projectDir);
     await fs.mkdir(projectDir, { recursive: true });
     await fs.writeFile(path.join(projectDir, 'agent.config'), 'existing config\n');

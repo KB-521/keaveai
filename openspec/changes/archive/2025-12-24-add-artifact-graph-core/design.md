@@ -2,7 +2,7 @@
 
 This implements "Slice 1: What's Ready?" from the artifact POC analysis. The core insight is using the filesystem as a database - artifact completion is detected by file existence, making the system stateless and version-control friendly.
 
-This module will coexist with the current WeaveAI system as a parallel capability, potentially enabling future migration or integration.
+This module will coexist with the current KeaveAI system as a parallel capability, potentially enabling future migration or integration.
 
 ## Goals / Non-Goals
 
@@ -19,7 +19,7 @@ This module will coexist with the current WeaveAI system as a parallel capabilit
 - Multi-change management (Slice 2)
 - Template resolution and enrichment (Slice 3)
 - Agent integration or Claude commands
-- Replacing existing WeaveAI functionality
+- Replacing existing KeaveAI functionality
 
 ## Decisions
 

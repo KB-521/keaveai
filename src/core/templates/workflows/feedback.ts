@@ -9,8 +9,8 @@ import type { SkillTemplate } from '../types.js';
 export function getFeedbackSkillTemplate(): SkillTemplate {
   return {
     name: 'feedback',
-    description: 'Collect and submit user feedback about WeaveAI with context enrichment and anonymization.',
-    instructions: `Help the user submit feedback about WeaveAI.
+    description: 'Collect and submit user feedback about KeaveAI with context enrichment and anonymization.',
+    instructions: `Help the user submit feedback about KeaveAI.
 
 **Goal**: Guide the user through collecting, enriching, and submitting feedback while ensuring privacy through anonymization.
 
@@ -45,8 +45,8 @@ export function getFeedbackSkillTemplate(): SkillTemplate {
    - Allow the user to request modifications
 
 5. **Submit on confirmation**
-   - Use the \`weaveai feedback\` command to submit
-   - Format: \`weaveai feedback "title" --body "body content"\`
+   - Use the \`keaveai feedback\` command to submit
+   - Format: \`keaveai feedback "title" --body "body content"\`
    - The command will automatically add metadata (version, platform, timestamp)
 
 **Example Draft**

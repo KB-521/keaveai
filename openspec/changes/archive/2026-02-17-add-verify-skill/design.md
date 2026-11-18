@@ -55,7 +55,7 @@ Both are generated from the template functions, with YAML frontmatter automatica
 
 **Alternative 1: Static skill files in repository**
 
-Create `.claude/skills/openspec-verify-change/SKILL.md` as a static file in the WeaveAI repository.
+Create `.claude/skills/openspec-verify-change/SKILL.md` as a static file in the KeaveAI repository.
 
 **Rejected because:**
 - Inconsistent with all other opsx skills

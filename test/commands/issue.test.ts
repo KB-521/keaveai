@@ -16,7 +16,7 @@ import {
 } from '../../src/commands/issue.js';
 
 function createTempProject(): string {
-  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'weaveai-issue-test-'));
+  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'keaveai-issue-test-'));
   fs.mkdirSync(path.join(tempDir, 'ai-workflow'), { recursive: true });
   fs.writeFileSync(path.join(tempDir, 'ai-workflow', 'README.md'), '# AI Workflow\n');
   fs.mkdirSync(path.join(tempDir, 'ai-workflow', 'sdd'), { recursive: true });
@@ -70,7 +70,7 @@ describe('IssueCommand', () => {
     vi.restoreAllMocks();
   });
 
-  it('uses WeaveAI initialized paths by default', () => {
+  it('uses KeaveAI initialized paths by default', () => {
     const defaults = getDefaultIssuePaths();
 
     expect(defaults).toContain('ai-workflow');
@@ -126,10 +126,10 @@ describe('IssueCommand', () => {
   it('builds GitLab merge request push options', () => {
     const args = buildGitLabMergeRequestPushArgs({
       remote: 'origin',
-      branch: 'weaveai/init-test',
+      branch: 'keaveai/init-test',
       target: 'main',
-      title: 'Initialize WeaveAI',
-      description: 'Install WeaveAI',
+      title: 'Initialize KeaveAI',
+      description: 'Install KeaveAI',
     });
 
     expect(args).toEqual([
@@ -139,11 +139,11 @@ describe('IssueCommand', () => {
       '-o',
       'merge_request.target=main',
       '-o',
-      'merge_request.title=Initialize WeaveAI',
+      'merge_request.title=Initialize KeaveAI',
       '-o',
-      'merge_request.description=Install WeaveAI',
+      'merge_request.description=Install KeaveAI',
       'origin',
-      'weaveai/init-test',
+      'keaveai/init-test',
     ]);
   });
 
@@ -153,11 +153,11 @@ describe('IssueCommand', () => {
     });
 
     const command = new IssueCommand(runner, tempDir);
-    await command.execute({ dryRun: true, branch: 'weaveai/init-test' });
+    await command.execute({ dryRun: true, branch: 'keaveai/init-test' });
 
     expect(calls.some((args) => args[0] === 'checkout')).toBe(false);
     expect(calls.some((args) => args[0] === 'push')).toBe(false);
-    expect(consoleLogSpy).toHaveBeenCalledWith('WeaveAI issue dry run:');
+    expect(consoleLogSpy).toHaveBeenCalledWith('KeaveAI issue dry run:');
     expect(consoleLogSpy).toHaveBeenCalledWith(
       '  Remote: http://gitlab.metac-inc.com/front/weaveai-database.git'
     );
@@ -202,7 +202,7 @@ describe('IssueCommand', () => {
       }
       if (args[0] === 'push') {
         return {
-          stderr: 'remote: View merge request for weaveai/init-test: https://gitlab.example.com/acme/app/-/merge_requests/1\n',
+          stderr: 'remote: View merge request for keaveai/init-test: https://gitlab.example.com/acme/app/-/merge_requests/1\n',
         };
       }
       return {};
@@ -210,23 +210,23 @@ describe('IssueCommand', () => {
 
     const command = new IssueCommand(runner, tempDir);
     await command.execute({
-      branch: 'weaveai/init-test',
-      title: 'Install WeaveAI',
-      message: 'chore: install WeaveAI',
+      branch: 'keaveai/init-test',
+      title: 'Install KeaveAI',
+      message: 'chore: install KeaveAI',
       description: 'Install initialized content',
     });
 
-    expect(calls).toContainEqual(['checkout', '-b', 'weaveai/init-test']);
+    expect(calls).toContainEqual(['checkout', '-b', 'keaveai/init-test']);
     expect(calls.some((args) => args[0] === 'clone' && args.includes('http://gitlab.metac-inc.com/front/weaveai-database.git'))).toBe(true);
     expect(calls.some((args) => args[0] === 'add' && args.includes('ai-workflow'))).toBe(true);
     expect(calls.some((args) => args[0] === 'add' && args.includes(path.join('.codex', 'skills')))).toBe(true);
     expect(calls.some((args) => args[0] === 'add' && args.includes('global'))).toBe(false);
-    expect(calls).toContainEqual(['commit', '-m', 'chore: install WeaveAI']);
+    expect(calls).toContainEqual(['commit', '-m', 'chore: install KeaveAI']);
 
     const pushCall = calls.find((args) => args[0] === 'push');
     expect(pushCall).toBeDefined();
     expect(pushCall).toContain('merge_request.create');
-    expect(pushCall).toContain('merge_request.title=Install WeaveAI');
+    expect(pushCall).toContain('merge_request.title=Install KeaveAI');
     expect(pushCall).toContain('http://gitlab.metac-inc.com/front/weaveai-database.git');
     expect(consoleLogSpy).not.toHaveBeenCalledWith('Files:');
     expect(consoleLogSpy).not.toHaveBeenCalledWith(expect.stringContaining('.codex/skills/openspec-propose/SKILL.md'));
@@ -283,8 +283,8 @@ describe('IssueCommand', () => {
 
     const command = new IssueCommand(runner, tempDir);
     await command.execute({
-      branch: 'weaveai/init-test',
-      title: 'Install WeaveAI',
+      branch: 'keaveai/init-test',
+      title: 'Install KeaveAI',
     });
 
     expect(observedCopy).toEqual({
@@ -313,7 +313,7 @@ describe('IssueCommand', () => {
     });
 
     const command = new IssueCommand(runner, tempDir);
-    await command.execute({ branch: 'weaveai/init-test' });
+    await command.execute({ branch: 'keaveai/init-test' });
 
     const expectedTitle = buildDefaultTitle(tempDir);
     expect(calls).toContainEqual(['commit', '-m', expectedTitle]);

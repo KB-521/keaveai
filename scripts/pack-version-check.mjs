@@ -58,7 +58,7 @@ function main() {
     tgzPath = path.resolve(filename);
     log(`Created: ${tgzPath}`);
 
-    work = mkdtempSync(path.join(tmpdir(), 'weaveai-pack-check-'));
+    work = mkdtempSync(path.join(tmpdir(), 'keaveai-pack-check-'));
     log(`Temp dir: ${work}`);
 
     // Make a tiny project
@@ -81,7 +81,7 @@ function main() {
     run('npm', ['install', tgzPath, '--silent', '--no-audit', '--no-fund'], { cwd: work, env });
 
     // Run the installed CLI via Node to avoid bin resolution/platform issues
-    const binRel = path.join('node_modules', pkg.name, 'bin', 'weaveai.js');
+    const binRel = path.join('node_modules', pkg.name, 'bin', 'keaveai.js');
     const actual = run(process.execPath, [binRel, '--version'], { cwd: work }).trim();
 
     if (actual !== expected) {

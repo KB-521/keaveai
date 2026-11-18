@@ -1,10 +1,10 @@
 # Getting Started
 
-This guide explains how WeaveAI works after you've installed and initialized it. For installation instructions, see the [main README](../README.md#quick-start).
+This guide explains how KeaveAI works after you've installed and initialized it. For installation instructions, see the [main README](../README.md#quick-start).
 
 ## How It Works
 
-WeaveAI helps you and your AI coding assistant agree on what to build before any code is written.
+KeaveAI helps you and your AI coding assistant agree on what to build before any code is written.
 
 **Default quick path (core profile):**
 
@@ -18,11 +18,11 @@ WeaveAI helps you and your AI coding assistant agree on what to build before any
 /opsx:new ──► /opsx:ff or /opsx:continue ──► /opsx:apply ──► /opsx:verify ──► /opsx:archive
 ```
 
-The default global profile is `core`, which includes `propose`, `explore`, `apply`, and `archive`. You can enable the expanded workflow commands with `weaveai config profile` and then `weaveai update`.
+The default global profile is `core`, which includes `propose`, `explore`, `apply`, and `archive`. You can enable the expanded workflow commands with `keaveai config profile` and then `keaveai update`.
 
-## What WeaveAI Creates
+## What KeaveAI Creates
 
-After running `weaveai init`, your project has this structure:
+After running `keaveai init`, your project has this structure:
 
 ```
 openspec/
@@ -70,7 +70,7 @@ You can always go back and refine earlier artifacts as you learn more during imp
 
 ## How Delta Specs Work
 
-Delta specs are the key concept in WeaveAI. They show what's changing relative to your current specs.
+Delta specs are the key concept in KeaveAI. They show what's changing relative to your current specs.
 
 ### The Format
 
@@ -233,16 +233,16 @@ Use the CLI to check on your changes:
 
 ```bash
 # List active changes
-weaveai list
+keaveai list
 
 # View change details
-weaveai show add-dark-mode
+keaveai show add-dark-mode
 
 # Validate spec formatting
-weaveai validate add-dark-mode
+keaveai validate add-dark-mode
 
 # Interactive dashboard
-weaveai view
+keaveai view
 ```
 
 ## Next Steps
@@ -250,4 +250,4 @@ weaveai view
 - [Workflows](workflows.md) - Common patterns and when to use each command
 - [Commands](commands.md) - Full reference for all slash commands
 - [Concepts](concepts.md) - Deeper understanding of specs, changes, and schemas
-- [Customization](customization.md) - Make WeaveAI work your way
+- [Customization](customization.md) - Make KeaveAI work your way

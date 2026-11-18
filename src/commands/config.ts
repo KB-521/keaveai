@@ -81,7 +81,7 @@ const WORKFLOW_PROMPT_META: Record<string, WorkflowPromptMeta> = {
   },
   onboard: {
     name: 'Onboard',
-    description: 'Guided onboarding flow for WeaveAI',
+    description: 'Guided onboarding flow for KeaveAI',
   },
 };
 
@@ -191,7 +191,7 @@ export function diffProfileState(before: ProfileState, after: ProfileState): Pro
 export function registerConfigCommand(program: Command): void {
   const configCmd = program
     .command('config')
-    .description('View and modify global WeaveAI configuration')
+    .description('View and modify global KeaveAI configuration')
     .option('--scope <scope>', 'Config scope (only "global" supported currently)')
     .hook('preAction', (thisCommand) => {
       const opts = thisCommand.opts();
@@ -281,7 +281,7 @@ export function registerConfigCommand(program: Command): void {
       if (!keyValidation.valid && !allowUnknown) {
         const reason = keyValidation.reason ? ` ${keyValidation.reason}.` : '';
         console.error(`Error: Invalid configuration key "${key}".${reason}`);
-        console.error('Use "weaveai config list" to see available keys.');
+        console.error('Use "keaveai config list" to see available keys.');
         console.error('Pass --allow-unknown to bypass this check.');
         process.exitCode = 1;
         return;
@@ -336,7 +336,7 @@ export function registerConfigCommand(program: Command): void {
     .action(async (options: { all?: boolean; yes?: boolean }) => {
       if (!options.all) {
         console.error('Error: --all flag is required for reset');
-        console.error('Usage: weaveai config reset --all [-y]');
+        console.error('Usage: keaveai config reset --all [-y]');
         process.exitCode = 1;
         return;
       }
@@ -436,7 +436,7 @@ export function registerConfigCommand(program: Command): void {
     .command('profile [preset]')
     .description('Configure workflow profile (interactive picker or preset shortcut)')
     .action(async (preset?: string) => {
-      // Preset shortcut: `weaveai config profile core`
+      // Preset shortcut: `keaveai config profile core`
       if (preset === 'core') {
         const config = getGlobalConfig();
         config.profile = 'core';
@@ -455,7 +455,7 @@ export function registerConfigCommand(program: Command): void {
 
       // Non-interactive check
       if (!process.stdout.isTTY) {
-        console.error('Interactive mode required. Use `weaveai config profile core` or set config via environment/flags.');
+        console.error('Interactive mode required. Use `keaveai config profile core` or set config via environment/flags.');
         process.exitCode = 1;
         return;
       }

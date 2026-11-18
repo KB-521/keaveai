@@ -1,12 +1,12 @@
 ## Why
 - GitHub Copilot supports custom slash commands through markdown files in `.github/prompts/<name>.prompt.md`. Each file includes YAML frontmatter with a `description` label and uses `$ARGUMENTS` to capture user input. This format allows teams to expose curated workflows directly in Copilot's chat interface.
-- Teams already rely on WeaveAI to manage slash-command configurations for Claude Code, Cursor, OpenCode, Codex, Kilo Code, and Windsurf. Excluding GitHub Copilot forces developers to manually maintain WeaveAI prompts in `.github/prompts/`, which leads to drift and undermines WeaveAI's "single source of truth" promise.
-- GitHub Copilot discovers prompts from the repository's `.github/prompts/` directory, making it straightforward to version control and share across the team. Adding automated generation and refresh through `openspec init` and `openspec update` eliminates manual synchronization and keeps WeaveAI instructions consistent across all AI assistants.
+- Teams already rely on KeaveAI to manage slash-command configurations for Claude Code, Cursor, OpenCode, Codex, Kilo Code, and Windsurf. Excluding GitHub Copilot forces developers to manually maintain KeaveAI prompts in `.github/prompts/`, which leads to drift and undermines KeaveAI's "single source of truth" promise.
+- GitHub Copilot discovers prompts from the repository's `.github/prompts/` directory, making it straightforward to version control and share across the team. Adding automated generation and refresh through `openspec init` and `openspec update` eliminates manual synchronization and keeps KeaveAI instructions consistent across all AI assistants.
 
 ## What Changes
-- Add GitHub Copilot to the `openspec init` tool picker with "already configured" detection similar to other editors, wiring an implementation that writes managed Markdown prompt files to `.github/prompts/` with WeaveAI marker blocks.
+- Add GitHub Copilot to the `openspec init` tool picker with "already configured" detection similar to other editors, wiring an implementation that writes managed Markdown prompt files to `.github/prompts/` with KeaveAI marker blocks.
 - Generate three GitHub Copilot prompt files—`openspec-proposal.prompt.md`, `openspec-apply.prompt.md`, and `openspec-archive.prompt.md`—whose content mirrors shared slash-command templates while conforming to Copilot's frontmatter and `$ARGUMENTS` placeholder convention.
-- Document GitHub Copilot's repository-based discovery and that WeaveAI writes prompts to `.github/prompts/` with managed blocks.
+- Document GitHub Copilot's repository-based discovery and that KeaveAI writes prompts to `.github/prompts/` with managed blocks.
 - Teach `openspec update` to refresh existing GitHub Copilot prompts in-place (only when they already exist) in the repository's `.github/prompts/` directory.
 - Document GitHub Copilot support alongside other slash-command integrations and add test coverage that exercises init/update behavior for `.github/prompts/` files.
 

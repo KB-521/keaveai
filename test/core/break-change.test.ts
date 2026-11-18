@@ -7,13 +7,13 @@ import { randomUUID } from 'crypto';
 import { BreakChangeCommand } from '../../src/core/break-change.js';
 
 const ENV_KEYS = [
-  'WEAVEAI_BREAK_CHANGE_REPO_URL',
-  'WEAVEAI_BREAK_CHANGE_REPO_BRANCH',
-  'WEAVEAI_UPDATE_REPO_URL',
-  'WEAVEAI_UPDATE_REPO_BRANCH',
-  'WEAVEAI_INIT_REPO_URL',
-  'WEAVEAI_INIT_REPO_BRANCH',
-  'WEAVEAI_DATABASE_SOURCE_DIR',
+  'KEAVEAI_BREAK_CHANGE_REPO_URL',
+  'KEAVEAI_BREAK_CHANGE_REPO_BRANCH',
+  'KEAVEAI_UPDATE_REPO_URL',
+  'KEAVEAI_UPDATE_REPO_BRANCH',
+  'KEAVEAI_INIT_REPO_URL',
+  'KEAVEAI_INIT_REPO_BRANCH',
+  'KEAVEAI_DATABASE_SOURCE_DIR',
 ];
 
 async function writeFile(filePath: string, content: string): Promise<void> {
@@ -35,13 +35,13 @@ async function pathExists(filePath: string): Promise<boolean> {
 }
 
 async function createBreakChangeRepo(parentDir: string): Promise<string> {
-  const repoDir = path.join(parentDir, 'weaveai-database');
+  const repoDir = path.join(parentDir, 'keaveai-database');
   await fs.mkdir(repoDir, { recursive: true });
 
   git(repoDir, ['init']);
   git(repoDir, ['checkout', '-b', 'main']);
-  git(repoDir, ['config', 'user.name', 'WeaveAI Test']);
-  git(repoDir, ['config', 'user.email', 'weaveai-test@example.com']);
+  git(repoDir, ['config', 'user.name', 'KeaveAI Test']);
+  git(repoDir, ['config', 'user.email', 'keaveai-test@example.com']);
 
   await writeFile(path.join(repoDir, '.codex', 'config.md'), '# Remote Codex Config\n');
   await writeFile(path.join(repoDir, '.codex', 'skills', 'init', 'SKILL.md'), '# Remote Init\n');
@@ -60,13 +60,13 @@ async function createBreakChangeRepo(parentDir: string): Promise<string> {
 }
 
 async function createLegacyBreakChangeRepo(parentDir: string): Promise<string> {
-  const repoDir = path.join(parentDir, 'legacy-weaveai-database');
+  const repoDir = path.join(parentDir, 'legacy-keaveai-database');
   await fs.mkdir(repoDir, { recursive: true });
 
   git(repoDir, ['init']);
   git(repoDir, ['checkout', '-b', 'main']);
-  git(repoDir, ['config', 'user.name', 'WeaveAI Test']);
-  git(repoDir, ['config', 'user.email', 'weaveai-test@example.com']);
+  git(repoDir, ['config', 'user.name', 'KeaveAI Test']);
+  git(repoDir, ['config', 'user.email', 'keaveai-test@example.com']);
 
   await writeFile(path.join(repoDir, 'global', 'init', 'SKILL.md'), '# Legacy Init\n');
   await writeFile(path.join(repoDir, 'ai-workflow', 'README.md'), '# Remote Workflow\n');
@@ -83,7 +83,7 @@ describe('BreakChangeCommand', () => {
   let savedEnv: Map<string, string | undefined>;
 
   beforeEach(async () => {
-    testDir = path.join(os.tmpdir(), `weaveai-break-change-test-${randomUUID()}`);
+    testDir = path.join(os.tmpdir(), `keaveai-break-change-test-${randomUUID()}`);
     await fs.mkdir(testDir, { recursive: true });
 
     savedEnv = new Map(ENV_KEYS.map((key) => [key, process.env[key]]));
@@ -112,8 +112,8 @@ describe('BreakChangeCommand', () => {
     const databaseRepo = await createBreakChangeRepo(testDir);
     const projectDir = path.join(testDir, 'project');
 
-    await writeFile(path.join(projectDir, 'weaveai', 'sdd', 'design.md'), '# Local SDD\n');
-    await writeFile(path.join(projectDir, 'weaveai', 'wiki', 'old.md'), '# Old Wiki\n');
+    await writeFile(path.join(projectDir, 'keaveai', 'sdd', 'design.md'), '# Local SDD\n');
+    await writeFile(path.join(projectDir, 'keaveai', 'wiki', 'old.md'), '# Old Wiki\n');
     await writeFile(path.join(projectDir, '.codex', 'old.md'), '# Old Codex\n');
     await writeFile(path.join(projectDir, '.cursor', 'old.md'), '# Old Cursor\n');
     await writeFile(path.join(projectDir, '.agents', 'old.md'), '# Old Agents\n');
@@ -123,7 +123,7 @@ describe('BreakChangeCommand', () => {
     await writeFile(path.join(projectDir, 'sdd', 'stale.md'), '# Stale Root SDD\n');
     await writeFile(path.join(projectDir, 'src', 'app.ts'), 'export const keep = true;\n');
 
-    process.env.WEAVEAI_DATABASE_SOURCE_DIR = databaseRepo;
+    process.env.KEAVEAI_DATABASE_SOURCE_DIR = databaseRepo;
 
     await new BreakChangeCommand().execute(projectDir);
 
@@ -132,7 +132,7 @@ describe('BreakChangeCommand', () => {
     expect(await pathExists(path.join(projectDir, 'ai-workflow', 'sdd', 'remote.md'))).toBe(false);
     expect(await pathExists(path.join(projectDir, 'ai-workflow', 'sdd', 'stale.md'))).toBe(false);
     expect(await pathExists(path.join(projectDir, 'sdd'))).toBe(false);
-    expect(await pathExists(path.join(projectDir, 'weaveai'))).toBe(false);
+    expect(await pathExists(path.join(projectDir, 'keaveai'))).toBe(false);
 
     expect(await pathExists(path.join(projectDir, '.codex', 'old.md'))).toBe(false);
     await expect(fs.readFile(path.join(projectDir, '.codex', 'config.md'), 'utf-8'))
@@ -170,18 +170,18 @@ describe('BreakChangeCommand', () => {
     const databaseRepo = await createBreakChangeRepo(testDir);
     const projectDir = path.join(testDir, 'project');
 
-    await writeFile(path.join(projectDir, 'weaveai', 'sdd', 'template.md'), '# Remote Template SDD\n');
+    await writeFile(path.join(projectDir, 'keaveai', 'sdd', 'template.md'), '# Remote Template SDD\n');
     await writeFile(path.join(projectDir, 'ai-workflow', 'sdd', 'original.md'), '# Original SDD\n');
     await writeFile(path.join(projectDir, 'global', 'stale', 'SKILL.md'), '# Stale Global\n');
 
-    process.env.WEAVEAI_DATABASE_SOURCE_DIR = databaseRepo;
+    process.env.KEAVEAI_DATABASE_SOURCE_DIR = databaseRepo;
 
     await new BreakChangeCommand().execute(projectDir);
 
     await expect(fs.readFile(path.join(projectDir, 'ai-workflow', 'sdd', 'original.md'), 'utf-8'))
       .resolves.toBe('# Original SDD\n');
     expect(await pathExists(path.join(projectDir, 'ai-workflow', 'sdd', 'template.md'))).toBe(false);
-    expect(await pathExists(path.join(projectDir, 'weaveai'))).toBe(false);
+    expect(await pathExists(path.join(projectDir, 'keaveai'))).toBe(false);
     expect(await pathExists(path.join(projectDir, 'global'))).toBe(false);
     await expect(fs.readFile(path.join(projectDir, '.codex', 'skills', 'init', 'SKILL.md'), 'utf-8'))
       .resolves.toBe('# Remote Init\n');
@@ -191,9 +191,9 @@ describe('BreakChangeCommand', () => {
     const databaseRepo = await createLegacyBreakChangeRepo(testDir);
     const projectDir = path.join(testDir, 'project');
 
-    await writeFile(path.join(projectDir, 'weaveai', 'sdd', 'design.md'), '# Local SDD\n');
+    await writeFile(path.join(projectDir, 'keaveai', 'sdd', 'design.md'), '# Local SDD\n');
 
-    process.env.WEAVEAI_DATABASE_SOURCE_DIR = databaseRepo;
+    process.env.KEAVEAI_DATABASE_SOURCE_DIR = databaseRepo;
 
     await new BreakChangeCommand().execute(projectDir);
 
@@ -209,7 +209,7 @@ describe('BreakChangeCommand', () => {
     await writeFile(path.join(projectDir, 'ai-workflow', 'sdd', 'design.md'), '# Local SDD\n');
     await writeFile(path.join(projectDir, '.gitignore'), 'ai-workflow/memory/LOCAL.md\n');
 
-    process.env.WEAVEAI_DATABASE_SOURCE_DIR = databaseRepo;
+    process.env.KEAVEAI_DATABASE_SOURCE_DIR = databaseRepo;
 
     await new BreakChangeCommand().execute(projectDir);
     await new BreakChangeCommand().execute(projectDir);
@@ -221,12 +221,12 @@ describe('BreakChangeCommand', () => {
     expect(entries).toHaveLength(1);
   });
 
-  it('requires existing weaveai/sdd content before migrating', async () => {
+  it('requires existing keaveai/sdd content before migrating', async () => {
     const projectDir = path.join(testDir, 'project');
     await fs.mkdir(projectDir, { recursive: true });
 
     await expect(new BreakChangeCommand().execute(projectDir)).rejects.toThrow(
-      "No weaveai/sdd or ai-workflow/sdd directory found. Run 'weaveai init' first."
+      "No keaveai/sdd or ai-workflow/sdd directory found. Run 'keaveai init' first."
     );
   });
 });

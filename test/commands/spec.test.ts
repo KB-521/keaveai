@@ -7,7 +7,7 @@ describe('spec command', () => {
   const projectRoot = process.cwd();
   const testDir = path.join(projectRoot, 'test-spec-command-tmp');
   const specsDir = path.join(testDir, 'openspec', 'specs');
-  const openspecBin = path.join(projectRoot, 'bin', 'weaveai.js');
+  const openspecBin = path.join(projectRoot, 'bin', 'keaveai.js');
   
   
   beforeEach(async () => {

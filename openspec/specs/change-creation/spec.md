@@ -1,7 +1,7 @@
 # change-creation Specification
 
 ## Purpose
-Provide programmatic utilities for creating and validating WeaveAI change directories.
+Provide programmatic utilities for creating and validating KeaveAI change directories.
 ## Requirements
 ### Requirement: Change Creation
 The system SHALL provide a function to create new change directories programmatically.

@@ -1,6 +1,6 @@
 ## Purpose
 
-The propose workflow SHALL combine change creation and artifact generation into a single command, reducing friction for new users while teaching them the WeaveAI workflow through embedded guidance.
+The propose workflow SHALL combine change creation and artifact generation into a single command, reducing friction for new users while teaching them the KeaveAI workflow through embedded guidance.
 
 ## ADDED Requirements
 

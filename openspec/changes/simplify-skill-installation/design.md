@@ -1,6 +1,6 @@
 ## Context
 
-WeaveAI currently installs 10 workflows (skills + commands) for every user, overwhelming new users. The init flow asks multiple questions (profile, delivery, tools) creating friction before users can experience value.
+KeaveAI currently installs 10 workflows (skills + commands) for every user, overwhelming new users. The init flow asks multiple questions (profile, delivery, tools) creating friction before users can experience value.
 
 Current architecture:
 - `src/core/init.ts` - Handles tool selection and skill/command generation
@@ -185,7 +185,7 @@ function migrateIfNeeded(projectPath: string, tools: AiTool[]): void {
 **Edge cases:**
 - **User manually deleted some workflows:** Migration scans what's actually installed, respecting their choices
 - **Multiple projects with different workflow sets:** First project to trigger migration sets global config; subsequent projects use it
-- **User has custom (non-WeaveAI) skills in the directory:** Ignored — scanner only matches known workflow IDs from `ALL_WORKFLOWS`
+- **User has custom (non-KeaveAI) skills in the directory:** Ignored — scanner only matches known workflow IDs from `ALL_WORKFLOWS`
 - **Migration is idempotent:** If `profile` is already set in config, no re-migration occurs
 - **Non-interactive (CI):** Same migration logic, no confirmation needed — it's preserving existing state
 

@@ -18,7 +18,7 @@ export function getArchiveChangeSkillTemplate(): SkillTemplate {
 
 1. **If no change name provided, prompt for selection**
 
-   Run \`weaveai list --json\` to get available changes. Use the **AskUserQuestion tool** to let the user select.
+   Run \`keaveai list --json\` to get available changes. Use the **AskUserQuestion tool** to let the user select.
 
    Show only active changes (not already archived).
    Include the schema used for each change if available.
@@ -27,7 +27,7 @@ export function getArchiveChangeSkillTemplate(): SkillTemplate {
 
 2. **Check artifact completion status**
 
-   Run \`weaveai status --change "<name>" --json\` to check artifact completion.
+   Run \`keaveai status --change "<name>" --json\` to check artifact completion.
 
    Parse the JSON to understand:
    - \`schemaName\`: The workflow being used
@@ -107,7 +107,7 @@ All artifacts complete. All tasks complete.
 
 **Guardrails**
 - Always prompt for change selection if not provided
-- Use artifact graph (weaveai status --json) for completion checking
+- Use artifact graph (keaveai status --json) for completion checking
 - Don't block archive on warnings - just inform and confirm
 - Preserve .openspec.yaml when moving to archive (it moves with the directory)
 - Show clear summary of what happened
@@ -133,7 +133,7 @@ export function getOpsxArchiveCommandTemplate(): CommandTemplate {
 
 1. **If no change name provided, prompt for selection**
 
-   Run \`weaveai list --json\` to get available changes. Use the **AskUserQuestion tool** to let the user select.
+   Run \`keaveai list --json\` to get available changes. Use the **AskUserQuestion tool** to let the user select.
 
    Show only active changes (not already archived).
    Include the schema used for each change if available.
@@ -142,7 +142,7 @@ export function getOpsxArchiveCommandTemplate(): CommandTemplate {
 
 2. **Check artifact completion status**
 
-   Run \`weaveai status --change "<name>" --json\` to check artifact completion.
+   Run \`keaveai status --change "<name>" --json\` to check artifact completion.
 
    Parse the JSON to understand:
    - \`schemaName\`: The workflow being used
@@ -269,7 +269,7 @@ Target archive directory already exists.
 
 **Guardrails**
 - Always prompt for change selection if not provided
-- Use artifact graph (weaveai status --json) for completion checking
+- Use artifact graph (keaveai status --json) for completion checking
 - Don't block archive on warnings - just inform and confirm
 - Preserve .openspec.yaml when moving to archive (it moves with the directory)
 - Show clear summary of what happened

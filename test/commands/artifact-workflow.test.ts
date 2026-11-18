@@ -135,7 +135,7 @@ describe('artifact-workflow CLI commands', () => {
       const result = await runCLI(['status'], { cwd: tempDir });
       expect(result.exitCode).toBe(0);
       expect(result.stdout).toContain('No active changes');
-      expect(result.stdout).toContain('weaveai new change');
+      expect(result.stdout).toContain('keaveai new change');
     });
 
     it('exits gracefully with JSON when no changes exist', async () => {

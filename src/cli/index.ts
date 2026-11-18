@@ -50,18 +50,18 @@ function getCommandPath(command: Command): string {
 
   while (current) {
     const name = current.name();
-    // Skip the root 'weaveai' command
-    if (name && name !== 'weaveai') {
+    // Skip the root 'keaveai' command
+    if (name && name !== 'keaveai') {
       names.unshift(name);
     }
     current = current.parent;
   }
 
-  return names.join(':') || 'weaveai';
+  return names.join(':') || 'keaveai';
 }
 
 program
-  .name('weaveai')
+  .name('keaveai')
   .description('AI-native system for spec-driven development')
   .version(version);
 
@@ -96,7 +96,7 @@ const toolsOptionDescription = `Configure AI tools non-interactively. Use "all",
 
 program
   .command('init [path]')
-  .description('Initialize WeaveAI in your project')
+  .description('Initialize KeaveAI in your project')
   .option('--tools <tools>', toolsOptionDescription)
   .option('--force', 'Auto-cleanup legacy files without prompting')
   .option('--profile <profile>', 'Override global config profile (core or custom)')
@@ -143,7 +143,7 @@ program
   .option('--no-interactive', 'Disable interactive prompts')
   .action(async (options?: { tool?: string; noInteractive?: boolean }) => {
     try {
-      console.log('Note: "weaveai experimental" is deprecated. Use "weaveai init" instead.');
+      console.log('Note: "keaveai experimental" is deprecated. Use "keaveai init" instead.');
       const { InitCommand } = await import('../core/init.js');
       const initCommand = new InitCommand({
         tools: options?.tool,
@@ -159,7 +159,7 @@ program
 
 program
   .command('update [path]')
-  .description('Update WeaveAI database assets from bundled content')
+  .description('Update KeaveAI database assets from bundled content')
   .action(async (targetPath = '.') => {
     try {
       const resolvedPath = path.resolve(targetPath);
@@ -174,7 +174,7 @@ program
 
 program
   .command('break-change [path]')
-  .description('Migrate initialized WeaveAI content to the bundled breaking layout')
+  .description('Migrate initialized KeaveAI content to the bundled breaking layout')
   .action(async (targetPath = '.') => {
     try {
       const resolvedPath = path.resolve(targetPath);
@@ -223,9 +223,9 @@ program
 
 program
   .command('database-update [path]')
-  .description('Refresh bundled weaveai-database assets')
-  .option('--repo <url>', 'WeaveAI database repository URL')
-  .option('--branch <branch>', 'WeaveAI database repository branch')
+  .description('Refresh bundled keaveai-database assets')
+  .option('--repo <url>', 'KeaveAI database repository URL')
+  .option('--branch <branch>', 'KeaveAI database repository branch')
   .action(async (targetPath?: string, options?: { repo?: string; branch?: string }) => {
     try {
       const databaseUpdateCommand = new DatabaseUpdateCommand();
@@ -240,11 +240,11 @@ program
 // Change command with subcommands
 const changeCmd = program
   .command('change')
-  .description('Manage WeaveAI change proposals');
+  .description('Manage KeaveAI change proposals');
 
 // Deprecation notice for noun-based commands
 changeCmd.hook('preAction', () => {
-  console.error('Warning: The "weaveai change ..." commands are deprecated. Prefer verb-first commands (e.g., "weaveai list", "weaveai validate --changes").');
+  console.error('Warning: The "keaveai change ..." commands are deprecated. Prefer verb-first commands (e.g., "keaveai list", "keaveai validate --changes").');
 });
 
 changeCmd
@@ -266,12 +266,12 @@ changeCmd
 
 changeCmd
   .command('list')
-  .description('List all active changes (DEPRECATED: use "weaveai list" instead)')
+  .description('List all active changes (DEPRECATED: use "keaveai list" instead)')
   .option('--json', 'Output as JSON')
   .option('--long', 'Show id and title with counts')
   .action(async (options?: { json?: boolean; long?: boolean }) => {
     try {
-      console.error('Warning: "weaveai change list" is deprecated. Use "weaveai list".');
+      console.error('Warning: "keaveai change list" is deprecated. Use "keaveai list".');
       const changeCommand = new ChangeCommand();
       await changeCommand.list(options);
     } catch (error) {
@@ -330,7 +330,7 @@ program
   .option('--type <type>', 'Specify item type when ambiguous: change|spec')
   .option('--strict', 'Enable strict validation mode')
   .option('--json', 'Output validation results as JSON')
-  .option('--concurrency <n>', 'Max concurrent validations (defaults to env WEAVEAI_CONCURRENCY or 6)')
+  .option('--concurrency <n>', 'Max concurrent validations (defaults to env KEAVEAI_CONCURRENCY or 6)')
   .option('--no-interactive', 'Disable interactive prompts')
   .action(async (itemName?: string, options?: { all?: boolean; changes?: boolean; specs?: boolean; type?: string; strict?: boolean; json?: boolean; noInteractive?: boolean; concurrency?: string }) => {
     try {
@@ -373,7 +373,7 @@ program
 // Feedback command
 program
   .command('feedback <message>')
-  .description('Submit feedback about WeaveAI')
+  .description('Submit feedback about KeaveAI')
   .option('--body <text>', 'Detailed description for the feedback')
   .action(async (message: string, options?: { body?: string }) => {
     try {
@@ -389,10 +389,10 @@ program
 // Issue command
 program
   .command('issue')
-  .description('Push initialized WeaveAI content as a GitLab merge request')
+  .description('Push initialized KeaveAI content as a GitLab merge request')
   .option(
     '--remote <repo>',
-    'GitLab repository URL or remote name to push to (default: weaveai-database)'
+    'GitLab repository URL or remote name to push to (default: keaveai-database)'
   )
   .option('--target <branch>', 'Merge request target branch (default: main)')
   .option('--branch <name>', 'Source branch to create')
@@ -424,7 +424,7 @@ program
 // Completion command with subcommands
 const completionCmd = program
   .command('completion')
-  .description('Manage shell completions for WeaveAI CLI');
+  .description('Manage shell completions for KeaveAI CLI');
 
 completionCmd
   .command('generate [shell]')

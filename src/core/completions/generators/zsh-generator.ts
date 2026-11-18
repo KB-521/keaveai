@@ -2,8 +2,8 @@ import { CompletionGenerator, CommandDefinition, FlagDefinition } from '../types
 import { ZSH_DYNAMIC_HELPERS } from '../templates/zsh-templates.js';
 
 /**
- * Generates Zsh completion scripts for the WeaveAI CLI.
- * Follows Zsh completion system conventions using the _weaveai function.
+ * Generates Zsh completion scripts for the KeaveAI CLI.
+ * Follows Zsh completion system conventions using the _keaveai function.
  */
 export class ZshGenerator implements CompletionGenerator {
   readonly shell = 'zsh' as const;
@@ -27,7 +27,7 @@ export class ZshGenerator implements CompletionGenerator {
     const commandCaseLines: string[] = [];
     for (const cmd of commands) {
       commandCaseLines.push(`        ${cmd.name})`);
-      commandCaseLines.push(`          _weaveai_${this.sanitizeFunctionName(cmd.name)}`);
+      commandCaseLines.push(`          _keaveai_${this.sanitizeFunctionName(cmd.name)}`);
       commandCaseLines.push('          ;;');
     }
     const commandCases = commandCaseLines.join('\n');
@@ -44,12 +44,12 @@ export class ZshGenerator implements CompletionGenerator {
     const helpers = ZSH_DYNAMIC_HELPERS;
 
     // Assemble final script with template literal
-    return `#compdef weaveai
+    return `#compdef keaveai
 
-# Zsh completion script for WeaveAI CLI
+# Zsh completion script for KeaveAI CLI
 # Auto-generated - do not edit manually
 
-_weaveai() {
+_keaveai() {
   local context state line
   typeset -A opt_args
 
@@ -64,7 +64,7 @@ ${commandList}
 
   case $state in
     command)
-      _describe "weaveai command" commands
+      _describe "keaveai command" commands
       ;;
     args)
       case $words[1] in
@@ -76,7 +76,7 @@ ${commandCases}
 
 ${commandFunctions}
 ${helpers}
-compdef _weaveai weaveai
+compdef _keaveai keaveai
 `;
   }
 
@@ -84,7 +84,7 @@ compdef _weaveai weaveai
    * Generate completion function for a specific command
    */
   private generateCommandFunction(cmd: CommandDefinition): string[] {
-    const funcName = `_weaveai_${this.sanitizeFunctionName(cmd.name)}`;
+    const funcName = `_keaveai_${this.sanitizeFunctionName(cmd.name)}`;
     const lines: string[] = [];
 
     lines.push(`${funcName}() {`);
@@ -123,7 +123,7 @@ compdef _weaveai weaveai
 
       for (const subcmd of cmd.subcommands) {
         lines.push(`        ${subcmd.name})`);
-        lines.push(`          _weaveai_${this.sanitizeFunctionName(cmd.name)}_${this.sanitizeFunctionName(subcmd.name)}`);
+        lines.push(`          _keaveai_${this.sanitizeFunctionName(cmd.name)}_${this.sanitizeFunctionName(subcmd.name)}`);
         lines.push('          ;;');
       }
 
@@ -168,7 +168,7 @@ compdef _weaveai weaveai
    * Generate completion function for a subcommand
    */
   private generateSubcommandFunction(parentName: string, subcmd: CommandDefinition): string[] {
-    const funcName = `_weaveai_${this.sanitizeFunctionName(parentName)}_${this.sanitizeFunctionName(subcmd.name)}`;
+    const funcName = `_keaveai_${this.sanitizeFunctionName(parentName)}_${this.sanitizeFunctionName(subcmd.name)}`;
     const lines: string[] = [];
 
     lines.push(`${funcName}() {`);
@@ -236,11 +236,11 @@ compdef _weaveai weaveai
   private generatePositionalSpec(positionalType?: string): string {
     switch (positionalType) {
       case 'change-id':
-        return "'*: :_weaveai_complete_changes'";
+        return "'*: :_keaveai_complete_changes'";
       case 'spec-id':
-        return "'*: :_weaveai_complete_specs'";
+        return "'*: :_keaveai_complete_specs'";
       case 'change-or-spec-id':
-        return "'*: :_weaveai_complete_items'";
+        return "'*: :_keaveai_complete_items'";
       case 'path':
         return "'*:path:_files'";
       case 'shell':

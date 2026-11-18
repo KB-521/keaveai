@@ -1,10 +1,10 @@
 # Concepts
 
-This guide explains the core ideas behind WeaveAI and how they fit together. For practical usage, see [Getting Started](getting-started.md) and [Workflows](workflows.md).
+This guide explains the core ideas behind KeaveAI and how they fit together. For practical usage, see [Getting Started](getting-started.md) and [Workflows](workflows.md).
 
 ## Philosophy
 
-WeaveAI is built around four principles:
+KeaveAI is built around four principles:
 
 ```
 fluid not rigid       — no phase gates, work on what makes sense
@@ -15,17 +15,17 @@ brownfield-first      — works with existing codebases, not just greenfield
 
 ### Why These Principles Matter
 
-**Fluid not rigid.** Traditional spec systems lock you into phases: first you plan, then you implement, then you're done. WeaveAI is more flexible — you can create artifacts in any order that makes sense for your work.
+**Fluid not rigid.** Traditional spec systems lock you into phases: first you plan, then you implement, then you're done. KeaveAI is more flexible — you can create artifacts in any order that makes sense for your work.
 
-**Iterative not waterfall.** Requirements change. Understanding deepens. What seemed like a good approach at the start might not hold up after you see the codebase. WeaveAI embraces this reality.
+**Iterative not waterfall.** Requirements change. Understanding deepens. What seemed like a good approach at the start might not hold up after you see the codebase. KeaveAI embraces this reality.
 
-**Easy not complex.** Some spec frameworks require extensive setup, rigid formats, or heavyweight processes. WeaveAI stays out of your way. Initialize in seconds, start working immediately, customize only if you need to.
+**Easy not complex.** Some spec frameworks require extensive setup, rigid formats, or heavyweight processes. KeaveAI stays out of your way. Initialize in seconds, start working immediately, customize only if you need to.
 
-**Brownfield-first.** Most software work isn't building from scratch — it's modifying existing systems. WeaveAI's delta-based approach makes it easy to specify changes to existing behavior, not just describe new systems.
+**Brownfield-first.** Most software work isn't building from scratch — it's modifying existing systems. KeaveAI's delta-based approach makes it easy to specify changes to existing behavior, not just describe new systems.
 
 ## The Big Picture
 
-WeaveAI organizes your work into two main areas:
+KeaveAI organizes your work into two main areas:
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -154,7 +154,7 @@ Quick test:
 
 ### Keep It Lightweight: Progressive Rigor
 
-WeaveAI aims to avoid bureaucracy. Use the lightest level that still makes the change verifiable.
+KeaveAI aims to avoid bureaucracy. Use the lightest level that still makes the change verifiable.
 
 **Lite spec (default):**
 - Short behavior-first requirements
@@ -345,7 +345,7 @@ Tasks are the **implementation checklist** — concrete steps with checkboxes.
 
 ## Delta Specs
 
-Delta specs are the key concept that makes WeaveAI work for brownfield development. They describe **what's changing** rather than restating the entire spec.
+Delta specs are the key concept that makes KeaveAI work for brownfield development. They describe **what's changing** rather than restating the entire spec.
 
 ### The Format
 
@@ -472,10 +472,10 @@ Create custom schemas for your team's workflow:
 
 ```bash
 # Create from scratch
-weaveai schema init research-first
+keaveai schema init research-first
 
 # Or fork an existing one
-weaveai schema fork spec-driven research-first
+keaveai schema fork spec-driven research-first
 ```
 
 **Example custom schema:**
@@ -559,7 +559,7 @@ openspec/
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                              WEAVEAI FLOW                                   │
+│                              KEAVEAI FLOW                                   │
 │                                                                              │
 │   ┌────────────────┐                                                         │
 │   │  1. START      │  /opsx:propose (core) or /opsx:new (expanded)          │

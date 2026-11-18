@@ -1,6 +1,6 @@
 # Maintainers
 
-People who maintain and guide WeaveAI.
+People who maintain and guide KeaveAI.
 
 ## Core Maintainers
 

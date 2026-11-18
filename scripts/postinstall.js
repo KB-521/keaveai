@@ -5,7 +5,7 @@
  *
  * This script runs automatically after npm install unless:
  * - CI=true environment variable is set
- * - WEAVEAI_NO_COMPLETIONS=1 environment variable is set
+ * - KEAVEAI_NO_COMPLETIONS=1 environment variable is set
  * - dist/ directory doesn't exist (dev setup scenario)
  *
  * The script never fails npm install - all errors are caught and handled gracefully.
@@ -28,8 +28,8 @@ function shouldSkipInstallation() {
   }
 
   // Skip if user opted out
-  if (process.env.WEAVEAI_NO_COMPLETIONS === '1') {
-    return { skip: true, reason: 'WEAVEAI_NO_COMPLETIONS=1 set' };
+  if (process.env.KEAVEAI_NO_COMPLETIONS === '1') {
+    return { skip: true, reason: 'KEAVEAI_NO_COMPLETIONS=1 set' };
   }
 
   return { skip: false };

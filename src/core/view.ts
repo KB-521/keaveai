@@ -13,7 +13,7 @@ export class ViewCommand {
       process.exit(1);
     }
 
-    console.log(chalk.bold('\nWeaveAI Dashboard\n'));
+    console.log(chalk.bold('\nKeaveAI Dashboard\n'));
     console.log('═'.repeat(60));
 
     // Get changes and specs data
@@ -75,7 +75,7 @@ export class ViewCommand {
     }
 
     console.log('\n' + '═'.repeat(60));
-    console.log(chalk.dim(`\nUse ${chalk.white('weaveai list --changes')} or ${chalk.white('weaveai list --specs')} for detailed views`));
+    console.log(chalk.dim(`\nUse ${chalk.white('keaveai list --changes')} or ${chalk.white('keaveai list --specs')} for detailed views`));
   }
 
   private async getChangesData(openspecDir: string): Promise<{

@@ -1,6 +1,6 @@
 ## Context
 
-WeaveAI currently resolves schemas from two locations:
+KeaveAI currently resolves schemas from two locations:
 1. User override: `~/.local/share/openspec/schemas/<name>/`
 2. Package built-in: `<npm-package>/schemas/<name>/`
 

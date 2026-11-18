@@ -2,21 +2,21 @@
 
 ## Purpose
 
-As a developer using WeaveAI, I want to update the WeaveAI instructions in my project when new versions are released, so that I can benefit from improvements to AI agent instructions.
+As a developer using KeaveAI, I want to update the KeaveAI instructions in my project when new versions are released, so that I can benefit from improvements to AI agent instructions.
 
 ## Core Requirements
 
 ### Update Behavior
 
-The update command SHALL update WeaveAI instruction files to the latest templates.
+The update command SHALL update KeaveAI instruction files to the latest templates.
 
 WHEN a user runs `openspec update` THEN the command SHALL:
 - Check if the `openspec` directory exists
 - Replace `openspec/README.md` with the latest template (complete replacement)
-- Update the WeaveAI-managed block in `CLAUDE.md` using markers
+- Update the KeaveAI-managed block in `CLAUDE.md` using markers
   - Preserve user content outside markers
   - Create `CLAUDE.md` if missing
-- Display ASCII-safe success message: "Updated WeaveAI instructions"
+- Display ASCII-safe success message: "Updated KeaveAI instructions"
 
 ### Prerequisites
 
@@ -24,14 +24,14 @@ The command SHALL require:
 - An existing `openspec` directory (created by `openspec init`)
 
 IF the `openspec` directory does not exist THEN:
-- Display error: "No WeaveAI directory found. Run 'openspec init' first."
+- Display error: "No KeaveAI directory found. Run 'openspec init' first."
 - Exit with code 1
 
 ### File Handling
 
 The update command SHALL:
 - Completely replace `openspec/README.md` with the latest template
-- Update only the WeaveAI-managed block in `CLAUDE.md` using markers
+- Update only the KeaveAI-managed block in `CLAUDE.md` using markers
 - Use the default directory name `openspec`
 - Be idempotent (repeated runs have no additional effect)
 
@@ -49,7 +49,7 @@ Not supported in this change. The default directory name `openspec` SHALL be use
 ## Success Criteria
 
 Users SHALL be able to:
-- Update WeaveAI instructions with a single command
+- Update KeaveAI instructions with a single command
 - Get the latest AI agent instructions
 - See clear confirmation of the update
 

@@ -36,7 +36,7 @@ describe('openspec CLI e2e basics', () => {
   it('shows help output', async () => {
     const result = await runCLI(['--help']);
     expect(result.exitCode).toBe(0);
-    expect(result.stdout).toContain('Usage: weaveai');
+    expect(result.stdout).toContain('Usage: keaveai');
     expect(result.stdout).toContain('init');
     expect(result.stdout).toContain('update');
     expect(result.stdout).toContain('break-change');
@@ -101,7 +101,7 @@ describe('openspec CLI e2e basics', () => {
         env: { CODEX_HOME: codexHome },
       });
       expect(result.exitCode).toBe(0);
-      expect(result.stdout).toContain('WeaveAI Setup Complete');
+      expect(result.stdout).toContain('KeaveAI Setup Complete');
       expect(result.stdout).toContain('Skills installed to: .codex/skills');
     });
 
@@ -119,7 +119,7 @@ describe('openspec CLI e2e basics', () => {
 
       const result = await runCLI(['init', '--tools', selectedTool.value], { cwd: emptyProjectDir });
       expect(result.exitCode).toBe(0);
-      expect(result.stdout).toContain('WeaveAI Setup Complete');
+      expect(result.stdout).toContain('KeaveAI Setup Complete');
       expect(result.stdout).toContain(path.join(selectedTool.skillsDir, 'skills'));
 
       const unselectedTools = AI_TOOLS.filter(
@@ -139,7 +139,7 @@ describe('openspec CLI e2e basics', () => {
 
       const result = await runCLI(['init', '--tools', 'none'], { cwd: emptyProjectDir });
       expect(result.exitCode).toBe(0);
-      expect(result.stdout).toContain('WeaveAI Setup Complete');
+      expect(result.stdout).toContain('KeaveAI Setup Complete');
 
       // With --tools none, no tool skills should be created
       const skillTools = AI_TOOLS.filter(

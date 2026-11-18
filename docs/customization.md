@@ -1,6 +1,6 @@
 # Customization
 
-WeaveAI provides three levels of customization:
+KeaveAI provides three levels of customization:
 
 | Level | What it does | Best for |
 |-------|--------------|----------|
@@ -12,7 +12,7 @@ WeaveAI provides three levels of customization:
 
 ## Project Configuration
 
-The `openspec/config.yaml` file is the easiest way to customize WeaveAI for your team. It lets you:
+The `openspec/config.yaml` file is the easiest way to customize KeaveAI for your team. It lets you:
 
 - **Set a default schema** - Skip `--schema` on every command
 - **Inject project context** - AI sees your tech stack, conventions, etc.
@@ -21,7 +21,7 @@ The `openspec/config.yaml` file is the easiest way to customize WeaveAI for your
 ### Quick Setup
 
 ```bash
-weaveai init
+keaveai init
 ```
 
 This walks you through creating a config interactively. Or create one manually:
@@ -51,10 +51,10 @@ rules:
 
 ```bash
 # Without config
-weaveai new change my-feature --schema spec-driven
+keaveai new change my-feature --schema spec-driven
 
 # With config - schema is automatic
-weaveai new change my-feature
+keaveai new change my-feature
 ```
 
 **Context and rules injection:**
@@ -82,7 +82,7 @@ Tech stack: TypeScript, React, Node.js, PostgreSQL
 
 ### Schema Resolution Order
 
-When WeaveAI needs a schema, it checks in this order:
+When KeaveAI needs a schema, it checks in this order:
 
 1. CLI flag: `--schema <name>`
 2. Change metadata (`.openspec.yaml` in the change folder)
@@ -112,7 +112,7 @@ your-project/
 The fastest way to customize is to fork a built-in schema:
 
 ```bash
-weaveai schema fork spec-driven my-workflow
+keaveai schema fork spec-driven my-workflow
 ```
 
 This copies the entire `spec-driven` schema to `openspec/schemas/my-workflow/` where you can edit it freely.
@@ -137,10 +137,10 @@ For a completely fresh workflow:
 
 ```bash
 # Interactive
-weaveai schema init research-first
+keaveai schema init research-first
 
 # Non-interactive
-weaveai schema init rapid \
+keaveai schema init rapid \
   --description "Rapid iteration workflow" \
   --artifacts "proposal,tasks" \
   --default
@@ -226,7 +226,7 @@ Templates can include:
 Before using a custom schema, validate it:
 
 ```bash
-weaveai schema validate my-workflow
+keaveai schema validate my-workflow
 ```
 
 This checks:
@@ -241,7 +241,7 @@ Once created, use your schema with:
 
 ```bash
 # Specify on command
-weaveai new change feature --schema my-workflow
+keaveai new change feature --schema my-workflow
 
 # Or set as default in config.yaml
 schema: my-workflow
@@ -253,10 +253,10 @@ Not sure which schema is being used? Check with:
 
 ```bash
 # See where a specific schema resolves from
-weaveai schema which my-workflow
+keaveai schema which my-workflow
 
 # List all available schemas
-weaveai schema which --all
+keaveai schema which --all
 ```
 
 Output shows whether it's from your project, user directory, or the package:
@@ -269,7 +269,7 @@ Path: /path/to/project/openspec/schemas/my-workflow
 
 ---
 
-> **Note:** WeaveAI also supports user-level schemas at `~/.local/share/openspec/schemas/` for sharing across projects, but project-level schemas in `openspec/schemas/` are recommended since they're version-controlled with your code.
+> **Note:** KeaveAI also supports user-level schemas at `~/.local/share/openspec/schemas/` for sharing across projects, but project-level schemas in `openspec/schemas/` are recommended since they're version-controlled with your code.
 
 ---
 
@@ -311,7 +311,7 @@ apply:
 Fork the default and add a review step:
 
 ```bash
-weaveai schema fork spec-driven with-review
+keaveai schema fork spec-driven with-review
 ```
 
 Then edit `schema.yaml` to add:

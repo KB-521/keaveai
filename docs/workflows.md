@@ -1,6 +1,6 @@
 # Workflows
 
-This guide covers common workflow patterns for WeaveAI and when to use each one. For basic setup, see [Getting Started](getting-started.md). For command reference, see [Commands](commands.md).
+This guide covers common workflow patterns for KeaveAI and when to use each one. For basic setup, see [Getting Started](getting-started.md). For command reference, see [Commands](commands.md).
 
 ## Philosophy: Actions, Not Phases
 
@@ -49,8 +49,8 @@ Typical flow:
 If you want explicit scaffold-and-build commands (`/opsx:new`, `/opsx:continue`, `/opsx:ff`, `/opsx:verify`, `/opsx:sync`, `/opsx:bulk-archive`, `/opsx:onboard`), enable them with:
 
 ```bash
-weaveai config profile
-weaveai update
+keaveai config profile
+keaveai update
 ```
 
 ## Workflow Patterns (Expanded Mode)
@@ -417,7 +417,7 @@ Catches mismatches before you close out the change.
 
 ### Name Changes Clearly
 
-Good names make `weaveai list` useful:
+Good names make `keaveai list` useful:
 
 ```text
 Good:                          Avoid:

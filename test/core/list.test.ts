@@ -35,7 +35,7 @@ describe('ListCommand', () => {
       const listCommand = new ListCommand();
       
       await expect(listCommand.execute(tempDir, 'changes')).rejects.toThrow(
-        "No WeaveAI changes directory found. Run 'weaveai init' first."
+        "No KeaveAI changes directory found. Run 'keaveai init' first."
       );
     });
 

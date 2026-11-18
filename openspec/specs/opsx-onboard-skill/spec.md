@@ -1,17 +1,17 @@
 # opsx-onboard-skill Specification
 
 ## Purpose
-Define `/opsx:onboard` behavior for guiding users through an end-to-end WeaveAI workflow on their real codebase.
+Define `/opsx:onboard` behavior for guiding users through an end-to-end KeaveAI workflow on their real codebase.
 
 ## Requirements
 ### Requirement: OPSX Onboard Skill
 
-The system SHALL provide an `/opsx:onboard` skill that guides users through their first complete WeaveAI workflow cycle with narration and real codebase work.
+The system SHALL provide an `/opsx:onboard` skill that guides users through their first complete KeaveAI workflow cycle with narration and real codebase work.
 
 #### Scenario: Skill invocation
 
 - **WHEN** user invokes `/opsx:onboard`
-- **THEN** agent checks if WeaveAI is initialized
+- **THEN** agent checks if KeaveAI is initialized
 - **AND** if not initialized, prompts user to run `openspec init` first
 - **AND** if initialized, proceeds with onboarding flow
 

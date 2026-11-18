@@ -6,8 +6,8 @@ import { FileSystemUtils, removeMarkerBlock } from '../../src/utils/file-system.
 
 describe('FileSystemUtils.updateFileWithMarkers', () => {
   let testDir: string;
-  const START_MARKER = '<!-- WEAVEAI:START -->';
-  const END_MARKER = '<!-- WEAVEAI:END -->';
+  const START_MARKER = '<!-- KEAVEAI:START -->';
+  const END_MARKER = '<!-- KEAVEAI:END -->';
 
   beforeEach(async () => {
     testDir = path.join(os.tmpdir(), `openspec-marker-test-${Date.now()}`);
@@ -21,7 +21,7 @@ describe('FileSystemUtils.updateFileWithMarkers', () => {
   describe('new file creation', () => {
     it('should create new file with markers and content', async () => {
       const filePath = path.join(testDir, 'new-file.md');
-      const content = 'WeaveAI content';
+      const content = 'KeaveAI content';
       
       await FileSystemUtils.updateFileWithMarkers(
         filePath,
@@ -41,7 +41,7 @@ describe('FileSystemUtils.updateFileWithMarkers', () => {
       const existingContent = '# Existing Content\nUser content here';
       await fs.writeFile(filePath, existingContent);
       
-      const newContent = 'WeaveAI content';
+      const newContent = 'KeaveAI content';
       await FileSystemUtils.updateFileWithMarkers(
         filePath,
         newContent,
@@ -60,13 +60,13 @@ describe('FileSystemUtils.updateFileWithMarkers', () => {
     it('should replace content between markers', async () => {
       const filePath = path.join(testDir, 'with-markers.md');
       const beforeContent = '# Before\nSome content before';
-      const oldManagedContent = 'Old WeaveAI content';
+      const oldManagedContent = 'Old KeaveAI content';
       const afterContent = '# After\nSome content after';
       
       const existingFile = `${beforeContent}\n${START_MARKER}\n${oldManagedContent}\n${END_MARKER}\n${afterContent}`;
       await fs.writeFile(filePath, existingFile);
       
-      const newContent = 'New WeaveAI content';
+      const newContent = 'New KeaveAI content';
       await FileSystemUtils.updateFileWithMarkers(
         filePath,
         newContent,
@@ -287,14 +287,14 @@ ${END_MARKER}
 });
 
 describe('removeMarkerBlock', () => {
-  const START_MARKER = '<!-- WEAVEAI:START -->';
-  const END_MARKER = '<!-- WEAVEAI:END -->';
+  const START_MARKER = '<!-- KEAVEAI:START -->';
+  const END_MARKER = '<!-- KEAVEAI:END -->';
 
   describe('basic removal', () => {
     it('should remove marker block and preserve content before', () => {
       const content = `User content before
 ${START_MARKER}
-WeaveAI content
+KeaveAI content
 ${END_MARKER}`;
       const result = removeMarkerBlock(content, START_MARKER, END_MARKER);
       expect(result).toBe('User content before\n');
@@ -304,7 +304,7 @@ ${END_MARKER}`;
 
     it('should remove marker block and preserve content after', () => {
       const content = `${START_MARKER}
-WeaveAI content
+KeaveAI content
 ${END_MARKER}
 User content after`;
       const result = removeMarkerBlock(content, START_MARKER, END_MARKER);
@@ -314,7 +314,7 @@ User content after`;
     it('should remove marker block and preserve content before and after', () => {
       const content = `User content before
 ${START_MARKER}
-WeaveAI content
+KeaveAI content
 ${END_MARKER}
 User content after`;
       const result = removeMarkerBlock(content, START_MARKER, END_MARKER);
@@ -325,7 +325,7 @@ User content after`;
 
     it('should return empty string when only markers remain', () => {
       const content = `${START_MARKER}
-WeaveAI content
+KeaveAI content
 ${END_MARKER}`;
       const result = removeMarkerBlock(content, START_MARKER, END_MARKER);
       expect(result).toBe('');
@@ -369,7 +369,7 @@ ${START_MARKER}`;
 
 
 ${START_MARKER}
-WeaveAI content
+KeaveAI content
 ${END_MARKER}
 
 
@@ -381,7 +381,7 @@ Line 2`;
     it('should handle markers with whitespace on same line', () => {
       const content = `User content
   ${START_MARKER}
-WeaveAI content
+KeaveAI content
   ${END_MARKER}
 More content`;
       const result = removeMarkerBlock(content, START_MARKER, END_MARKER);
@@ -424,16 +424,16 @@ After block content`;
   });
 
   describe('shell markers', () => {
-    const SHELL_START = '# WEAVEAI:START';
-    const SHELL_END = '# WEAVEAI:END';
+    const SHELL_START = '# KEAVEAI:START';
+    const SHELL_END = '# KEAVEAI:END';
 
     it('should work with shell-style markers', () => {
       const content = `# User config
 export PATH="/usr/local/bin:$PATH"
 
 ${SHELL_START}
-# WeaveAI managed
-alias openspec="npx weaveai"
+# KeaveAI managed
+alias openspec="npx keaveai"
 ${SHELL_END}
 
 # More user config

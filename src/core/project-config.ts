@@ -12,9 +12,9 @@ import { z } from 'zod';
  * 3. Runtime validation - uses safeParse() for resilient field-by-field validation
  *
  * Why Zod over manual validation:
- * - Helps understand WeaveAI's data interfaces at a glance
+ * - Helps understand KeaveAI's data interfaces at a glance
  * - Single source of truth for type and validation
- * - Consistent with other WeaveAI schemas
+ * - Consistent with other KeaveAI schemas
  */
 export const ProjectConfigSchema = z.object({
   // Required: which schema to use (e.g., "spec-driven", or project-local schema name)

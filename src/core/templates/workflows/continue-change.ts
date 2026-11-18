@@ -9,7 +9,7 @@ import type { SkillTemplate, CommandTemplate } from '../types.js';
 export function getContinueChangeSkillTemplate(): SkillTemplate {
   return {
     name: 'openspec-continue-change',
-    description: 'Continue working on an WeaveAI change by creating the next artifact. Use when the user wants to progress their change, create the next artifact, or continue their workflow.',
+    description: 'Continue working on an KeaveAI change by creating the next artifact. Use when the user wants to progress their change, create the next artifact, or continue their workflow.',
     instructions: `Continue working on a change by creating the next artifact.
 
 **Input**: Optionally specify a change name. If omitted, check if it can be inferred from conversation context. If vague or ambiguous you MUST prompt for available changes.
@@ -18,7 +18,7 @@ export function getContinueChangeSkillTemplate(): SkillTemplate {
 
 1. **If no change name provided, prompt for selection**
 
-   Run \`weaveai list --json\` to get available changes sorted by most recently modified. Then use the **AskUserQuestion tool** to let the user select which change to work on.
+   Run \`keaveai list --json\` to get available changes sorted by most recently modified. Then use the **AskUserQuestion tool** to let the user select which change to work on.
 
    Present the top 3-4 most recently modified changes as options, showing:
    - Change name
@@ -32,7 +32,7 @@ export function getContinueChangeSkillTemplate(): SkillTemplate {
 
 2. **Check current status**
    \`\`\`bash
-   weaveai status --change "<name>" --json
+   keaveai status --change "<name>" --json
    \`\`\`
    Parse the JSON to understand current state. The response includes:
    - \`schemaName\`: The workflow schema being used (e.g., "spec-driven")
@@ -55,7 +55,7 @@ export function getContinueChangeSkillTemplate(): SkillTemplate {
    - Pick the FIRST artifact with \`status: "ready"\` from the status output
    - Get its instructions:
      \`\`\`bash
-     weaveai instructions <artifact-id> --change "<name>" --json
+     keaveai instructions <artifact-id> --change "<name>" --json
      \`\`\`
    - Parse the JSON. The key fields are:
      - \`context\`: Project background (constraints for you - do NOT include in output)
@@ -80,7 +80,7 @@ export function getContinueChangeSkillTemplate(): SkillTemplate {
 
 4. **After creating an artifact, show progress**
    \`\`\`bash
-   weaveai status --change "<name>"
+   keaveai status --change "<name>"
    \`\`\`
 
 **Output**
@@ -137,7 +137,7 @@ export function getOpsxContinueCommandTemplate(): CommandTemplate {
 
 1. **If no change name provided, prompt for selection**
 
-   Run \`weaveai list --json\` to get available changes sorted by most recently modified. Then use the **AskUserQuestion tool** to let the user select which change to work on.
+   Run \`keaveai list --json\` to get available changes sorted by most recently modified. Then use the **AskUserQuestion tool** to let the user select which change to work on.
 
    Present the top 3-4 most recently modified changes as options, showing:
    - Change name
@@ -151,7 +151,7 @@ export function getOpsxContinueCommandTemplate(): CommandTemplate {
 
 2. **Check current status**
    \`\`\`bash
-   weaveai status --change "<name>" --json
+   keaveai status --change "<name>" --json
    \`\`\`
    Parse the JSON to understand current state. The response includes:
    - \`schemaName\`: The workflow schema being used (e.g., "spec-driven")
@@ -174,7 +174,7 @@ export function getOpsxContinueCommandTemplate(): CommandTemplate {
    - Pick the FIRST artifact with \`status: "ready"\` from the status output
    - Get its instructions:
      \`\`\`bash
-     weaveai instructions <artifact-id> --change "<name>" --json
+     keaveai instructions <artifact-id> --change "<name>" --json
      \`\`\`
    - Parse the JSON. The key fields are:
      - \`context\`: Project background (constraints for you - do NOT include in output)
@@ -199,7 +199,7 @@ export function getOpsxContinueCommandTemplate(): CommandTemplate {
 
 4. **After creating an artifact, show progress**
    \`\`\`bash
-   weaveai status --change "<name>"
+   keaveai status --change "<name>"
    \`\`\`
 
 **Output**

@@ -1,9 +1,9 @@
 ## MODIFIED Requirements
 
 ### Requirement: Directory Creation
-The command SHALL create the complete WeaveAI directory structure with all required directories and files.
+The command SHALL create the complete KeaveAI directory structure with all required directories and files.
 
-#### Scenario: Creating WeaveAI structure
+#### Scenario: Creating KeaveAI structure
 - **WHEN** `openspec init` is executed
 - **THEN** create the following directory structure:
 ```
@@ -19,17 +19,17 @@ openspec/
 The command SHALL generate required template files with appropriate content for immediate use.
 
 #### Scenario: Generating template files
-- **WHEN** initializing WeaveAI
-- **THEN** generate `AGENTS.md` containing complete WeaveAI instructions for AI assistants
+- **WHEN** initializing KeaveAI
+- **THEN** generate `AGENTS.md` containing complete KeaveAI instructions for AI assistants
 - **AND** generate `project.md` with project context template
 
 ### Requirement: AI Tool Configuration Details
 
-The command SHALL properly configure selected AI tools with WeaveAI-specific instructions using a marker system.
+The command SHALL properly configure selected AI tools with KeaveAI-specific instructions using a marker system.
 
 #### Scenario: Creating new CLAUDE.md
 - **WHEN** CLAUDE.md does not exist
-- **THEN** create new file with WeaveAI content wrapped in markers including reference to `@openspec/AGENTS.md`
+- **THEN** create new file with KeaveAI content wrapped in markers including reference to `@openspec/AGENTS.md`
 
 ### Requirement: Success Output
 
@@ -37,4 +37,4 @@ The command SHALL provide clear, actionable next steps upon successful initializ
 
 #### Scenario: Displaying success message
 - **WHEN** initialization completes successfully
-- **THEN** include prompt: "Please explain the WeaveAI workflow from openspec/AGENTS.md and how I should work with you on this project"
+- **THEN** include prompt: "Please explain the KeaveAI workflow from openspec/AGENTS.md and how I should work with you on this project"

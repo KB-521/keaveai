@@ -1,17 +1,17 @@
 # CLI Reference
 
-The public WeaveAI CLI currently exposes only the project setup and sync commands below. Legacy workflow commands remain hidden from top-level help and shell completion while the CLI surface is being narrowed.
+The public KeaveAI CLI currently exposes only the project setup and sync commands below. Legacy workflow commands remain hidden from top-level help and shell completion while the CLI surface is being narrowed.
 
 ## Commands
 
 | Command | Purpose |
 |---------|---------|
-| `weaveai init [path]` | Initialize WeaveAI content in a project |
-| `weaveai update [path]` | Refresh initialized project assets from the bundled database |
-| `weaveai break-change [path]` | Migrate initialized content to the bundled breaking layout |
-| `weaveai database-update [path]` | Refresh the bundled `weaveai-database/` directory from GitLab |
-| `weaveai issue` | Push initialized WeaveAI content as a GitLab merge request |
-| `weaveai help [command]` | Show CLI help |
+| `keaveai init [path]` | Initialize KeaveAI content in a project |
+| `keaveai update [path]` | Refresh initialized project assets from the bundled database |
+| `keaveai break-change [path]` | Migrate initialized content to the bundled breaking layout |
+| `keaveai database-update [path]` | Refresh the bundled `keaveai-database/` directory from GitLab |
+| `keaveai issue` | Push initialized KeaveAI content as a GitLab merge request |
+| `keaveai help [command]` | Show CLI help |
 
 ## Global Options
 
@@ -21,12 +21,12 @@ The public WeaveAI CLI currently exposes only the project setup and sync command
 | `--no-color` | Disable color output |
 | `--help`, `-h` | Display help for a command |
 
-## `weaveai init`
+## `keaveai init`
 
-Initialize WeaveAI in your project.
+Initialize KeaveAI in your project.
 
 ```bash
-weaveai init [path] [options]
+keaveai init [path] [options]
 ```
 
 | Option | Description |
@@ -44,45 +44,45 @@ codex
 Examples:
 
 ```bash
-weaveai init
-weaveai init . --tools codex
-weaveai init . --tools none
-weaveai init . --force
+keaveai init
+keaveai init . --tools codex
+keaveai init . --tools none
+keaveai init . --force
 ```
 
 The command also ensures the project root has an `agent.config` file.
-It installs content from the bundled `weaveai-database/` directory and does not pull from GitLab during normal initialization.
+It installs content from the bundled `keaveai-database/` directory and does not pull from GitLab during normal initialization.
 
-## `weaveai update`
+## `keaveai update`
 
-Refresh WeaveAI database assets for an initialized project from the bundled `weaveai-database/` directory.
+Refresh KeaveAI database assets for an initialized project from the bundled `keaveai-database/` directory.
 
 ```bash
-weaveai update [path]
+keaveai update [path]
 ```
 
 Example:
 
 ```bash
-weaveai update .
+keaveai update .
 ```
 
 The command also ensures the project root has an `agent.config` file.
-It does not pull from GitLab; run `weaveai database-update` first when the bundled database itself needs to be refreshed.
+It does not pull from GitLab; run `keaveai database-update` first when the bundled database itself needs to be refreshed.
 
-## `weaveai break-change`
+## `keaveai break-change`
 
 Migrate an initialized project to the bundled database layout while preserving existing SDD content.
 
 ```bash
-weaveai break-change [path]
+keaveai break-change [path]
 ```
 
 The command:
 
-1. Copies `weaveai/sdd` or existing `ai-workflow/sdd` to a temporary root-level `sdd` directory.
-2. Removes root-level `.codex`, `.cursor`, `.agents`, `weaveai`, `.claude`, `AGENTS.md`, and stale `global`.
-3. Copies bundled `weaveai-database/` contents into the project root. Bundled `.codex/skills/*` stays under `.codex/skills/*`.
+1. Copies `keaveai/sdd` or existing `ai-workflow/sdd` to a temporary root-level `sdd` directory.
+2. Removes root-level `.codex`, `.cursor`, `.agents`, `keaveai`, `.claude`, `AGENTS.md`, and stale `global`.
+3. Copies bundled `keaveai-database/` contents into the project root. Bundled `.codex/skills/*` stays under `.codex/skills/*`.
 4. Copies legacy bundled `global/*` content into `.codex/skills/*` when a legacy database layout is used.
 5. Moves the preserved SDD content to `ai-workflow/sdd`.
 6. Ensures `.gitignore` contains `ai-workflow/memory/LOCAL.md`.
@@ -91,37 +91,37 @@ The command:
 Example:
 
 ```bash
-weaveai break-change .
+keaveai break-change .
 ```
 
-## `weaveai database-update`
+## `keaveai database-update`
 
-Refresh the local bundled `weaveai-database/` directory from the GitLab database repository.
+Refresh the local bundled `keaveai-database/` directory from the GitLab database repository.
 
 ```bash
-weaveai database-update [path] [options]
+keaveai database-update [path] [options]
 ```
 
 | Option | Description |
 |--------|-------------|
-| `--repo <url>` | WeaveAI database repository URL |
-| `--branch <branch>` | WeaveAI database repository branch |
+| `--repo <url>` | KeaveAI database repository URL |
+| `--branch <branch>` | KeaveAI database repository branch |
 
-When `path` is omitted, the command updates the package's bundled `weaveai-database/` directory.
+When `path` is omitted, the command updates the package's bundled `keaveai-database/` directory.
 
 Examples:
 
 ```bash
-weaveai database-update
-weaveai database-update ./weaveai-database --branch main
+keaveai database-update
+keaveai database-update ./keaveai-database --branch main
 ```
 
-## `weaveai issue`
+## `keaveai issue`
 
-Push initialized WeaveAI content as a GitLab merge request.
+Push initialized KeaveAI content as a GitLab merge request.
 
 ```bash
-weaveai issue [options]
+keaveai issue [options]
 ```
 
 | Option | Description |
@@ -144,18 +144,18 @@ http://gitlab.metac-inc.com/front/weaveai-database.git
 Examples:
 
 ```bash
-weaveai issue --dry-run
-weaveai issue
+keaveai issue --dry-run
+keaveai issue
 ```
 
-## `weaveai help`
+## `keaveai help`
 
 Show help for the CLI or a specific public command.
 
 ```bash
-weaveai help
-weaveai help init
-weaveai help update
-weaveai help database-update
-weaveai help issue
+keaveai help
+keaveai help init
+keaveai help update
+keaveai help database-update
+keaveai help issue
 ```

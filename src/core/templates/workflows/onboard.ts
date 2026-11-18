@@ -9,7 +9,7 @@ import type { SkillTemplate, CommandTemplate } from '../types.js';
 export function getOnboardSkillTemplate(): SkillTemplate {
   return {
     name: 'openspec-onboard',
-    description: 'Guided onboarding for WeaveAI - walk through a complete workflow cycle with narration and real codebase work.',
+    description: 'Guided onboarding for KeaveAI - walk through a complete workflow cycle with narration and real codebase work.',
     instructions: getOnboardInstructions(),
     license: 'MIT',
     compatibility: 'Requires openspec CLI.',
@@ -18,23 +18,23 @@ export function getOnboardSkillTemplate(): SkillTemplate {
 }
 
 function getOnboardInstructions(): string {
-  return `Guide the user through their first complete WeaveAI workflow cycle. This is a teaching experience—you'll do real work in their codebase while explaining each step.
+  return `Guide the user through their first complete KeaveAI workflow cycle. This is a teaching experience—you'll do real work in their codebase while explaining each step.
 
 ---
 
 ## Preflight
 
-Before starting, check if the WeaveAI CLI is installed:
+Before starting, check if the KeaveAI CLI is installed:
 
 \`\`\`bash
 # Unix/macOS
-weaveai --version 2>&1 || echo "CLI_NOT_INSTALLED"
+keaveai --version 2>&1 || echo "CLI_NOT_INSTALLED"
 # Windows (PowerShell)
-# if (Get-Command weaveai -ErrorAction SilentlyContinue) { weaveai --version } else { echo "CLI_NOT_INSTALLED" }
+# if (Get-Command keaveai -ErrorAction SilentlyContinue) { keaveai --version } else { echo "CLI_NOT_INSTALLED" }
 \`\`\`
 
 **If CLI not installed:**
-> WeaveAI CLI is not installed. Install it first, then come back to \`/opsx:onboard\`.
+> KeaveAI CLI is not installed. Install it first, then come back to \`/opsx:onboard\`.
 
 Stop here if not installed.
 
@@ -45,7 +45,7 @@ Stop here if not installed.
 Display:
 
 \`\`\`
-## Welcome to WeaveAI!
+## Welcome to KeaveAI!
 
 I'll walk you through a complete change cycle—from idea to implementation—using a real task in your codebase. Along the way, you'll learn the workflow by doing it.
 
@@ -123,7 +123,7 @@ Which task interests you? (Pick a number or describe your own)
 If the user picks or describes something too large (major feature, multi-day work):
 
 \`\`\`
-That's a valuable task, but it's probably larger than ideal for your first WeaveAI run-through.
+That's a valuable task, but it's probably larger than ideal for your first KeaveAI run-through.
 
 For learning the workflow, smaller is better—it lets you see the full cycle without getting stuck in implementation details.
 
@@ -176,14 +176,14 @@ Now let's create a change to hold our work.
 \`\`\`
 ## Creating a Change
 
-A "change" in WeaveAI is a container for all the thinking and planning around a piece of work. It lives in \`openspec/changes/<name>/\` and holds your artifacts—proposal, specs, design, tasks.
+A "change" in KeaveAI is a container for all the thinking and planning around a piece of work. It lives in \`openspec/changes/<name>/\` and holds your artifacts—proposal, specs, design, tasks.
 
 Let me create one for our task.
 \`\`\`
 
 **DO:** Create the change with a derived kebab-case name:
 \`\`\`bash
-weaveai new change "<derived-name>"
+keaveai new change "<derived-name>"
 \`\`\`
 
 **SHOW:**
@@ -252,7 +252,7 @@ Does this capture the intent? I can adjust before we save it.
 
 After approval, save the proposal:
 \`\`\`bash
-weaveai instructions proposal --change "<name>" --json
+keaveai instructions proposal --change "<name>" --json
 \`\`\`
 Then write the content to \`openspec/changes/<name>/proposal.md\`.
 
@@ -441,7 +441,7 @@ Archived changes become your project's decision history—you can always find th
 
 **DO:**
 \`\`\`bash
-weaveai archive "<name>"
+keaveai archive "<name>"
 \`\`\`
 
 **SHOW:**
@@ -458,7 +458,7 @@ The change is now part of your project's history. The code is in your codebase, 
 \`\`\`
 ## Congratulations!
 
-You just completed a full WeaveAI cycle:
+You just completed a full KeaveAI cycle:
 
 1. **Explore** - Thought through the problem
 2. **New** - Created a change container
@@ -525,7 +525,7 @@ Exit gracefully without pressure.
 If the user says they just want to see the commands or skip the tutorial:
 
 \`\`\`
-## WeaveAI Quick Reference
+## KeaveAI Quick Reference
 
 **Core workflow:**
 
@@ -566,7 +566,7 @@ Exit gracefully.
 export function getOpsxOnboardCommandTemplate(): CommandTemplate {
   return {
     name: 'OPSX: Onboard',
-    description: 'Guided onboarding - walk through a complete WeaveAI workflow cycle with narration',
+    description: 'Guided onboarding - walk through a complete KeaveAI workflow cycle with narration',
     category: 'Workflow',
     tags: ['workflow', 'onboarding', 'tutorial', 'learning'],
     content: getOnboardInstructions(),

@@ -11,7 +11,7 @@ Additionally, different team members may use different AI tools, so we cannot re
 Modify the update command to:
 1. Only update AI tool configuration files that already exist
 2. Never create new AI tool configuration files
-3. Always update the core WeaveAI files (README.md, etc.)
+3. Always update the core KeaveAI files (README.md, etc.)
 
 ## Implementation
 
@@ -29,11 +29,11 @@ Modify the update command to:
 
 ## Why
 
-Users need predictable, tool-agnostic behavior from `openspec update`. Creating or forcing updates for AI tool files that a project does not use causes confusion and merge conflicts. Restricting updates to existing files and always updating core WeaveAI files keeps the workflow consistent for mixed-tool teams.
+Users need predictable, tool-agnostic behavior from `openspec update`. Creating or forcing updates for AI tool files that a project does not use causes confusion and merge conflicts. Restricting updates to existing files and always updating core KeaveAI files keeps the workflow consistent for mixed-tool teams.
 
 ## What Changes
 
-- **cli-update:** Modify update behavior to update only existing AI tool configuration files and never create new ones; always update core WeaveAI files and display an ASCII-safe success message.
+- **cli-update:** Modify update behavior to update only existing AI tool configuration files and never create new ones; always update core KeaveAI files and display an ASCII-safe success message.
 
 ## ADDED Requirements
 

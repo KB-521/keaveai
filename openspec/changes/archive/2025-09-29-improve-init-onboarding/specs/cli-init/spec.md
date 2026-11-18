@@ -1,7 +1,7 @@
 ## MODIFIED Requirements
 ### Requirement: AI Tool Configuration
 
-The command SHALL configure AI coding assistants with WeaveAI instructions based on user selection.
+The command SHALL configure AI coding assistants with KeaveAI instructions based on user selection.
 
 #### Scenario: Prompting for AI tool selection
 
@@ -10,14 +10,14 @@ The command SHALL configure AI coding assistants with WeaveAI instructions based
 - **AND** list every available tool with a checkbox:
   - Claude Code (creates or refreshes CLAUDE.md and slash commands)
   - Cursor (creates or refreshes `.cursor/commands/*` slash commands)
-  - AGENTS.md standard (creates or refreshes AGENTS.md with WeaveAI markers)
+  - AGENTS.md standard (creates or refreshes AGENTS.md with KeaveAI markers)
 - **AND** show "(already configured)" beside tools whose managed files exist so users understand selections will refresh content
 - **AND** treat disabled tools as "coming soon" and keep them unselectable
 - **AND** allow confirming with Enter after selecting one or more tools
 
 ### Requirement: AI Tool Configuration Details
 
-The command SHALL properly configure selected AI tools with WeaveAI-specific instructions using a marker system.
+The command SHALL properly configure selected AI tools with KeaveAI-specific instructions using a marker system.
 
 #### Scenario: Configuring Claude Code
 
@@ -27,12 +27,12 @@ The command SHALL properly configure selected AI tools with WeaveAI-specific ins
 #### Scenario: Creating new CLAUDE.md
 
 - **WHEN** CLAUDE.md does not exist
-- **THEN** create new file with WeaveAI content wrapped in markers:
+- **THEN** create new file with KeaveAI content wrapped in markers:
 ```markdown
-<!-- WEAVEAI:START -->
-# WeaveAI Instructions
+<!-- KEAVEAI:START -->
+# KeaveAI Instructions
 
-Instructions for AI coding assistants using WeaveAI for spec-driven development.
+Instructions for AI coding assistants using KeaveAI for spec-driven development.
 
 ## TL;DR Quick Checklist
 - Search existing work: `openspec spec list --long`, `openspec list`
@@ -41,22 +41,22 @@ Instructions for AI coding assistants using WeaveAI for spec-driven development.
 - Scaffold: `proposal.md`, `tasks.md`, optional `design.md`, and spec deltas
 - Validate with `openspec validate [change-id] --strict`
 - Request approval before implementation
-<!-- WEAVEAI:END -->
+<!-- KEAVEAI:END -->
 ```
 
 #### Scenario: Updating existing CLAUDE.md
 
 - **WHEN** CLAUDE.md already exists
 - **THEN** preserve all existing content
-- **AND** insert WeaveAI content at the beginning of the file using markers
+- **AND** insert KeaveAI content at the beginning of the file using markers
 - **AND** ensure markers don't duplicate if they already exist
 
 #### Scenario: Managing content with markers
 
 - **WHEN** using the marker system
-- **THEN** use `<!-- WEAVEAI:START -->` to mark the beginning of managed content
-- **AND** use `<!-- WEAVEAI:END -->` to mark the end of managed content
-- **AND** allow WeaveAI to update its content without affecting user customizations
+- **THEN** use `<!-- KEAVEAI:START -->` to mark the beginning of managed content
+- **AND** use `<!-- KEAVEAI:END -->` to mark the end of managed content
+- **AND** allow KeaveAI to update its content without affecting user customizations
 - **AND** preserve all content outside the markers intact
 
 ### Requirement: Interactive Mode

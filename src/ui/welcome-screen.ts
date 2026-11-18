@@ -17,13 +17,13 @@ const ART_COLUMN_WIDTH = 24;
  */
 function getWelcomeText(): string[] {
   return [
-    chalk.white.bold('Welcome to WeaveAI'),
+    chalk.white.bold('Welcome to KeaveAI'),
     chalk.dim('A powerful AI framework for programming and AI development'),
     '',
     chalk.white('This setup will configure:'),
     chalk.dim('  • /req-dev slash commands'),
     chalk.dim('  • /init slash commands'),
-    chalk.dim('  • WeaveAI sop configuration'),
+    chalk.dim('  • KeaveAI sop configuration'),
     '',
     // chalk.white('Quick start after setup:'),
     // `  ${chalk.yellow('/meta:new')}      ${chalk.dim('Create a change')}`,

@@ -1,10 +1,10 @@
-# weaveai
+# keaveai
 
 ## 1.2.5
 
 ### Patch Changes
 
-- Refresh the bundled `weaveai-database` from the internal database repository.
+- Refresh the bundled `keaveai-database` from the internal database repository.
 - Split backend workflows into focused data-model, persistence, skeleton, business, and entry implementation skills.
 - Expand task-splitting rules, validation scripts, and backend delivery guidance.
 
@@ -80,7 +80,7 @@
 
 ### Major Changes
 
-- [#578](https://github.com/Fission-AI/WeaveAI/pull/578) [`0cc9d90`](https://github.com/Fission-AI/WeaveAI/commit/0cc9d9025af367faa1688a7b2606a2549053cd3f) Thanks [@TabishB](https://github.com/TabishB)! - ## WeaveAI 1.0 — The OPSX Release
+- [#578](https://github.com/Fission-AI/WeaveAI/pull/578) [`0cc9d90`](https://github.com/Fission-AI/WeaveAI/commit/0cc9d9025af367faa1688a7b2606a2549053cd3f) Thanks [@TabishB](https://github.com/TabishB)! - ## KeaveAI 1.0 — The OPSX Release
 
   The workflow has been rebuilt from the ground up. OPSX replaces the old phase-locked `/openspec:*` commands with an action-based system where AI understands what artifacts exist, what's ready to create, and what each action unlocks.
 
@@ -182,7 +182,7 @@
 
   **New Features**
 
-  - **Project-level configuration** — Configure WeaveAI behavior per-project via `openspec/config.yaml`, including custom rules injection, context files, and schema resolution settings
+  - **Project-level configuration** — Configure KeaveAI behavior per-project via `openspec/config.yaml`, including custom rules injection, context files, and schema resolution settings
   - **Project-local schemas** — Define custom artifact schemas within your project's `openspec/schemas/` directory for project-specific workflows
   - **Schema management commands** — New `openspec schema` commands (`list`, `show`, `export`, `validate`) for inspecting and managing artifact schemas (experimental)
 
@@ -234,7 +234,7 @@
 
   **New Features**
 
-  - **Continue IDE support** – WeaveAI now generates slash commands for [Continue](https://continue.dev/), expanding editor integration options alongside Cursor, Windsurf, Claude Code, and others
+  - **Continue IDE support** – KeaveAI now generates slash commands for [Continue](https://continue.dev/), expanding editor integration options alongside Cursor, Windsurf, Claude Code, and others
   - **Shell completions for Bash, Fish, and PowerShell** – Run `openspec completion install` to set up tab completion in your preferred shell
   - **`/opsx:explore` command** – A new thinking partner mode for exploring ideas and investigating problems before committing to changes
   - **Codebuddy slash command improvements** – Updated frontmatter format for better compatibility
@@ -246,7 +246,7 @@
 
   **Other**
 
-  - Added optional anonymous usage statistics to help understand how WeaveAI is used. This is **opt-out** by default – set `WEAVEAI_TELEMETRY=0` or `DO_NOT_TRACK=1` to disable. Only command names and version are collected; no arguments, file paths, or content. Automatically disabled in CI environments.
+  - Added optional anonymous usage statistics to help understand how KeaveAI is used. This is **opt-out** by default – set `KEAVEAI_TELEMETRY=0` or `DO_NOT_TRACK=1` to disable. Only command names and version are collected; no arguments, file paths, or content. Automatically disabled in CI environments.
 
 ## 0.18.0
 
@@ -411,7 +411,7 @@
 
 ### Minor Changes
 
-- 312e1d6: Add Amazon Q Developer CLI integration. WeaveAI now supports Amazon Q Developer with automatic prompt generation in `.amazonq/prompts/` directory, allowing you to use WeaveAI slash commands with Amazon Q's @-syntax.
+- 312e1d6: Add Amazon Q Developer CLI integration. KeaveAI now supports Amazon Q Developer with automatic prompt generation in `.amazonq/prompts/` directory, allowing you to use KeaveAI slash commands with Amazon Q's @-syntax.
 
 ## 0.10.0
 
@@ -423,13 +423,13 @@
 
 ### Patch Changes
 
-- 2ae0484: Fix cross-platform path handling issues. This release includes fixes for joinPath behavior and slash command path resolution to ensure WeaveAI works correctly across all platforms.
+- 2ae0484: Fix cross-platform path handling issues. This release includes fixes for joinPath behavior and slash command path resolution to ensure KeaveAI works correctly across all platforms.
 
 ## 0.9.1
 
 ### Patch Changes
 
-- 8210970: Fix WeaveAI not working on Windows when Codex integration is selected. This release includes fixes for cross-platform path handling and normalization to ensure WeaveAI works correctly on Windows systems.
+- 8210970: Fix KeaveAI not working on Windows when Codex integration is selected. This release includes fixes for cross-platform path handling and normalization to ensure KeaveAI works correctly on Windows systems.
 
 ## 0.9.0
 
@@ -441,7 +441,7 @@
 
 ### Minor Changes
 
-- Add GitHub Copilot slash command support. WeaveAI now writes prompts to `.github/prompts/openspec-{proposal,apply,archive}.prompt.md` with YAML frontmatter and `$ARGUMENTS` placeholder, and refreshes them on `openspec update`.
+- Add GitHub Copilot slash command support. KeaveAI now writes prompts to `.github/prompts/openspec-{proposal,apply,archive}.prompt.md` with YAML frontmatter and `$ARGUMENTS` placeholder, and refreshes them on `openspec update`.
 
 ## 0.8.1
 
@@ -454,7 +454,7 @@
 ### Minor Changes
 
 - c29b06d: Add Windsurf support.
-- Add Codex slash command support. WeaveAI now writes prompts directly to Codex's global directory (`~/.codex/prompts` or `$CODEX_HOME/prompts`) and refreshes them on `openspec update`.
+- Add Codex slash command support. KeaveAI now writes prompts directly to Codex's global directory (`~/.codex/prompts` or `$CODEX_HOME/prompts`) and refreshes them on `openspec update`.
 
 ## 0.7.0
 
@@ -497,7 +497,7 @@
 
 ### Minor Changes
 
-- Add WeaveAI change proposals for CLI improvements and enhanced user experience
+- Add KeaveAI change proposals for CLI improvements and enhanced user experience
 - Add Opencode slash commands support for AI-driven development workflows
 
 ### Patch Changes

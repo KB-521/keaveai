@@ -6,7 +6,7 @@
 
 ## Package Managers
 
-Install the `keaveai` package. It provides the `weaveai` command.
+Install the `keaveai` package. It provides the `keaveai` command.
 
 ### npm
 
@@ -34,16 +34,16 @@ bun add -g keaveai@latest
 
 ## Nix
 
-Run WeaveAI directly without installation:
+Run KeaveAI directly without installation:
 
 ```bash
-nix run github:Fission-AI/WeaveAI -- init
+nix run github:KB-521/keaveai -- init
 ```
 
 Or install to your profile:
 
 ```bash
-nix profile install github:Fission-AI/WeaveAI
+nix profile install github:KB-521/keaveai
 ```
 
 Or add to your development environment in `flake.nix`:
@@ -52,7 +52,7 @@ Or add to your development environment in `flake.nix`:
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    openspec.url = "github:Fission-AI/WeaveAI";
+    openspec.url = "github:KB-521/keaveai";
   };
 
   outputs = { nixpkgs, openspec, ... }: {
@@ -66,16 +66,16 @@ Or add to your development environment in `flake.nix`:
 ## Verify Installation
 
 ```bash
-weaveai --version
+keaveai --version
 ```
 
 ## Next Steps
 
-After installing, initialize WeaveAI in your project:
+After installing, initialize KeaveAI in your project:
 
 ```bash
 cd your-project
-weaveai init
+keaveai init
 ```
 
 See [Getting Started](getting-started.md) for a full walkthrough.

@@ -1,17 +1,17 @@
 ## MODIFIED Requirements
 ### Requirement: AI Tool Configuration
-The command SHALL configure AI coding assistants with WeaveAI instructions based on user selection.
+The command SHALL configure AI coding assistants with KeaveAI instructions based on user selection.
 
 #### Scenario: Prompting for AI tool selection
 
 - **WHEN** run
 - **THEN** prompt user to select AI tools to configure:
-  - Claude Code (✅ WeaveAI custom slash commands available)
-  - Cursor (✅ WeaveAI custom slash commands available)
+  - Claude Code (✅ KeaveAI custom slash commands available)
+  - Cursor (✅ KeaveAI custom slash commands available)
   - AGENTS.md (works with Codex, Amp, Copilot, …)
 
 ### Requirement: AI Tool Configuration Details
-The command SHALL properly configure selected AI tools with WeaveAI-specific instructions using a marker system.
+The command SHALL properly configure selected AI tools with KeaveAI-specific instructions using a marker system.
 
 #### Scenario: Configuring Claude Code
 
@@ -26,46 +26,46 @@ The command SHALL properly configure selected AI tools with WeaveAI-specific ins
 #### Scenario: Creating new CLAUDE.md
 
 - **WHEN** CLAUDE.md does not exist
-- **THEN** create new file with WeaveAI content wrapped in markers:
+- **THEN** create new file with KeaveAI content wrapped in markers:
 ```markdown
-<!-- WEAVEAI:START -->
-# WeaveAI Project
+<!-- KEAVEAI:START -->
+# KeaveAI Project
 
-This document provides instructions for AI coding assistants on how to use WeaveAI conventions for spec-driven development. Follow these rules precisely when working on WeaveAI-enabled projects.
+This document provides instructions for AI coding assistants on how to use KeaveAI conventions for spec-driven development. Follow these rules precisely when working on KeaveAI-enabled projects.
 
-This project uses WeaveAI for spec-driven development. Specifications are the source of truth.
+This project uses KeaveAI for spec-driven development. Specifications are the source of truth.
 
 See @openspec/AGENTS.md for detailed conventions and guidelines.
-<!-- WEAVEAI:END -->
+<!-- KEAVEAI:END -->
 ```
 
 #### Scenario: Creating new AGENTS.md
 
 - **WHEN** AGENTS.md does not exist in the project root
-- **THEN** create new file with WeaveAI content wrapped in markers using the same template as CLAUDE.md
+- **THEN** create new file with KeaveAI content wrapped in markers using the same template as CLAUDE.md
 
 #### Scenario: Updating existing CLAUDE.md
 
 - **WHEN** CLAUDE.md already exists
 - **THEN** preserve all existing content
-- **AND** insert WeaveAI content at the beginning of the file using markers
+- **AND** insert KeaveAI content at the beginning of the file using markers
 - **AND** ensure markers don't duplicate if they already exist
 
 #### Scenario: Updating existing AGENTS.md
 
 - **WHEN** AGENTS.md already exists in the project root
 - **THEN** preserve all existing content
-- **AND** ensure the WeaveAI-managed block at the beginning of the file is refreshed without duplicating markers
+- **AND** ensure the KeaveAI-managed block at the beginning of the file is refreshed without duplicating markers
 
 #### Scenario: Managing content with markers
 
 - **WHEN** using the marker system
-- **THEN** use `<!-- WEAVEAI:START -->` to mark the beginning of managed content
-- **AND** use `<!-- WEAVEAI:END -->` to mark the end of managed content
-- **AND** allow WeaveAI to update its content without affecting user customizations
+- **THEN** use `<!-- KEAVEAI:START -->` to mark the beginning of managed content
+- **AND** use `<!-- KEAVEAI:END -->` to mark the end of managed content
+- **AND** allow KeaveAI to update its content without affecting user customizations
 - **AND** preserve all content outside the markers intact
 
 WHY use markers:
 - Users may have existing CLAUDE.md or AGENTS.md instructions they want to keep
-- WeaveAI can update its instructions in future versions
-- Clear boundary between WeaveAI-managed and user-managed content
+- KeaveAI can update its instructions in future versions
+- Clear boundary between KeaveAI-managed and user-managed content

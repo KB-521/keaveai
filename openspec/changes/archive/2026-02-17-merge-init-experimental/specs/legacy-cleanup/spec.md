@@ -2,12 +2,12 @@
 
 ### Requirement: Legacy artifact detection
 
-The system SHALL detect legacy WeaveAI artifacts from previous init versions.
+The system SHALL detect legacy KeaveAI artifacts from previous init versions.
 
 #### Scenario: Detecting legacy config files
 
 - **WHEN** running `openspec init` on an existing project
-- **THEN** the system SHALL check for config files with WeaveAI markers:
+- **THEN** the system SHALL check for config files with KeaveAI markers:
   - `CLAUDE.md`
   - `.cursorrules`
   - `.windsurfrules`
@@ -28,13 +28,13 @@ The system SHALL detect legacy WeaveAI artifacts from previous init versions.
   - `.windsurf/workflows/openspec-*.md`
   - And equivalent directories for all tools in the legacy SlashCommandRegistry
 
-#### Scenario: Detecting legacy WeaveAI structure files
+#### Scenario: Detecting legacy KeaveAI structure files
 
 - **WHEN** running `openspec init` on an existing project
 - **THEN** the system SHALL check for:
   - `openspec/AGENTS.md`
   - `openspec/project.md` (for migration messaging only, not deleted)
-  - Root `AGENTS.md` with WeaveAI markers
+  - Root `AGENTS.md` with KeaveAI markers
 
 ### Requirement: Legacy cleanup confirmation
 
@@ -69,26 +69,26 @@ The system SHALL prompt for confirmation before removing legacy artifacts.
 
 ### Requirement: Surgical removal of config file content
 
-The system SHALL preserve user content when removing WeaveAI markers from config files.
+The system SHALL preserve user content when removing KeaveAI markers from config files.
 
-#### Scenario: Config file with only WeaveAI content
+#### Scenario: Config file with only KeaveAI content
 
-- **WHEN** a config file contains only WeaveAI marker block (whitespace outside is acceptable)
-- **THEN** the system SHALL remove the WeaveAI marker block
+- **WHEN** a config file contains only KeaveAI marker block (whitespace outside is acceptable)
+- **THEN** the system SHALL remove the KeaveAI marker block
 - **AND** preserve the file (even if empty or whitespace-only)
 - **AND** NOT delete the file (config files belong to the user's project root)
 
 #### Scenario: Config file with mixed content
 
-- **WHEN** a config file contains content outside WeaveAI markers
-- **THEN** the system SHALL remove only the `<!-- WEAVEAI:START -->` to `<!-- WEAVEAI:END -->` block
+- **WHEN** a config file contains content outside KeaveAI markers
+- **THEN** the system SHALL remove only the `<!-- KEAVEAI:START -->` to `<!-- KEAVEAI:END -->` block
 - **AND** preserve all content before and after the markers
 - **AND** clean up any resulting double blank lines
 
 #### Scenario: Root AGENTS.md with mixed content
 
-- **WHEN** root `AGENTS.md` contains WeaveAI markers AND other content
-- **THEN** the system SHALL remove only the WeaveAI marker block
+- **WHEN** root `AGENTS.md` contains KeaveAI markers AND other content
+- **THEN** the system SHALL remove only the KeaveAI marker block
 - **AND** preserve the rest of the file
 
 ### Requirement: Legacy directory removal
@@ -139,7 +139,7 @@ The system SHALL report what was cleaned up.
 - **THEN** the system SHALL display a summary section:
   ```
   Cleaned up legacy files:
-    ✓ Removed WeaveAI markers from CLAUDE.md
+    ✓ Removed KeaveAI markers from CLAUDE.md
     ✓ Removed .claude/commands/openspec/ (replaced by /opsx:*)
     ✓ Removed openspec/AGENTS.md (no longer needed)
   ```

@@ -1,6 +1,6 @@
 ## Context
 
-WeaveAI uses workflow schemas to define artifact sequences for change proposals. Currently, schemas are resolved from three locations (project → user → package), but managing custom schemas requires manual file creation with no tooling support. The resolver infrastructure exists (`src/core/artifact-graph/resolver.ts`) but there's no CLI exposure for schema management operations.
+KeaveAI uses workflow schemas to define artifact sequences for change proposals. Currently, schemas are resolved from three locations (project → user → package), but managing custom schemas requires manual file creation with no tooling support. The resolver infrastructure exists (`src/core/artifact-graph/resolver.ts`) but there's no CLI exposure for schema management operations.
 
 Users who want to customize workflows must:
 1. Manually create directory structures under `openspec/schemas/<name>/`
@@ -87,7 +87,7 @@ All commands support `--json` flag for machine-readable output:
 
 Text output uses ora spinners for progress and clear success/error messaging.
 
-**Rationale:** Consistent with existing WeaveAI commands and enables scripting/automation.
+**Rationale:** Consistent with existing KeaveAI commands and enables scripting/automation.
 
 ### 7. Schema `which` Command Design
 

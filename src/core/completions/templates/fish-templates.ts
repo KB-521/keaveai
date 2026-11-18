@@ -4,7 +4,7 @@
  */
 
 export const FISH_STATIC_HELPERS = `# Helper function to check if a subcommand is present
-function __fish_weaveai_using_subcommand
+function __fish_keaveai_using_subcommand
     set -l cmd (commandline -opc)
     set -e cmd[1]
     for i in $argv
@@ -15,26 +15,26 @@ function __fish_weaveai_using_subcommand
     return 1
 end
 
-function __fish_weaveai_no_subcommand
+function __fish_keaveai_no_subcommand
     set -l cmd (commandline -opc)
     test (count $cmd) -eq 1
 end`;
 
 export const FISH_DYNAMIC_HELPERS = `# Dynamic completion helpers
 
-function __fish_weaveai_changes
-    weaveai __complete changes 2>/dev/null | while read -l id desc
+function __fish_keaveai_changes
+    keaveai __complete changes 2>/dev/null | while read -l id desc
         printf '%s\\t%s\\n' "$id" "$desc"
     end
 end
 
-function __fish_weaveai_specs
-    weaveai __complete specs 2>/dev/null | while read -l id desc
+function __fish_keaveai_specs
+    keaveai __complete specs 2>/dev/null | while read -l id desc
         printf '%s\\t%s\\n' "$id" "$desc"
     end
 end
 
-function __fish_weaveai_items
-    __fish_weaveai_changes
-    __fish_weaveai_specs
+function __fish_keaveai_items
+    __fish_keaveai_changes
+    __fish_keaveai_specs
 end`;

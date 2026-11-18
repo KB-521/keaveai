@@ -1,18 +1,18 @@
-# Add Init Command for WeaveAI
+# Add Init Command for KeaveAI
 
 ## Why
 
-Projects need a simple way to adopt WeaveAI conventions. Currently, users must manually create the directory structure and understand all the conventions, which creates friction for adoption. An init command would enable instant WeaveAI setup with proper structure and guidance.
+Projects need a simple way to adopt KeaveAI conventions. Currently, users must manually create the directory structure and understand all the conventions, which creates friction for adoption. An init command would enable instant KeaveAI setup with proper structure and guidance.
 
 ## What Changes
 
-- Add `openspec init` CLI command that creates the complete WeaveAI directory structure
+- Add `openspec init` CLI command that creates the complete KeaveAI directory structure
 - Generate template files (README.md with AI instructions, project.md template)
 - Interactive prompt to select which AI tools to configure (Claude Code initially, others marked as "coming soon")
 - Support for multiple AI coding assistants with extensible plugin architecture
 - Smart file updates using content markers to preserve existing configurations
 - Custom directory naming with `--dir` flag
-- Validation to prevent overwriting existing WeaveAI structures
+- Validation to prevent overwriting existing KeaveAI structures
 - Clear error messages with helpful guidance (e.g., suggesting 'openspec update' for existing structures)
 - Display actionable next steps after successful initialization
 

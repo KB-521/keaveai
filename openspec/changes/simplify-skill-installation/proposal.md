@@ -34,7 +34,7 @@ Detected tools:
 
 Press Enter to confirm, or Space to toggle
 
-Setting up WeaveAI...
+Setting up KeaveAI...
 ✓ Done
 
 Start your first change:

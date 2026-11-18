@@ -18,7 +18,7 @@ export function getVerifyChangeSkillTemplate(): SkillTemplate {
 
 1. **If no change name provided, prompt for selection**
 
-   Run \`weaveai list --json\` to get available changes. Use the **AskUserQuestion tool** to let the user select.
+   Run \`keaveai list --json\` to get available changes. Use the **AskUserQuestion tool** to let the user select.
 
    Show changes that have implementation tasks (tasks artifact exists).
    Include the schema used for each change if available.
@@ -28,7 +28,7 @@ export function getVerifyChangeSkillTemplate(): SkillTemplate {
 
 2. **Check status to understand the schema**
    \`\`\`bash
-   weaveai status --change "<name>" --json
+   keaveai status --change "<name>" --json
    \`\`\`
    Parse the JSON to understand:
    - \`schemaName\`: The workflow being used (e.g., "spec-driven")
@@ -37,7 +37,7 @@ export function getVerifyChangeSkillTemplate(): SkillTemplate {
 3. **Get the change directory and load artifacts**
 
    \`\`\`bash
-   weaveai instructions apply --change "<name>" --json
+   keaveai instructions apply --change "<name>" --json
    \`\`\`
 
    This returns the change directory and context files. Read all available artifacts from \`contextFiles\`.
@@ -187,7 +187,7 @@ export function getOpsxVerifyCommandTemplate(): CommandTemplate {
 
 1. **If no change name provided, prompt for selection**
 
-   Run \`weaveai list --json\` to get available changes. Use the **AskUserQuestion tool** to let the user select.
+   Run \`keaveai list --json\` to get available changes. Use the **AskUserQuestion tool** to let the user select.
 
    Show changes that have implementation tasks (tasks artifact exists).
    Include the schema used for each change if available.
@@ -197,7 +197,7 @@ export function getOpsxVerifyCommandTemplate(): CommandTemplate {
 
 2. **Check status to understand the schema**
    \`\`\`bash
-   weaveai status --change "<name>" --json
+   keaveai status --change "<name>" --json
    \`\`\`
    Parse the JSON to understand:
    - \`schemaName\`: The workflow being used (e.g., "spec-driven")
@@ -206,7 +206,7 @@ export function getOpsxVerifyCommandTemplate(): CommandTemplate {
 3. **Get the change directory and load artifacts**
 
    \`\`\`bash
-   weaveai instructions apply --change "<name>" --json
+   keaveai instructions apply --change "<name>" --json
    \`\`\`
 
    This returns the change directory and context files. Read all available artifacts from \`contextFiles\`.

@@ -15,9 +15,9 @@ The system SHALL define a tool-agnostic `CommandContent` interface for command d
 - **WHEN** defining a command to generate
 - **THEN** `CommandContent` SHALL include:
   - `id`: string identifier (e.g., 'explore', 'apply')
-  - `name`: human-readable name (e.g., 'WeaveAI Explore')
+  - `name`: human-readable name (e.g., 'KeaveAI Explore')
   - `description`: brief description of command purpose
-  - `category`: grouping category (e.g., 'WeaveAI')
+  - `category`: grouping category (e.g., 'KeaveAI')
   - `tags`: array of tag strings
   - `body`: the command instruction content
 

@@ -1,7 +1,7 @@
 ## ADDED Requirements
 
 ### Requirement: Command execution tracking
-The system SHALL send a `command_executed` event to PostHog when any CLI command executes, including only the command name and WeaveAI version as properties.
+The system SHALL send a `command_executed` event to PostHog when any CLI command executes, including only the command name and KeaveAI version as properties.
 
 #### Scenario: Standard command execution
 - **WHEN** a user runs any openspec command
@@ -23,10 +23,10 @@ The system SHALL NOT include command arguments, file paths, project names, spec 
 - **THEN** the event explicitly sets `$ip: null` to prevent IP tracking
 
 ### Requirement: Environment variable opt-out
-The system SHALL disable telemetry when `WEAVEAI_TELEMETRY=0` or `DO_NOT_TRACK=1` environment variables are set.
+The system SHALL disable telemetry when `KEAVEAI_TELEMETRY=0` or `DO_NOT_TRACK=1` environment variables are set.
 
-#### Scenario: WEAVEAI_TELEMETRY opt-out
-- **WHEN** `WEAVEAI_TELEMETRY=0` is set in the environment
+#### Scenario: KEAVEAI_TELEMETRY opt-out
+- **WHEN** `KEAVEAI_TELEMETRY=0` is set in the environment
 - **THEN** the system sends no telemetry events
 
 #### Scenario: DO_NOT_TRACK opt-out
@@ -35,7 +35,7 @@ The system SHALL disable telemetry when `WEAVEAI_TELEMETRY=0` or `DO_NOT_TRACK=1
 
 #### Scenario: Environment variable takes precedence
 - **WHEN** the user has previously used the CLI (config exists)
-- **AND** the user sets `WEAVEAI_TELEMETRY=0`
+- **AND** the user sets `KEAVEAI_TELEMETRY=0`
 - **THEN** telemetry is disabled regardless of config state
 
 ### Requirement: CI environment auto-disable
@@ -47,7 +47,7 @@ The system SHALL automatically disable telemetry when `CI=true` environment vari
 
 #### Scenario: CI with explicit enable
 - **WHEN** `CI=true` is set
-- **AND** `WEAVEAI_TELEMETRY=1` is explicitly set
+- **AND** `KEAVEAI_TELEMETRY=1` is explicitly set
 - **THEN** telemetry remains disabled (CI takes precedence for privacy)
 
 ### Requirement: First-run telemetry notice
@@ -56,7 +56,7 @@ The system SHALL display a one-line telemetry disclosure notice on the first com
 #### Scenario: First command execution
 - **WHEN** a user runs their first openspec command
 - **AND** telemetry is enabled
-- **THEN** the system displays: "Note: WeaveAI collects anonymous usage stats. Opt out: WEAVEAI_TELEMETRY=0"
+- **THEN** the system displays: "Note: KeaveAI collects anonymous usage stats. Opt out: KEAVEAI_TELEMETRY=0"
 
 #### Scenario: Subsequent command execution
 - **WHEN** a user has already seen the notice (noticeSeen: true in config)

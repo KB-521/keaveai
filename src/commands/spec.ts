@@ -111,11 +111,11 @@ export class SpecCommand {
 export function registerSpecCommand(rootProgram: typeof program) {
   const specCommand = rootProgram
     .command('spec')
-    .description('Manage and view WeaveAI specifications');
+    .description('Manage and view KeaveAI specifications');
 
   // Deprecation notice for noun-based commands
   specCommand.hook('preAction', () => {
-    console.error('Warning: The "weaveai spec ..." commands are deprecated. Prefer verb-first commands (e.g., "weaveai show", "weaveai validate --specs").');
+    console.error('Warning: The "keaveai spec ..." commands are deprecated. Prefer verb-first commands (e.g., "keaveai show", "keaveai validate --specs").');
   });
 
   specCommand

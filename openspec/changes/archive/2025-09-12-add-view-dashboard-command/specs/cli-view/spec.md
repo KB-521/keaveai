@@ -11,9 +11,9 @@ The system SHALL provide a `view` command that displays a dashboard overview of 
 - **WHEN** user runs `openspec view`
 - **THEN** system displays a formatted dashboard with sections for summary, active changes, completed changes, and specifications
 
-#### Scenario: No WeaveAI directory
+#### Scenario: No KeaveAI directory
 
-- **WHEN** user runs `openspec view` in a directory without WeaveAI
+- **WHEN** user runs `openspec view` in a directory without KeaveAI
 - **THEN** system displays error message "✗ No openspec directory found"
 
 ### Requirement: Summary Section

@@ -1,40 +1,40 @@
 ## ADDED Requirements
 
 ### Requirement: Multi-platform Nix flake
-The system SHALL provide a Nix flake that builds WeaveAI for multiple platforms.
+The system SHALL provide a Nix flake that builds KeaveAI for multiple platforms.
 
 #### Scenario: Build on Linux x86_64
 - **WHEN** user runs `nix build` on x86_64-linux system
-- **THEN** system builds WeaveAI package successfully
+- **THEN** system builds KeaveAI package successfully
 - **AND** package includes the `openspec` binary
 
 #### Scenario: Build on macOS ARM
 - **WHEN** user runs `nix build` on aarch64-darwin system
-- **THEN** system builds WeaveAI package successfully
+- **THEN** system builds KeaveAI package successfully
 - **AND** package includes the `openspec` binary
 
 #### Scenario: Build on Linux ARM
 - **WHEN** user runs `nix build` on aarch64-linux system
-- **THEN** system builds WeaveAI package successfully
+- **THEN** system builds KeaveAI package successfully
 
 #### Scenario: Build on macOS x86_64
 - **WHEN** user runs `nix build` on x86_64-darwin system
-- **THEN** system builds WeaveAI package successfully
+- **THEN** system builds KeaveAI package successfully
 
 ### Requirement: Direct execution via nix run
-The system SHALL allow users to run WeaveAI directly from GitHub without installing.
+The system SHALL allow users to run KeaveAI directly from GitHub without installing.
 
 #### Scenario: Run init command from GitHub
 - **WHEN** user runs `nix run github:Fission-AI/WeaveAI -- init`
-- **THEN** system downloads and builds WeaveAI
+- **THEN** system downloads and builds KeaveAI
 - **AND** executes `openspec init` command
 
-#### Scenario: Run any WeaveAI command
+#### Scenario: Run any KeaveAI command
 - **WHEN** user runs `nix run github:Fission-AI/WeaveAI -- <command> <args>`
 - **THEN** system executes `openspec <command> <args>`
 
 ### Requirement: pnpm dependency management
-The system SHALL use pnpm for building WeaveAI in the Nix flake.
+The system SHALL use pnpm for building KeaveAI in the Nix flake.
 
 #### Scenario: Fetch dependencies with pnpm
 - **WHEN** Nix builds the package
@@ -51,7 +51,7 @@ The system SHALL use pnpm for building WeaveAI in the Nix flake.
 The system SHALL use Node.js 20 as specified in package.json engines field.
 
 #### Scenario: Build with correct Node version
-- **WHEN** Nix builds WeaveAI
+- **WHEN** Nix builds KeaveAI
 - **THEN** system uses nodejs_20 from nixpkgs
 - **AND** build succeeds without version compatibility errors
 
@@ -59,7 +59,7 @@ The system SHALL use Node.js 20 as specified in package.json engines field.
 The system SHALL provide a Nix development shell for contributors.
 
 #### Scenario: Enter dev shell
-- **WHEN** user runs `nix develop` in WeaveAI repository
+- **WHEN** user runs `nix develop` in KeaveAI repository
 - **THEN** system provides shell with nodejs_20 and pnpm_9
 - **AND** displays welcome message with versions
 - **AND** provides instructions to run `pnpm install`

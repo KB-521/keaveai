@@ -1,6 +1,6 @@
 # Migrating to OPSX
 
-This guide helps you transition from the legacy WeaveAI workflow to OPSX. The migration is designed to be smooth—your existing work is preserved, and the new system offers more flexibility.
+This guide helps you transition from the legacy KeaveAI workflow to OPSX. The migration is designed to be smooth—your existing work is preserved, and the new system offers more flexibility.
 
 ## What's Changing?
 
@@ -27,17 +27,17 @@ The migration process is designed with preservation in mind:
 - **Active changes in `openspec/changes/`** — Completely preserved. You can continue them with OPSX commands.
 - **Archived changes** — Untouched. Your history remains intact.
 - **Main specs in `openspec/specs/`** — Untouched. These are your source of truth.
-- **Your content in CLAUDE.md, AGENTS.md, etc.** — Preserved. Only the WeaveAI marker blocks are removed; everything you wrote stays.
+- **Your content in CLAUDE.md, AGENTS.md, etc.** — Preserved. Only the KeaveAI marker blocks are removed; everything you wrote stays.
 
 ### What Gets Removed
 
-Only WeaveAI-managed files that are being replaced:
+Only KeaveAI-managed files that are being replaced:
 
 | What | Why |
 |------|-----|
 | Legacy slash command directories/files | Replaced by the new skills system |
 | `openspec/AGENTS.md` | Obsolete workflow trigger |
-| WeaveAI markers in `CLAUDE.md`, `AGENTS.md`, etc. | No longer needed |
+| KeaveAI markers in `CLAUDE.md`, `AGENTS.md`, etc. | No longer needed |
 
 **Legacy command locations by tool** (examples—your tool may vary):
 
@@ -51,7 +51,7 @@ Only WeaveAI-managed files that are being replaced:
 
 The migration detects whichever tools you have configured and cleans up their legacy files.
 
-The removal list may seem long, but these are all files that WeaveAI originally created. Your own content is never deleted.
+The removal list may seem long, but these are all files that KeaveAI originally created. Your own content is never deleted.
 
 ### What Needs Your Attention
 
@@ -67,7 +67,7 @@ One file requires manual migration:
 
 The old `project.md` was passive—agents might read it, might not, might forget what they read. We found reliability was inconsistent.
 
-The new `config.yaml` context is **actively injected into every WeaveAI planning request**. This means your project conventions, tech stack, and rules are always present when the AI is creating artifacts. Higher reliability.
+The new `config.yaml` context is **actively injected into every KeaveAI planning request**. This means your project conventions, tech stack, and rules are always present when the AI is creating artifacts. Higher reliability.
 
 **The tradeoff:**
 
@@ -82,25 +82,25 @@ Don't worry about getting it perfect. We're still learning what works best here,
 
 ## Running the Migration
 
-Both `weaveai init` and `weaveai update` detect legacy files and guide you through the same cleanup process. Use whichever fits your situation:
+Both `keaveai init` and `keaveai update` detect legacy files and guide you through the same cleanup process. Use whichever fits your situation:
 
 - New installs default to profile `core` (`propose`, `explore`, `apply`, `archive`).
 - Migrated installs preserve your previously installed workflows by writing a `custom` profile when needed.
 
-### Using `weaveai init`
+### Using `keaveai init`
 
 Run this if you want to add new tools or reconfigure which tools are set up:
 
 ```bash
-weaveai init
+keaveai init
 ```
 
 The init command detects legacy files and guides you through cleanup:
 
 ```
-Upgrading to the new WeaveAI
+Upgrading to the new KeaveAI
 
-WeaveAI now uses agent skills, the emerging standard across coding
+KeaveAI now uses agent skills, the emerging standard across coding
 agents. This simplifies your setup while keeping everything working
 as before.
 
@@ -110,7 +110,7 @@ No user content to preserve:
   • openspec/AGENTS.md
 
 Files to update
-WeaveAI markers will be removed, your content preserved:
+KeaveAI markers will be removed, your content preserved:
   • CLAUDE.md
   • AGENTS.md
 
@@ -119,7 +119,7 @@ Needs your attention
     We won't delete this file. It may contain useful project context.
 
     The new openspec/config.yaml has a "context:" section for planning
-    context. This is included in every WeaveAI request and works more
+    context. This is included in every KeaveAI request and works more
     reliably than the old project.md approach.
 
     Review project.md, move any useful content to config.yaml's context
@@ -131,17 +131,17 @@ Needs your attention
 **What happens when you say yes:**
 
 1. Legacy slash command directories are removed
-2. WeaveAI markers are stripped from `CLAUDE.md`, `AGENTS.md`, etc. (your content stays)
+2. KeaveAI markers are stripped from `CLAUDE.md`, `AGENTS.md`, etc. (your content stays)
 3. `openspec/AGENTS.md` is deleted
 4. New skills are installed in `.claude/skills/`
 5. `openspec/config.yaml` is created with a default schema
 
-### Using `weaveai update`
+### Using `keaveai update`
 
 Run this if you just want to migrate and refresh your existing tools to the latest version:
 
 ```bash
-weaveai update
+keaveai update
 ```
 
 The update command also detects and cleans up legacy artifacts, then refreshes generated skills/commands to match your current profile and delivery settings.
@@ -151,7 +151,7 @@ The update command also detects and cleans up legacy artifacts, then refreshes g
 For scripted migrations:
 
 ```bash
-weaveai init --force --tools claude
+keaveai init --force --tools claude
 ```
 
 The `--force` flag skips prompts and auto-accepts cleanup.
@@ -260,7 +260,7 @@ When migrating, be selective. Ask yourself: "Does the AI need this for *every* p
 If you're unsure how to distill your project.md, ask your AI assistant:
 
 ```
-I'm migrating from WeaveAI's old project.md to the new config.yaml format.
+I'm migrating from KeaveAI's old project.md to the new config.yaml format.
 
 Here's my current project.md:
 [paste your project.md content]
@@ -301,7 +301,7 @@ Command availability is profile-dependent:
 | `/opsx:bulk-archive` | Archive multiple changes at once |
 | `/opsx:onboard` | Guided end-to-end onboarding workflow |
 
-Enable expanded commands with `weaveai config profile`, then run `weaveai update`.
+Enable expanded commands with `keaveai config profile`, then run `keaveai update`.
 
 ### Command Mapping from Legacy
 
@@ -432,7 +432,7 @@ Shows what's ready to create based on what already exists.
 **Need to see status?**
 
 ```bash
-weaveai status --change add-my-feature
+keaveai status --change add-my-feature
 ```
 
 ---
@@ -482,7 +482,7 @@ When determining which schema to use, OPSX checks in order:
 List all available schemas:
 
 ```bash
-weaveai schemas
+keaveai schemas
 ```
 
 ### Custom Schemas
@@ -490,13 +490,13 @@ weaveai schemas
 Create your own workflow:
 
 ```bash
-weaveai schema init my-workflow
+keaveai schema init my-workflow
 ```
 
 Or fork an existing one:
 
 ```bash
-weaveai schema fork spec-driven my-workflow
+keaveai schema fork spec-driven my-workflow
 ```
 
 See [Customization](customization.md) for details.
@@ -510,7 +510,7 @@ See [Customization](customization.md) for details.
 You're running in a CI or non-interactive environment. Use:
 
 ```bash
-weaveai init --force
+keaveai init --force
 ```
 
 ### Commands not appearing after migration
@@ -526,7 +526,7 @@ Check that your `rules:` keys match your schema's artifact IDs:
 Run this to see valid artifact IDs:
 
 ```bash
-weaveai schemas --json
+keaveai schemas --json
 ```
 
 ### Config not being applied
@@ -562,8 +562,8 @@ project/
 │       ├── openspec-explore/
 │       ├── openspec-apply-change/
 │       └── ...                   # expanded profile adds new/continue/ff/etc.
-├── CLAUDE.md                     # WeaveAI markers removed, your content preserved
-└── AGENTS.md                     # WeaveAI markers removed, your content preserved
+├── CLAUDE.md                     # KeaveAI markers removed, your content preserved
+└── AGENTS.md                     # KeaveAI markers removed, your content preserved
 ```
 
 ### What's Gone
@@ -571,7 +571,7 @@ project/
 - `.claude/commands/openspec/` — replaced by `.claude/skills/`
 - `openspec/AGENTS.md` — obsolete
 - `openspec/project.md` — migrate to `config.yaml`, then delete
-- WeaveAI marker blocks in `CLAUDE.md`, `AGENTS.md`, etc.
+- KeaveAI marker blocks in `CLAUDE.md`, `AGENTS.md`, etc.
 
 ### Command Cheatsheet
 

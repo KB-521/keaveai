@@ -9,7 +9,7 @@ interface CacheEntry<T> {
 }
 
 /**
- * Provides dynamic completion suggestions for WeaveAI items (changes and specs).
+ * Provides dynamic completion suggestions for KeaveAI items (changes and specs).
  * Implements a 2-second cache to avoid excessive file system operations during
  * tab completion.
  */

@@ -2,7 +2,7 @@
 
 ## Purpose
 
-The `openspec init` command SHALL create a complete WeaveAI directory structure in any project, enabling immediate adoption of WeaveAI conventions with support for multiple AI coding assistants.
+The `openspec init` command SHALL create a complete KeaveAI directory structure in any project, enabling immediate adoption of KeaveAI conventions with support for multiple AI coding assistants.
 
 ## Behavior
 
@@ -11,8 +11,8 @@ The `openspec init` command SHALL create a complete WeaveAI directory structure 
 WHEN executing initialization steps
 THEN validate environment silently in background (no output unless error)
 AND display progress with ora spinners:
-- Show spinner: "⠋ Creating WeaveAI structure..."
-- Then success: "✔ WeaveAI structure created"
+- Show spinner: "⠋ Creating KeaveAI structure..."
+- Then success: "✔ KeaveAI structure created"
 - Show spinner: "⠋ Configuring AI tools..."
 - Then success: "✔ AI tools configured"
 
@@ -32,14 +32,14 @@ openspec/
 ### File Generation
 
 The command SHALL generate:
-- `README.md` containing complete WeaveAI instructions for AI assistants
+- `README.md` containing complete KeaveAI instructions for AI assistants
 - `project.md` with project context template
 
 ### AI Tool Configuration
 
 WHEN run interactively
 THEN prompt user to select AI tools to configure:
-- Claude Code (updates/creates CLAUDE.md with WeaveAI markers)
+- Claude Code (updates/creates CLAUDE.md with KeaveAI markers)
 - Cursor (future)
 - Aider (future)
 
@@ -49,34 +49,34 @@ WHEN Claude Code is selected
 THEN create or update `CLAUDE.md` in the project root directory (not inside openspec/)
 
 WHEN CLAUDE.md does not exist
-THEN create new file with WeaveAI content wrapped in markers:
+THEN create new file with KeaveAI content wrapped in markers:
 ```markdown
-<!-- WEAVEAI:START -->
-# WeaveAI Project
+<!-- KEAVEAI:START -->
+# KeaveAI Project
 
-This document provides instructions for AI coding assistants on how to use WeaveAI conventions for spec-driven development. Follow these rules precisely when working on WeaveAI-enabled projects.
+This document provides instructions for AI coding assistants on how to use KeaveAI conventions for spec-driven development. Follow these rules precisely when working on KeaveAI-enabled projects.
 
-This project uses WeaveAI for spec-driven development. Specifications are the source of truth.
+This project uses KeaveAI for spec-driven development. Specifications are the source of truth.
 
 See @openspec/README.md for detailed conventions and guidelines.
-<!-- WEAVEAI:END -->
+<!-- KEAVEAI:END -->
 ```
 
 WHEN CLAUDE.md already exists
 THEN preserve all existing content
-AND insert WeaveAI content at the beginning of the file using markers
+AND insert KeaveAI content at the beginning of the file using markers
 AND ensure markers don't duplicate if they already exist
 
 The marker system SHALL:
-- Use `<!-- WEAVEAI:START -->` to mark the beginning of managed content
-- Use `<!-- WEAVEAI:END -->` to mark the end of managed content
-- Allow WeaveAI to update its content without affecting user customizations
+- Use `<!-- KEAVEAI:START -->` to mark the beginning of managed content
+- Use `<!-- KEAVEAI:END -->` to mark the end of managed content
+- Allow KeaveAI to update its content without affecting user customizations
 - Preserve all content outside the markers intact
 
 WHY use markers:
 - Users may have existing CLAUDE.md instructions they want to keep
-- WeaveAI can update its instructions in future versions
-- Clear boundary between WeaveAI-managed and user-managed content
+- KeaveAI can update its instructions in future versions
+- Clear boundary between KeaveAI-managed and user-managed content
 
 ### Interactive Mode
 
@@ -97,7 +97,7 @@ User navigation:
 
 WHEN `openspec/` directory already exists
 THEN display error with ora fail indicator:
-"✖ Error: WeaveAI seems to already be initialized. Use 'openspec update' to update the structure."
+"✖ Error: KeaveAI seems to already be initialized. Use 'openspec update' to update the structure."
 
 WHEN checking initialization feasibility
 THEN verify write permissions in the target directory silently
@@ -108,7 +108,7 @@ AND only display error if permissions are insufficient
 WHEN initialization completes successfully
 THEN display actionable prompts for AI-driven workflow:
 ```
-✔ WeaveAI initialized successfully!
+✔ KeaveAI initialized successfully!
 
 Next steps - Copy these prompts to Claude:
 
@@ -119,10 +119,10 @@ Next steps - Copy these prompts to Claude:
 
 2. Create your first change proposal:
    "I want to add [YOUR FEATURE HERE]. Please create an
-    WeaveAI change proposal for this feature"
+    KeaveAI change proposal for this feature"
 
-3. Learn the WeaveAI workflow:
-   "Please explain the WeaveAI workflow from openspec/README.md
+3. Learn the KeaveAI workflow:
+   "Please explain the KeaveAI workflow from openspec/README.md
     and how I should work with you on this project"
 ────────────────────────────────────────────────────────────
 ```
@@ -135,13 +135,13 @@ The prompts SHALL:
 ### Exit Codes
 
 - 0: Success
-- 1: General error (including when WeaveAI directory already exists)
+- 1: General error (including when KeaveAI directory already exists)
 - 2: Insufficient permissions (reserved for future use)
 - 3: User cancelled operation (reserved for future use)
 
 ## Why
 
-Manual creation of WeaveAI structure is error-prone and creates adoption friction. A standardized init command ensures:
+Manual creation of KeaveAI structure is error-prone and creates adoption friction. A standardized init command ensures:
 - Consistent structure across all projects
 - Proper AI instruction files are always included
 - Quick onboarding for new projects

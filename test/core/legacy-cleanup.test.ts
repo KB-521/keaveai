@@ -8,8 +8,8 @@ import {
   detectLegacyConfigFiles,
   detectLegacySlashCommands,
   detectLegacyStructureFiles,
-  hasWeaveAIMarkers,
-  isOnlyWeaveAIContent,
+  hasKeaveAIMarkers,
+  isOnlyKeaveAIContent,
   removeMarkerBlock,
   cleanupLegacyArtifacts,
   formatCleanupSummary,
@@ -19,7 +19,7 @@ import {
   LEGACY_CONFIG_FILES,
   LEGACY_SLASH_COMMAND_PATHS,
 } from '../../src/core/legacy-cleanup.js';
-import { WEAVEAI_MARKERS } from '../../src/core/config.js';
+import { KEAVEAI_MARKERS } from '../../src/core/config.js';
 import { CommandAdapterRegistry } from '../../src/core/command-generation/registry.js';
 
 describe('legacy-cleanup', () => {
@@ -36,100 +36,100 @@ describe('legacy-cleanup', () => {
     await fs.rm(testDir, { recursive: true, force: true });
   });
 
-  describe('hasWeaveAIMarkers', () => {
+  describe('hasKeaveAIMarkers', () => {
     it('should return true when both markers are present', () => {
       const content = `Some content
-${WEAVEAI_MARKERS.start}
-WeaveAI content
-${WEAVEAI_MARKERS.end}
+${KEAVEAI_MARKERS.start}
+KeaveAI content
+${KEAVEAI_MARKERS.end}
 More content`;
-      expect(hasWeaveAIMarkers(content)).toBe(true);
+      expect(hasKeaveAIMarkers(content)).toBe(true);
     });
 
     it('should return false when start marker is missing', () => {
       const content = `Some content
-WeaveAI content
-${WEAVEAI_MARKERS.end}`;
-      expect(hasWeaveAIMarkers(content)).toBe(false);
+KeaveAI content
+${KEAVEAI_MARKERS.end}`;
+      expect(hasKeaveAIMarkers(content)).toBe(false);
     });
 
     it('should return false when end marker is missing', () => {
-      const content = `${WEAVEAI_MARKERS.start}
-WeaveAI content
+      const content = `${KEAVEAI_MARKERS.start}
+KeaveAI content
 Some content`;
-      expect(hasWeaveAIMarkers(content)).toBe(false);
+      expect(hasKeaveAIMarkers(content)).toBe(false);
     });
 
     it('should return false when no markers are present', () => {
       const content = 'Plain content without markers';
-      expect(hasWeaveAIMarkers(content)).toBe(false);
+      expect(hasKeaveAIMarkers(content)).toBe(false);
     });
   });
 
-  describe('isOnlyWeaveAIContent', () => {
+  describe('isOnlyKeaveAIContent', () => {
     it('should return true when content is only markers and whitespace outside', () => {
-      const content = `${WEAVEAI_MARKERS.start}
-WeaveAI content here
-${WEAVEAI_MARKERS.end}`;
-      expect(isOnlyWeaveAIContent(content)).toBe(true);
+      const content = `${KEAVEAI_MARKERS.start}
+KeaveAI content here
+${KEAVEAI_MARKERS.end}`;
+      expect(isOnlyKeaveAIContent(content)).toBe(true);
     });
 
     it('should return true with whitespace before and after markers', () => {
       const content = `
 
-${WEAVEAI_MARKERS.start}
-WeaveAI content
-${WEAVEAI_MARKERS.end}
+${KEAVEAI_MARKERS.start}
+KeaveAI content
+${KEAVEAI_MARKERS.end}
 
 `;
-      expect(isOnlyWeaveAIContent(content)).toBe(true);
+      expect(isOnlyKeaveAIContent(content)).toBe(true);
     });
 
     it('should return false when content exists before markers', () => {
       const content = `User content here
-${WEAVEAI_MARKERS.start}
-WeaveAI content
-${WEAVEAI_MARKERS.end}`;
-      expect(isOnlyWeaveAIContent(content)).toBe(false);
+${KEAVEAI_MARKERS.start}
+KeaveAI content
+${KEAVEAI_MARKERS.end}`;
+      expect(isOnlyKeaveAIContent(content)).toBe(false);
     });
 
     it('should return false when content exists after markers', () => {
-      const content = `${WEAVEAI_MARKERS.start}
-WeaveAI content
-${WEAVEAI_MARKERS.end}
+      const content = `${KEAVEAI_MARKERS.start}
+KeaveAI content
+${KEAVEAI_MARKERS.end}
 User content here`;
-      expect(isOnlyWeaveAIContent(content)).toBe(false);
+      expect(isOnlyKeaveAIContent(content)).toBe(false);
     });
 
     it('should return false when markers are missing', () => {
       const content = 'Plain content without markers';
-      expect(isOnlyWeaveAIContent(content)).toBe(false);
+      expect(isOnlyKeaveAIContent(content)).toBe(false);
     });
 
     it('should return false when end marker comes before start marker', () => {
-      const content = `${WEAVEAI_MARKERS.end}
+      const content = `${KEAVEAI_MARKERS.end}
 Content
-${WEAVEAI_MARKERS.start}`;
-      expect(isOnlyWeaveAIContent(content)).toBe(false);
+${KEAVEAI_MARKERS.start}`;
+      expect(isOnlyKeaveAIContent(content)).toBe(false);
     });
   });
 
   describe('removeMarkerBlock', () => {
     it('should remove marker block and preserve content before', () => {
       const content = `User content before
-${WEAVEAI_MARKERS.start}
-WeaveAI content
-${WEAVEAI_MARKERS.end}`;
+${KEAVEAI_MARKERS.start}
+KeaveAI content
+${KEAVEAI_MARKERS.end}`;
       const result = removeMarkerBlock(content);
       expect(result).toBe('User content before\n');
-      expect(result).not.toContain(WEAVEAI_MARKERS.start);
-      expect(result).not.toContain(WEAVEAI_MARKERS.end);
+      expect(result).not.toContain(KEAVEAI_MARKERS.start);
+      expect(result).not.toContain(KEAVEAI_MARKERS.end);
     });
 
     it('should remove marker block and preserve content after', () => {
-      const content = `${WEAVEAI_MARKERS.start}
-WeaveAI content
-${WEAVEAI_MARKERS.end}
+      const content = `${KEAVEAI_MARKERS.start}
+KeaveAI content
+${KEAVEAI_MARKERS.end}
 User content after`;
       const result = removeMarkerBlock(content);
       expect(result).toBe('User content after\n');
@@ -137,23 +137,23 @@ User content after`;
 
     it('should remove marker block and preserve content before and after', () => {
       const content = `User content before
-${WEAVEAI_MARKERS.start}
-WeaveAI content
-${WEAVEAI_MARKERS.end}
+${KEAVEAI_MARKERS.start}
+KeaveAI content
+${KEAVEAI_MARKERS.end}
 User content after`;
       const result = removeMarkerBlock(content);
       expect(result).toContain('User content before');
       expect(result).toContain('User content after');
-      expect(result).not.toContain(WEAVEAI_MARKERS.start);
+      expect(result).not.toContain(KEAVEAI_MARKERS.start);
     });
 
     it('should clean up double blank lines', () => {
       const content = `Line 1
 
 
-${WEAVEAI_MARKERS.start}
-WeaveAI content
-${WEAVEAI_MARKERS.end}
+${KEAVEAI_MARKERS.start}
+KeaveAI content
+${KEAVEAI_MARKERS.end}
 
 
 Line 2`;
@@ -162,9 +162,9 @@ Line 2`;
     });
 
     it('should return empty string when only markers remain', () => {
-      const content = `${WEAVEAI_MARKERS.start}
-WeaveAI content
-${WEAVEAI_MARKERS.end}`;
+      const content = `${KEAVEAI_MARKERS.start}
+KeaveAI content
+${KEAVEAI_MARKERS.end}`;
       const result = removeMarkerBlock(content);
       expect(result).toBe('');
     });
@@ -177,26 +177,26 @@ ${WEAVEAI_MARKERS.end}`;
     });
 
     it('should return original content when markers are in wrong order', () => {
-      const content = `${WEAVEAI_MARKERS.end}
+      const content = `${KEAVEAI_MARKERS.end}
 Content
-${WEAVEAI_MARKERS.start}`;
+${KEAVEAI_MARKERS.start}`;
       const result = removeMarkerBlock(content);
-      expect(result).toContain(WEAVEAI_MARKERS.end);
-      expect(result).toContain(WEAVEAI_MARKERS.start);
+      expect(result).toContain(KEAVEAI_MARKERS.end);
+      expect(result).toContain(KEAVEAI_MARKERS.start);
     });
 
     it('should ignore inline mentions of markers and only remove actual block', () => {
-      const content = `Intro referencing ${WEAVEAI_MARKERS.start} and ${WEAVEAI_MARKERS.end} inline.
+      const content = `Intro referencing ${KEAVEAI_MARKERS.start} and ${KEAVEAI_MARKERS.end} inline.
 
-${WEAVEAI_MARKERS.start}
+${KEAVEAI_MARKERS.start}
 Managed content here
-${WEAVEAI_MARKERS.end}
+${KEAVEAI_MARKERS.end}
 After content`;
       const result = removeMarkerBlock(content);
       // Inline mentions preserved
       expect(result).toContain('Intro referencing');
-      expect(result).toContain(WEAVEAI_MARKERS.start);
-      expect(result).toContain(WEAVEAI_MARKERS.end);
+      expect(result).toContain(KEAVEAI_MARKERS.start);
+      expect(result).toContain(KEAVEAI_MARKERS.end);
       // Managed content removed
       expect(result).not.toContain('Managed content here');
       expect(result).toContain('After content');
@@ -204,11 +204,11 @@ After content`;
   });
 
   describe('detectLegacyConfigFiles', () => {
-    it('should detect CLAUDE.md with WeaveAI markers and put in update list', async () => {
+    it('should detect CLAUDE.md with KeaveAI markers and put in update list', async () => {
       const claudePath = path.join(testDir, 'CLAUDE.md');
-      await fs.writeFile(claudePath, `${WEAVEAI_MARKERS.start}
-WeaveAI content
-${WEAVEAI_MARKERS.end}`);
+      await fs.writeFile(claudePath, `${KEAVEAI_MARKERS.start}
+KeaveAI content
+${KEAVEAI_MARKERS.end}`);
 
       const result = await detectLegacyConfigFiles(testDir);
       expect(result.allFiles).toContain('CLAUDE.md');
@@ -219,16 +219,16 @@ ${WEAVEAI_MARKERS.end}`);
     it('should detect files with mixed content and put in update list', async () => {
       const claudePath = path.join(testDir, 'CLAUDE.md');
       await fs.writeFile(claudePath, `User instructions here
-${WEAVEAI_MARKERS.start}
-WeaveAI content
-${WEAVEAI_MARKERS.end}`);
+${KEAVEAI_MARKERS.start}
+KeaveAI content
+${KEAVEAI_MARKERS.end}`);
 
       const result = await detectLegacyConfigFiles(testDir);
       expect(result.allFiles).toContain('CLAUDE.md');
       expect(result.filesToUpdate).toContain('CLAUDE.md');
     });
 
-    it('should not detect files without WeaveAI markers', async () => {
+    it('should not detect files without KeaveAI markers', async () => {
       const claudePath = path.join(testDir, 'CLAUDE.md');
       await fs.writeFile(claudePath, 'Plain instructions without markers');
 
@@ -238,9 +238,9 @@ ${WEAVEAI_MARKERS.end}`);
 
     it('should detect multiple config files', async () => {
       // Create multiple config files with markers
-      await fs.writeFile(path.join(testDir, 'CLAUDE.md'), `${WEAVEAI_MARKERS.start}\nContent\n${WEAVEAI_MARKERS.end}`);
-      await fs.writeFile(path.join(testDir, 'CLINE.md'), `${WEAVEAI_MARKERS.start}\nContent\n${WEAVEAI_MARKERS.end}`);
-      await fs.writeFile(path.join(testDir, 'QODER.md'), `${WEAVEAI_MARKERS.start}\nContent\n${WEAVEAI_MARKERS.end}`);
+      await fs.writeFile(path.join(testDir, 'CLAUDE.md'), `${KEAVEAI_MARKERS.start}\nContent\n${KEAVEAI_MARKERS.end}`);
+      await fs.writeFile(path.join(testDir, 'CLINE.md'), `${KEAVEAI_MARKERS.start}\nContent\n${KEAVEAI_MARKERS.end}`);
+      await fs.writeFile(path.join(testDir, 'QODER.md'), `${KEAVEAI_MARKERS.start}\nContent\n${KEAVEAI_MARKERS.end}`);
 
       const result = await detectLegacyConfigFiles(testDir);
       expect(result.allFiles).toHaveLength(3);
@@ -383,11 +383,11 @@ ${WEAVEAI_MARKERS.end}`);
       expect(result.hasProjectMd).toBe(true);
     });
 
-    it('should detect root AGENTS.md with WeaveAI markers', async () => {
+    it('should detect root AGENTS.md with KeaveAI markers', async () => {
       const agentsPath = path.join(testDir, 'AGENTS.md');
-      await fs.writeFile(agentsPath, `${WEAVEAI_MARKERS.start}
-WeaveAI content
-${WEAVEAI_MARKERS.end}`);
+      await fs.writeFile(agentsPath, `${KEAVEAI_MARKERS.start}
+KeaveAI content
+${KEAVEAI_MARKERS.end}`);
 
       const result = await detectLegacyStructureFiles(testDir);
       expect(result.hasRootAgentsWithMarkers).toBe(true);
@@ -416,7 +416,7 @@ ${WEAVEAI_MARKERS.end}`);
     });
 
     it('should return hasLegacyArtifacts: true when config files are found', async () => {
-      await fs.writeFile(path.join(testDir, 'CLAUDE.md'), `${WEAVEAI_MARKERS.start}\nContent\n${WEAVEAI_MARKERS.end}`);
+      await fs.writeFile(path.join(testDir, 'CLAUDE.md'), `${KEAVEAI_MARKERS.start}\nContent\n${KEAVEAI_MARKERS.end}`);
 
       const result = await detectLegacyArtifacts(testDir);
       expect(result.hasLegacyArtifacts).toBe(true);
@@ -450,7 +450,7 @@ ${WEAVEAI_MARKERS.end}`);
 
     it('should combine all detection results', async () => {
       // Create various legacy artifacts
-      await fs.writeFile(path.join(testDir, 'CLAUDE.md'), `${WEAVEAI_MARKERS.start}\nContent\n${WEAVEAI_MARKERS.end}`);
+      await fs.writeFile(path.join(testDir, 'CLAUDE.md'), `${KEAVEAI_MARKERS.start}\nContent\n${KEAVEAI_MARKERS.end}`);
       await fs.mkdir(path.join(testDir, '.claude', 'commands', 'openspec'), { recursive: true });
       await fs.writeFile(path.join(testDir, 'openspec', 'AGENTS.md'), 'content');
       await fs.writeFile(path.join(testDir, 'openspec', 'project.md'), 'content');
@@ -465,9 +465,9 @@ ${WEAVEAI_MARKERS.end}`);
   });
 
   describe('cleanupLegacyArtifacts', () => {
-    it('should remove markers from config files that have only WeaveAI content (never delete)', async () => {
+    it('should remove markers from config files that have only KeaveAI content (never delete)', async () => {
       const claudePath = path.join(testDir, 'CLAUDE.md');
-      await fs.writeFile(claudePath, `${WEAVEAI_MARKERS.start}\nContent\n${WEAVEAI_MARKERS.end}`);
+      await fs.writeFile(claudePath, `${KEAVEAI_MARKERS.start}\nContent\n${KEAVEAI_MARKERS.end}`);
 
       const detection = await detectLegacyArtifacts(testDir);
       const result = await cleanupLegacyArtifacts(testDir, detection);
@@ -479,16 +479,16 @@ ${WEAVEAI_MARKERS.end}`);
       await expect(fs.access(claudePath)).resolves.not.toThrow();
       // File should be empty or have markers removed
       const content = await fs.readFile(claudePath, 'utf-8');
-      expect(content).not.toContain(WEAVEAI_MARKERS.start);
-      expect(content).not.toContain(WEAVEAI_MARKERS.end);
+      expect(content).not.toContain(KEAVEAI_MARKERS.start);
+      expect(content).not.toContain(KEAVEAI_MARKERS.end);
     });
 
     it('should remove marker block from files with mixed content', async () => {
       const claudePath = path.join(testDir, 'CLAUDE.md');
       await fs.writeFile(claudePath, `User instructions
-${WEAVEAI_MARKERS.start}
-WeaveAI content
-${WEAVEAI_MARKERS.end}`);
+${KEAVEAI_MARKERS.start}
+KeaveAI content
+${KEAVEAI_MARKERS.end}`);
 
       const detection = await detectLegacyArtifacts(testDir);
       const result = await cleanupLegacyArtifacts(testDir, detection);
@@ -496,7 +496,7 @@ ${WEAVEAI_MARKERS.end}`);
       expect(result.modifiedFiles).toContain('CLAUDE.md');
       const content = await fs.readFile(claudePath, 'utf-8');
       expect(content).toContain('User instructions');
-      expect(content).not.toContain(WEAVEAI_MARKERS.start);
+      expect(content).not.toContain(KEAVEAI_MARKERS.start);
     });
 
     it('should delete legacy slash command directories', async () => {
@@ -554,9 +554,9 @@ ${WEAVEAI_MARKERS.end}`);
     it('should handle root AGENTS.md with mixed content', async () => {
       const agentsPath = path.join(testDir, 'AGENTS.md');
       await fs.writeFile(agentsPath, `User content
-${WEAVEAI_MARKERS.start}
-WeaveAI content
-${WEAVEAI_MARKERS.end}`);
+${KEAVEAI_MARKERS.start}
+KeaveAI content
+${KEAVEAI_MARKERS.end}`);
 
       const detection = await detectLegacyArtifacts(testDir);
       const result = await cleanupLegacyArtifacts(testDir, detection);
@@ -564,12 +564,12 @@ ${WEAVEAI_MARKERS.end}`);
       expect(result.modifiedFiles).toContain('AGENTS.md');
       const content = await fs.readFile(agentsPath, 'utf-8');
       expect(content).toContain('User content');
-      expect(content).not.toContain(WEAVEAI_MARKERS.start);
+      expect(content).not.toContain(KEAVEAI_MARKERS.start);
     });
 
-    it('should remove markers from root AGENTS.md even when only WeaveAI content (never delete)', async () => {
+    it('should remove markers from root AGENTS.md even when only KeaveAI content (never delete)', async () => {
       const agentsPath = path.join(testDir, 'AGENTS.md');
-      await fs.writeFile(agentsPath, `${WEAVEAI_MARKERS.start}\nWeaveAI content\n${WEAVEAI_MARKERS.end}`);
+      await fs.writeFile(agentsPath, `${KEAVEAI_MARKERS.start}\nKeaveAI content\n${KEAVEAI_MARKERS.end}`);
 
       const detection = await detectLegacyArtifacts(testDir);
       const result = await cleanupLegacyArtifacts(testDir, detection);
@@ -641,7 +641,7 @@ ${WEAVEAI_MARKERS.end}`);
       };
 
       const summary = formatCleanupSummary(result);
-      expect(summary).toContain('✓ Removed WeaveAI markers from AGENTS.md');
+      expect(summary).toContain('✓ Removed KeaveAI markers from AGENTS.md');
     });
 
     it('should include migration hint for project.md', () => {
@@ -701,7 +701,7 @@ ${WEAVEAI_MARKERS.end}`);
       };
 
       const summary = formatDetectionSummary(detection);
-      expect(summary).toContain('Upgrading to the new WeaveAI');
+      expect(summary).toContain('Upgrading to the new KeaveAI');
       expect(summary).toContain('agent skills');
       expect(summary).toContain('keeping everything working');
     });
@@ -895,7 +895,7 @@ ${WEAVEAI_MARKERS.end}`);
 
     it('should explain the new context section benefits', () => {
       const hint = formatProjectMdMigrationHint();
-      expect(hint).toContain('included in every WeaveAI request');
+      expect(hint).toContain('included in every KeaveAI request');
       expect(hint).toContain('reliably');
     });
   });

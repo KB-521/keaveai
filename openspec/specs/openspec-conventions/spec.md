@@ -1,20 +1,20 @@
-# WeaveAI Conventions Specification
+# KeaveAI Conventions Specification
 
 ## Purpose
 
-WeaveAI conventions SHALL define how system capabilities are documented, how changes are proposed and tracked, and how specifications evolve over time. This meta-specification serves as the source of truth for WeaveAI's own conventions.
+KeaveAI conventions SHALL define how system capabilities are documented, how changes are proposed and tracked, and how specifications evolve over time. This meta-specification serves as the source of truth for KeaveAI's own conventions.
 ## Requirements
 ### Requirement: Structured conventions for specs and changes
 
-WeaveAI conventions SHALL mandate a structured spec format with clear requirement and scenario sections so tooling can parse consistently.
+KeaveAI conventions SHALL mandate a structured spec format with clear requirement and scenario sections so tooling can parse consistently.
 
 #### Scenario: Following the structured spec format
 
-- **WHEN** writing or updating WeaveAI specifications
+- **WHEN** writing or updating KeaveAI specifications
 - **THEN** authors SHALL use `### Requirement: ...` followed by at least one `#### Scenario: ...` section
 
 ### Requirement: Behavior-First Specification Boundary
-WeaveAI specifications SHALL capture verifiable behavior contracts and avoid internal implementation detail.
+KeaveAI specifications SHALL capture verifiable behavior contracts and avoid internal implementation detail.
 
 #### Scenario: Writing behavior requirements
 - **WHEN** documenting a capability in `spec.md`
@@ -26,7 +26,7 @@ WeaveAI specifications SHALL capture verifiable behavior contracts and avoid int
 - **THEN** those details SHALL be documented in `design.md` or `tasks.md` instead of behavioral requirements
 
 ### Requirement: Progressive Rigor
-WeaveAI conventions SHALL keep specs lightweight by default and scale rigor only when risk or coordination complexity demands it.
+KeaveAI conventions SHALL keep specs lightweight by default and scale rigor only when risk or coordination complexity demands it.
 
 #### Scenario: Routine change specification
 - **WHEN** a change is local and low-risk
@@ -37,10 +37,10 @@ WeaveAI conventions SHALL keep specs lightweight by default and scale rigor only
 - **THEN** authors increase detail and explicit validation expectations proportionally
 
 ### Requirement: Project Structure
-An WeaveAI project SHALL maintain a consistent directory structure for specifications and changes.
+An KeaveAI project SHALL maintain a consistent directory structure for specifications and changes.
 
 #### Scenario: Initializing project structure
-- **WHEN** an WeaveAI project is initialized
+- **WHEN** an KeaveAI project is initialized
 - **THEN** it SHALL have this structure:
 ```
 openspec/
@@ -228,7 +228,7 @@ Behavioral specifications SHALL adopt the structured format with `### Requiremen
 - **AND** use `#### Scenario:` for scenarios with bold WHEN/THEN/AND keywords
 
 ### Requirement: Verb–Noun CLI Command Structure
-WeaveAI CLI design SHALL use verbs as top-level commands with nouns provided as arguments or flags for scoping.
+KeaveAI CLI design SHALL use verbs as top-level commands with nouns provided as arguments or flags for scoping.
 
 #### Scenario: Verb-first command discovery
 - **WHEN** a user runs a command like `openspec list`
@@ -257,11 +257,11 @@ The system SHALL follow these principles:
 
 ### Requirement: Project Structure
 
-An WeaveAI project SHALL maintain a consistent directory structure for specifications and changes.
+An KeaveAI project SHALL maintain a consistent directory structure for specifications and changes.
 
 #### Scenario: Initializing project structure
 
-- **WHEN** an WeaveAI project is initialized
+- **WHEN** an KeaveAI project is initialized
 - **THEN** it SHALL have this structure:
 ```
 openspec/
