@@ -20,7 +20,7 @@ description: 管理需求的全生命周期,从初始想法到完成全程管理
 - `AGENTS.md` 与目标代码子项目 `AGENTS.md` - 当前任务所属项目域的技术导航、模块职责与下钻入口
 - `ai-workflow/sdd/INDEX.md` - 统一需求管理
 
-`<project-domain>` 按任务范围判定：`web/` 使用 `web`，`app/` 使用 `app`，`mini/` 使用 `mini`，`server/` 使用 `server`，跨项目通用内容使用 `global`；索引不存在时跳过该类上下文，不回退到其它项目域。
+`<project-domain>` 按任务实际所属的代码目录或仓库已有 wiki 域判定；`web/`、`app/`、`mini/`、`server/` 只是常见示例，不是唯一布局。跨项目通用内容使用 `global`。索引不存在时跳过该类上下文，不回退到其它项目域。
 
 ## 工作流
 
@@ -44,12 +44,12 @@ description: 管理需求的全生命周期,从初始想法到完成全程管理
 输入设计/PRD/动作底稿 → 提取功能点 → 拆分批次与子需求 → 建立依赖与追溯矩阵→ 更新索引（索引中需要标注哪些任务可以并行执行）
 ```
 
-### E. 新增/新建/更新需求（含语雀链接）工作流
+### E. 新增/新建/更新需求（含文档源）工作流
 ```
-输入“新增/新建/更新需求 + 语雀链接”
+输入“新增/新建/更新需求 + PRD 本地路径、文档链接或其他已配置文档源”
 → 生成或确认 change-id
 → 初始化目录 `ai-workflow/sdd/changes/<change-id>/prd/`
-→ 执行 prd-archive（先落库 PRD）
+→ 执行 prd-archive（按可插拔文档源先落库 PRD）
 → 更新 ai-workflow/sdd/INDEX.md
 ```
 

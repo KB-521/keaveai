@@ -7,7 +7,7 @@
 3. 业务服务契约 -> Entry API。
 4. 业务事件定义 -> 异步/MQ/定时任务。
 5. 外部 Client/Adapter 契约 -> 业务服务或异步任务。
-6. API 契约和实现稳定 -> YApi、测试。
+6. API 契约和实现稳定 -> API 文档（按项目已有或用户指定的可插拔来源）与测试。
 
 ## 阻塞判断
 
@@ -26,7 +26,7 @@
 - `biz`
 - `dal`
 - `manager`
-- `web/endpoint/controller`
+- `api/handler/router`（以仓库实际接口层目录为准）
 - `tests`
 - 共享契约：DTO、枚举、表结构、API、事件、错误码。
 
@@ -41,7 +41,7 @@
 规则：
 
 - 设计侧写入 `design/<design-package>/sql/`。
-- 运行侧写入 `server/docker-config/sql/<design-package>/`。
+- 运行侧写入仓库已有的 SQL/migration 目录；不要把某一固定路径（例如 `server/docker-config/sql/`）当作唯一布局。若仓库没有既有约定，先在父计划中声明本次采用的目录再写。
 - 文件名使用 `<order>-<source-id>-<sql-kind>.sql`，例如 `0100-OP-ORDER-01-schema-delta.sql`、`0110-OP-ORDER-01-dict-init.sql`。
 - 拆分任务场景下，`source-id` 必须使用对应 `Task Code`；无拆分任务且由技术方案直接生成 SQL 时，`source-id` 使用 `design-id`。
 - 执行顺序写入 manifest；文件名前缀必须来自父计划分配号段，用于大批量 SQL 的人工排序和发布辅助排序。

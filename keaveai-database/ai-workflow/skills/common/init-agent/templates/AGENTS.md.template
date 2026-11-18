@@ -23,7 +23,7 @@
 
 ## 子项目路由（混合项目根目录必选）
 - 修改 `<subproject>/`：先读取 `<subproject>/AGENTS.md`，并同时遵守 `ai-workflow/memory/` 中适用的偏好与约定。
-- 修改 `ai-workflow/` 或 `.codex/skills/`：按对应 `SKILL.md`、`ai-workflow/skills/INDEX.md` 与 `ai-workflow/wiki/**/INDEX.md` 执行；不生成 `ai-workflow/AGENTS.md`。
+- 修改 `ai-workflow/` 或当前工具的 skills 目录：按对应 `SKILL.md`、`ai-workflow/skills/INDEX.md` 与 `ai-workflow/wiki/**/INDEX.md` 执行；不生成 `ai-workflow/AGENTS.md`。
 
 ## 编码规范与命名约定
 - <缩进/引号/命名/导入规则>
@@ -43,7 +43,7 @@
 - 技术导航默认由各代码子项目 `AGENTS.md` 承接；不要默认生成 `ai-workflow/wiki/<project-domain>/tech/*`。
 
 ## 配置与环境（如适用）
-- <application*.yaml / .env / 日志配置位置>
+- <实际存在的应用配置、环境变量与日志配置位置>
 
 ## 安全与配置提示
 - <敏感信息与环境变量注意事项>

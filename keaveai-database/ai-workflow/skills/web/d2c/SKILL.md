@@ -2,8 +2,6 @@
 name: d2c
 description: 基于 Figma 链接，仅使用 Figma 官方 API 获取 2x 截图与 depth=10 节点 JSON，逐节点还原 React + Tailwind 页面并输出可追溯实现清单、节点映射与计算依据。用于设计稿高保真还原、UI 对齐修复与可审计交付。
 version: 1.0.0
-owners:
-  - dachui
 ---
 
 # D2C 页面实现（Figma API Only）

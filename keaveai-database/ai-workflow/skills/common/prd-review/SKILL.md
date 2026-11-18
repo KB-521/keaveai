@@ -2,9 +2,6 @@
 name: prd-review
 description: 检查 PRD 是否结构化、功能点是否清晰且可实现；进入技术方案或代码实现前，输出问题清单、业务对照证据、历史问题复核和修订建议。
 version: 1.1.0
-owners:
-  - dachui
-  - sunwencong
 ---
 
 # PRD 审查

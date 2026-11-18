@@ -38,7 +38,7 @@
 | 状态机 / 事务 / 幂等 / 并发控制 | +1 |
 | 异步 / MQ / 事件 / 定时 / 补偿 | +1 |
 | 外部系统 / SDK / Client / Adapter | +1 |
-| 跨租户 openService / openDAO | +1 |
+| 跨租户或跨边界的共享访问能力 | +1 |
 | 迁移 / 灰度 / 回滚 / 发布顺序 | +1 |
 | 多入口 API / 多业务主链路 | +1 |
 | 资金、资产、权限、安全、敏感数据等高风险主题 | +1 |
@@ -56,30 +56,30 @@
 当子任务超出复杂度预算时，按以下顺序拆：
 
 1. `migration-compat`：DDL、DML、回填、回滚、发布顺序。
-2. `persistence-capability`：DAO/Mapper/Manager/OpenDAO 能形成契约时拆。
+2. `persistence-capability`：数据访问层或仓库接口能形成契约时拆。
 3. `external-adapter`：Client/SDK/Adapter、防腐层、超时重试、错误映射。
 4. `async-worker`：MQ、事件、定时、补偿、重试、幂等消费。
-5. `entry-api`：Endpoint/Controller/DTO/校验/错误码。
+5. `entry-api`：对外 API、请求响应模型、校验与错误码。
 6. `business-service`：只保留业务原子链路、事务、状态和编排。
 
 ## Task Type
 
-| Type | 职责 | 推荐 skill |
+| Type | 职责 | 推荐实现方式 |
 | --- | --- | --- |
-| `persistence-capability` | DAO/Repository/Mapper/XML/PO/Query/OpenDAO/OpenMapper/薄 Manager | `server/persistence-impl` |
-| `business-service` | Service/Facade 编排、事务、状态、权限、租户上下文、幂等 | `server/req-impl` |
-| `async-worker` | 事件、MQ、定时、补偿、重试、死信、幂等消费 | `server/req-impl` |
-| `entry-api` | Endpoint/Controller、DTO、参数校验、错误码、鉴权、YApi 契约 | `server/entry-impl` |
-| `external-adapter` | Client/SDK/Adapter、防腐层、超时重试、错误映射 | `server/req-impl` 或专用 adapter skill |
-| `migration-compat` | DDL、DML、回填、兼容、灰度、回滚、数据校验 | `server/data-model-design` 或实现专项 |
-| `test-doc-review` | 单测、接口 mock、YApi、review | `server/test-codegen`、`server/yapi-mcp-sync`、`server/code-review` |
+| `persistence-capability` | 数据访问层、仓库/ORM 映射、查询对象与薄封装 | 按仓库已有数据访问约定实现，不预设某一框架或专用 skill |
+| `business-service` | 业务编排、事务、状态、权限、租户上下文、幂等 | 按仓库已有业务层约定实现 |
+| `async-worker` | 事件、消息队列、定时、补偿、重试、死信、幂等消费 | 按仓库已有异步约定实现 |
+| `entry-api` | 对外 API、请求响应模型、参数校验、错误码、鉴权、API 契约 | 按仓库已有接口层约定与可插拔 API 文档源实现 |
+| `external-adapter` | Client/SDK/Adapter、防腐层、超时重试、错误映射 | 按仓库已有适配层约定实现，或使用专用 adapter skill（若有） |
+| `migration-compat` | DDL、DML、回填、兼容、灰度、回滚、数据校验 | 按仓库已有 migration/SQL 约定实现 |
+| `test-doc-review` | 单测、接口 mock、API 文档、review | 按仓库测试与文档约定实现；文档同步不是某一平台的必选步骤 |
 
 ## 拆分规则
 
 - 有表结构输入时，优先判断是否需要 `persistence-capability`；只有能形成稳定方法契约时才独立成任务。
-- 业务主链路归入 `business-service`，包括当前租户 DAO、跨租户 openService/openDAO、事务和状态守卫。
+- 业务主链路归入 `business-service`，包括当前边界内的数据访问、跨边界共享访问、事务和状态守卫。
 - `business-service` 默认只保留 1 个核心复杂驱动；若同时包含外部适配、异步 worker、迁移回滚、独立跨租户能力、多入口 API 中任意 2 项，必须拆分或写明 `Why not split`。
-- Endpoint/Controller 只承接对外协议和薄编排，不承接核心业务逻辑。
+- 对外 API 层只承接协议和薄编排，不承接核心业务逻辑。
 - 异步、事件、MQ、定时任务可归入业务层；若有独立触发入口、重试/补偿/幂等语义，拆成 `async-worker`。
 - 外部集成只是业务下游调用时可纳入 `business-service`；需要 Client/Adapter 或独立失败语义时拆成 `external-adapter`。
 

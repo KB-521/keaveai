@@ -1,10 +1,7 @@
 ---
 name: init-business
-description: 按仓库项目域生成“索引 + 摘要层”业务知识文档；支持 clear 模式覆盖重建目标业务文档
-version: 1.4.0
-owners:
-  - dachui
-  - sunwencong
+description: 按仓库项目域生成“索引 + 摘要层”业务知识文档；支持 clear 模式覆盖重建目标业务文档。按仓库实际技术栈识别前后端，不预设单一语言或固定目录名。
+version: 1.5.0
 ---
 
 # 初始化业务知识沉淀（入口）
@@ -26,16 +23,16 @@ owners:
 2. 若用户未指定项目域，扫描仓库根目录下的一级代码项目目录：
    - 目录名不得以 `.` 开头。
    - 排除流程与资料目录，例如 `ai-workflow/`、`docs/`、`todos/`、构建产物和依赖目录。
-   - 满足任一事实即可进入候选：存在 `AGENTS.md`、`package.json`、`pom.xml`、`build.gradle*`、`src/`、`app.config.*`、`project.config.json`。
+   - 满足任一事实即可进入候选：存在 `AGENTS.md`、或任意常见语言/包清单（如 `package.json`、`go.mod`、`pyproject.toml`、`Cargo.toml`、`Gemfile`、`pom.xml`、`build.gradle*`、`*.csproj`、`pubspec.yaml`）、`src/`、应用或小程序配置文件。
    - 若根 `AGENTS.md` 的项目结构列出了一级代码目录，优先按该顺序执行；否则按目录名排序。
-3. 项目域名称始终使用一级目录名本身；新增项目目录后不需要修改本 skill 的项目名列表。
+3. 项目域名称始终使用一级目录名本身；新增项目目录后不需要修改本 skill 的项目名列表。不得把 `web/`、`app/`、`server/` 当作唯一布局。
 
 ## 项目画像分类
 
 对每个候选项目域读取最小必要事实后分类：
 
-- 前端类：存在 `package.json`，且出现页面/路由入口或前端框架事实，例如 `src/app`、`src/pages`、`app.config.*`、`src/app.config.*`、`next.config.*`、`vite.config.*`、React、React Native、Expo、Taro 等。
-- 后端类：存在 `pom.xml`、`build.gradle*`、`src/main/java`，或源码中存在 `*Endpoint`、`*Controller`、`*Application`。
+- 前端类：存在页面/路由/组件等 UI 入口，或前端/移动/小程序框架事实。`package.json`、`src/app`、`src/pages`、`app.config.*`、Expo、React Native、Flutter 等只是常见信号，不是唯一依据。
+- 后端类：存在服务端清单、服务入口、API 路由、RPC、消息消费或后台任务入口。`pom.xml`、`src/main/java`、`*Endpoint`、`*Controller`、`*Application` 只是其中一类信号，不得作为唯一判定。
 - 未识别：保留在执行摘要中说明跳过原因，不生成业务文档。
 - 同一项目域同时命中多个画像时，按命中的画像分别执行；输出仍落在同一个 `ai-workflow/wiki/<project-domain>/business/` 下，避免跨项目覆盖。
 

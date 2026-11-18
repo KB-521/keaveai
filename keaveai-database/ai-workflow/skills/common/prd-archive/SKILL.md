@@ -1,41 +1,39 @@
 ---
 name: prd-archive
-description: 通过语雀 Open API（非 MCP）拉取最新 PRD 并覆盖落库到 ai-workflow/sdd/changes/<change-id>/prd。
-version: 1.0.0
-owners:
-  - dachui
-  - sunwencong
+description: 从可插拔文档源拉取最新 PRD 并覆盖落库到 ai-workflow/sdd/changes/<change-id>/prd。支持本地文件、通用 HTTP(S) 文档，以及用户指定时的可选平台适配器（例如语雀 Open API）。
+version: 1.1.0
 ---
 
 ## 输入
 
 - `change-id`（必填）
-- 原始 PRD 路径/语雀文档链接（必填）
+- 原始 PRD 来源（必填）：本地文件路径、通用文档 URL，或用户指定的文档平台链接/标识
 - 目标文件名（可选，未提供时按源标题或源文件名生成）
 
-## 接口拉取脚本（非 MCP）
+## 文档源（可插拔）
+
+按以下优先级选择来源，不把任一文档平台当作唯一默认绑定：
+
+1. 本地文件：直接读取用户指定或仓库内的 PRD 文件。
+2. 通用 HTTP(S) 文档：当用户提供可直接获取的 Markdown/HTML/文本 URL 时，下载正文后再进入工作流。
+3. 可选平台适配器：仅当用户提供对应平台链接或标识，并且已配置该适配器所需凭证时使用。语雀 Open API 是其中一种可选适配器，不是唯一来源。
+
+### 可选：语雀适配器
 
 - 脚本路径：`ai-workflow/skills/common/prd-archive/scripts/fetch_yuque_doc.py`
+- 仅在来源是语雀文档且具备凭证时使用。
 - 鉴权优先级：`--token` > 环境变量 `YUQUE_TOKEN`/`YUQUE_API_TOKEN` > 仓库根目录 `agent.config` 的 `YUQUE_TOKEN`/`YUQUE_API_TOKEN`
-- 标题序号：`--format markdown` 时会自动结合 `body_html` 保留/补齐语雀标题自动编号（如 `1.`、`3.1.`、`4.2.1.`）
+- 标题序号：`--format markdown` 时会自动结合 `body_html` 保留/补齐标题自动编号（如 `1.`、`3.1.`、`4.2.1.`）
 - 支持三种输入方式：
   - 语雀链接：`--url "https://www.yuque.com/<group>/<repo>/<slug>"`
   - 命名空间 + 文档标识：`--namespace "<group>/<repo>" --slug "<slug>"`
   - 文档 ID：`--doc-id "<id>"`
 - 可选参数：`--repo-id "<book-id>"`（部分租户 API 需要 `repo_id` 路由；`--url/--namespace` 默认自动解析）
-- 常用命令：
 
 ```bash
-# 通过语雀链接拉取 Markdown
+# 可选适配器示例：通过语雀链接拉取 Markdown
 python3 ai-workflow/skills/common/prd-archive/scripts/fetch_yuque_doc.py \
   --url "https://www.yuque.com/xxx/yyy/zzz" \
-  --format markdown \
-  --output /tmp/prd.md
-
-# 通过 namespace + slug 拉取
-python3 ai-workflow/skills/common/prd-archive/scripts/fetch_yuque_doc.py \
-  --namespace "xxx/yyy" \
-  --slug "zzz" \
   --format markdown \
   --output /tmp/prd.md
 ```
@@ -58,7 +56,7 @@ python3 ai-workflow/skills/common/prd-archive/scripts/fetch_yuque_doc.py \
 
 2. 完整性校验（采集阶段）
 - 未拿到完整正文时，禁止落库；应明确报错“源文档获取不完整”。
-- 若输入为语雀链接且仅返回登录页/摘要页，判定为“源文档获取不完整”。
+- 若输入为在线文档链接且仅返回登录页/摘要页/空壳页面，判定为“源文档获取不完整”。
 
 3. 样式清洗（必做）
 - 仅清洗“展示样式噪音”，不改变业务文本语义与文档结构。
@@ -80,7 +78,7 @@ python3 ai-workflow/skills/common/prd-archive/scripts/fetch_yuque_doc.py \
 
 5. 自检
 - 输出中不得出现以下章节（含同义标题变体）：`变更记录`、`文档版本记录`、`竞品参考`。
-- 输出中不得出现语雀样式噪音：`<font style=`、`<span style=`、`style="color:`、`background-color:`。
+- 输出中不得出现纯展示样式噪音：`<font style=`、`<span style=`、`style="color:`、`background-color:`。
 - 除被排除章节外，每条内容都能在原 PRD 中逐条追溯到依据。
 - 除被排除章节外，不得只保留摘要句；需保留完整原文结构。
 
@@ -98,3 +96,4 @@ python3 ai-workflow/skills/common/prd-archive/scripts/fetch_yuque_doc.py \
 - 输出文档始终写入 `ai-workflow/sdd/changes/<change-id>/prd/`。
 - 禁止在导入执行中进行摘要化处理；只允许“按排除章节裁剪”，不允许“按内容压缩”。
 - 样式清洗仅移除展示层信息，不得影响正文事实、标题层级、表格结构、链接地址与图片地址。
+- 未配置某平台适配器时，不得把该平台当作唯一可用来源；应改用本地文件或通用文档 URL，或明确报出缺失的凭证/适配器。

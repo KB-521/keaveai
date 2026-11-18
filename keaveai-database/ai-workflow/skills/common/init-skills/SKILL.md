@@ -1,15 +1,12 @@
 ---
 name: init-skills
 description: 递归扫描指定 skills 目录下的 skill 子目录，生成可维护的 skill 索引；支持 clear 模式覆盖重建 INDEX.md
-version: 1.1.0
-owners:
-  - dachui
-  - sunwencong
+version: 1.2.0
 ---
 
 # 初始化 Skills 索引
 
-为目标 `skills` 目录创建或更新 `INDEX.md`，沉淀当前可用 skill 的目录、名称、版本、负责人与用途，避免后续重复遍历目录。
+为目标 `skills` 目录创建或更新 `INDEX.md`，沉淀当前可用 skill 的目录、名称、版本与用途，避免后续重复遍历目录。
 
 ## 适用场景
 
@@ -50,8 +47,8 @@ owners:
 - 索引中的“目录”字段使用相对于目标 `skills` 目录的路径，例如：`common/init-skills`。
 
 2. 采集事实
-- 读取每个 `SKILL.md` 的 frontmatter，提取 `name`、`description`、`version`、`owners`。
-- 若 `version` 或 `owners` 缺失，不得凭空补齐；索引中标记为 `未声明`，并在结果中提示需要补齐的 skill。
+- 读取每个 `SKILL.md` 的 frontmatter，提取 `name`、`description`、`version`，以及可选的 `owners`。
+- 若 `version` 缺失，不得凭空补齐；索引中标记为 `未声明`，并在结果中提示需要补齐的 skill。`owners` 为可选字段，缺失时索引中写 `-`，不必补齐个人姓名。
 - 如 `description` 不足以支撑索引条目，再读取正文前部，补充“典型使用时机”和“主要产出/关注点”。
 
 3. 生成或更新 `INDEX.md`
@@ -92,14 +89,14 @@ owners:
 
 | 目录 | `name` | version | owners | 作用说明 | 典型使用时机 | 主要产出/关注点 |
 | --- | --- | --- | --- | --- | --- | --- |
-| xxx | xxx | 1.0.0 | dachui | xxx | xxx | xxx |
+| xxx | xxx | 1.0.0 | - | xxx | xxx | xxx |
 ```
 
 ## 校验项
 
 - `INDEX.md` 已创建或更新到目标 `skills` 目录。
 - 每个条目都能对应到真实存在的 `SKILL.md`。
-- 每个条目都包含 `version` 与 `owners`；缺失项已标记并在结果中提示。
+- 每个条目都包含 `version`；`owners` 若未声明则写 `-`。缺失的必填项已标记并在结果中提示。
 - 不包含隐藏目录、无效目录或重复条目。
 - 多级子目录中的有效 skill 已被正确收录。
 - 表格字段与顺序符合模板要求。

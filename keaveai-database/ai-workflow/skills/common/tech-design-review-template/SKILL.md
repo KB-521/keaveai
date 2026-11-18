@@ -2,9 +2,6 @@
 name: tech-design-review-template
 description: 基于技术方案文档生成 Review 模版。用于技术方案产出后、正式评审前，快速建立问题追踪清单。
 version: 1.0.0
-owners:
-  - dachui
-  - sunwencong
 ---
 
 # 技术方案 Review 模版生成

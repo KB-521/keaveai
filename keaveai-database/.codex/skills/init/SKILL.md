@@ -2,9 +2,6 @@
 name: init
 description: 根据用户输入执行全量或特定初始化；支持 clear 模式；未指定具体范围时，默认依次初始化 AGENTS.md、业务文档、规则文档与 skills 索引
 version: 1.2.0
-owners:
-  - dachui
-  - sunwencong
 ---
 
 # 初始化项目指南（入口）

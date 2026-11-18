@@ -2,8 +2,6 @@
 name: api-mock
 description: 为接口提供本地 mock/假数据联调能力。用于“mock 接口 / 假数据 / 本地联调 / stub 后端 / 离线开发”。
 version: 1.0.0
-owners:
-  - dachui
 ---
 
 # API Mock

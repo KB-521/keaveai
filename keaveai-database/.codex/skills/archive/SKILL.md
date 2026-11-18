@@ -2,8 +2,6 @@
 name: archive
 description: 将一个或多个已完成的 SDD changes 变更包从 ai-workflow/sdd/changes 迁移到 ai-workflow/sdd/archive，并同步更新 ai-workflow/sdd/INDEX.md；用于用户要求归档、archive、批量归档、收口已完成变更包时。
 version: 1.4.0
-owners:
-  - dachui
 ---
 
 # SDD 变更包归档指南

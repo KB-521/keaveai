@@ -12,6 +12,66 @@ export const KEAVEAI_DATABASE_GLOBAL_SKILLS_DIR = 'global';
 export const DEFAULT_KEAVEAI_DATABASE_REPO = 'http://gitlab.metac-inc.com/front/weaveai-database.git';
 export const DEFAULT_KEAVEAI_DATABASE_BRANCH = 'main';
 
+/**
+ * Default-pack skills retired because they bind the previous company's
+ * Java/Metac stack, CI, or a single-tool gate. Init/update/refresh must
+ * not copy or leave these paths in a project or bundled database.
+ */
+export const RETIRED_DEFAULT_SKILL_PATHS = [
+  'ai-workflow/skills/server',
+  'ai-workflow/skills/common/codex-parallel-execute',
+  'ai-workflow/skills/common/init-rules/rules',
+  '.codex/skills/ci-test-codegen',
+] as const;
+
+export const RETIRED_DEFAULT_SKILL_INDEX_MARKERS = [
+  'server/pay-starter-impl',
+  'server/backend-design',
+  'server/data-model-design',
+  'server/persistence-impl',
+  'server/skeleton-codegen',
+  'server/entry-impl',
+  'server/req-impl',
+  'server/test-codegen',
+  'server/code-review',
+  'server/init-business',
+  'server/yapi-mcp-sync',
+  'common/codex-parallel-execute',
+  'ci-test-codegen',
+] as const;
+
+const RETIRED_GLOBAL_SKILL_DIRS = new Set(['ci-test-codegen']);
+
+export async function removeRetiredDefaultSkills(rootDir: string): Promise<void> {
+  for (const rel of RETIRED_DEFAULT_SKILL_PATHS) {
+    await fs.promises.rm(path.join(rootDir, rel), { recursive: true, force: true });
+  }
+
+  await scrubRetiredSkillIndex(path.join(rootDir, 'ai-workflow', 'skills', 'INDEX.md'));
+}
+
+async function scrubRetiredSkillIndex(indexPath: string): Promise<void> {
+  if (!(await FileSystemUtils.fileExists(indexPath))) {
+    return;
+  }
+
+  const original = await fs.promises.readFile(indexPath, 'utf-8');
+  const next = original
+    .split('\n')
+    .filter((line) => {
+      if (!line.startsWith('|')) {
+        return true;
+      }
+      return !RETIRED_DEFAULT_SKILL_INDEX_MARKERS.some((marker) => line.includes(marker));
+    })
+    .join('\n');
+
+  if (next !== original) {
+    await fs.promises.writeFile(indexPath, next);
+  }
+}
+
+
 export type SkillTargetTool = {
   value: string;
   name: string;
@@ -52,6 +112,7 @@ export async function copyBundledDatabaseAssets(
   const sourceKeaveAIDir = path.join(sourceDir, KEAVEAI_DATABASE_CONTENT_DIR);
   const targetKeaveAIDir = path.join(projectPath, KEAVEAI_DATABASE_CONTENT_DIR);
   await fs.promises.cp(sourceKeaveAIDir, targetKeaveAIDir, { recursive: true, force: true });
+  await removeRetiredDefaultSkills(projectPath);
 
   await syncGlobalSkills(sourceDir, projectPath, tools);
 }
@@ -81,6 +142,10 @@ export async function syncGlobalSkills(
 
     for (const dirName of globalSkillDirs) {
       const sourceSkillDir = path.join(globalSkillsDir, dirName);
+      if (RETIRED_GLOBAL_SKILL_DIRS.has(dirName)) {
+        continue;
+      }
+
       const sourceSkillFile = path.join(sourceSkillDir, 'SKILL.md');
       if (!(await FileSystemUtils.fileExists(sourceSkillFile))) {
         continue;
@@ -120,6 +185,8 @@ export async function copyDatabaseRootContents(
       { recursive: true, force: true }
     );
   }
+
+  await removeRetiredDefaultSkills(projectPath);
 }
 
 export async function copyLegacyGlobalSkillsToCodex(sourceDir: string, projectPath: string): Promise<void> {
@@ -133,12 +200,18 @@ export async function copyLegacyGlobalSkillsToCodex(sourceDir: string, projectPa
 
   const entries = await fs.promises.readdir(globalDir, { withFileTypes: true });
   for (const entry of entries) {
+    if (RETIRED_GLOBAL_SKILL_DIRS.has(entry.name)) {
+      continue;
+    }
+
     await fs.promises.cp(
       path.join(globalDir, entry.name),
       path.join(targetSkillsDir, entry.name),
       { recursive: true, force: true }
     );
   }
+
+  await removeRetiredDefaultSkills(projectPath);
 }
 
 export async function refreshBundledDatabaseAssets(
@@ -173,6 +246,8 @@ export async function refreshBundledDatabaseAssets(
         { recursive: true, force: true }
       );
     }
+
+    await removeRetiredDefaultSkills(targetDir);
 
     return targetDir;
   } finally {

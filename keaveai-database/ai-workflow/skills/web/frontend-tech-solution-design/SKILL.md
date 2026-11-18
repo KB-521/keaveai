@@ -2,8 +2,6 @@
 name: frontend-tech-solution-design
 description: 基于 PRD/原型/评审结论设计前端技术方案。用于页面信息架构、路由策略、组件分层、状态建模、前端权限、接口契约映射、渲染与性能方案设计。适用于需要先冻结前端实现口径再进入开发的场景。
 version: 1.1.0
-owners:
-  - dachui
 ---
 
 # 前端技术方案设计

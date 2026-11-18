@@ -19,7 +19,7 @@ description: 负责架构决策与设计,如技术方案、系统架构、技术
 - `AGENTS.md` 与目标代码子项目 `AGENTS.md` - 当前任务所属项目域的技术导航、模块职责与下钻入口
 - `ai-workflow/sdd/INDEX.md` - 统一需求管理
 
-`<project-domain>` 按任务范围判定：`web/` 使用 `web`，`app/` 使用 `app`，`mini/` 使用 `mini`，`server/` 使用 `server`，跨项目通用内容使用 `global`；索引不存在时跳过该类上下文，不回退到其它项目域。
+`<project-domain>` 按任务实际所属的代码目录或仓库已有 wiki 域判定；`web/`、`app/`、`mini/`、`server/` 只是常见示例，不是唯一布局。跨项目通用内容使用 `global`。索引不存在时跳过该类上下文，不回退到其它项目域。
 
 ## 工作流
 

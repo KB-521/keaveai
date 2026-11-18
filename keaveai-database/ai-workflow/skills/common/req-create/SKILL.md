@@ -2,9 +2,6 @@
 name: req-create
 description: 从用户想法创建结构化需求文档。用于记录需要写入当前变更包任务索引的新功能、任务或用户故事。
 version: 1.1.0
-owners:
-  - dachui
-  - sunwencong
 ---
 
 # 创建需求

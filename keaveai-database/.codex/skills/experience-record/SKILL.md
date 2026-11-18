@@ -2,9 +2,6 @@
 name: experience-record
 description: 收到沉淀经验、记录经验或整理经验教训请求时使用；根据反馈提炼可复用经验，写入 ai-workflow/wiki/experience/ 并更新索引。
 version: 1.0.0
-owners:
-  - dachui
-  - sunwencong
 ---
 
 # 经验沉淀

@@ -1,10 +1,7 @@
 ---
 name: skill-creator
-description: 创建高效技能的指南。用于创建新技能或更新现有技能，以专业知识、工作流或工具集成扩展 Codex 的能力。
-version: 1.0.0
-owners:
-  - dachui
-  - sunwencong
+description: 创建高效技能的指南。用于创建新技能或更新现有技能，以专业知识、工作流或工具集成扩展当前 AI 编程工具的能力。
+version: 1.1.0
 ---
 
 # 技能创建
@@ -14,7 +11,7 @@ owners:
 ## 核心原则
 
 ### 简洁至上
-审视每一段内容：“Codex 真的需要这个吗？”用简洁示例替代冗长解释。
+审视每一段内容：“当前 AI 编程工具真的需要这个吗？”用简洁示例替代冗长解释。
 
 ### 渐进式披露
 1. **元数据**（约 100 词）- 总是加载
@@ -25,7 +22,7 @@ owners:
 ```
 skill-name/
 ├── SKILL.md (required)
-│   ├── YAML frontmatter (name, description, version, owners)
+│   ├── YAML frontmatter (name, description, version；owners 可选)
 │   └── Markdown instructions
 └── Bundled Resources (optional)
     ├── scripts/      - Executable code
@@ -40,8 +37,6 @@ skill-name/
 name: my-skill
 description: 做什么 AND 何时使用（触发关键）
 version: 1.0.0
-owners:
-  - dachui
 ---
 
 # Title
@@ -58,13 +53,8 @@ owners:
 - `name`：skill 唯一名称。
 - `description`：作用与触发场景。
 - `version`：skill 契约版本，新增 skill 默认从 `1.0.0` 开始。
-- `owners`：负责人列表。
 
-负责人归属规则：
-
-- 前端、Web、App、React Native、D2C 相关 skill：`dachui`。
-- 后端、Server、Java、Spring Boot、YApi 相关 skill：`sunwencong`。
-- `common`、`.codex` 或跨前后端流程 skill：`dachui` 与 `sunwencong` 共同负责。
+`owners` 为可选字段。若当前团队需要维护负责人，使用当前团队约定；不要写入与本仓库无关的个人姓名，也不按前端/后端技术栈绑定固定负责人。
 
 ## 最佳实践
 

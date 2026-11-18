@@ -2,9 +2,6 @@
 name: code-commit
 description: 按照 Conventional Commits 提交代码变更并使用结构化信息。在实现或修复完成后需要提交时使用。
 version: 1.0.0
-owners:
-  - dachui
-  - sunwencong
 ---
 
 # 代码提交

@@ -2,8 +2,6 @@
 name: task-impl
 description: 前端任务执行，代码实现。默认只做实现自检与建议验证记录；测试命令与 code review 由用户显式触发或 CI 处理。
 version: 1.2.0
-owners:
-  - dachui
 ---
 
 # 前端任务实现 Skill

@@ -1,10 +1,7 @@
 ---
 name: task-split
 description: 将技术方案拆分为可开发、可验收、可并行执行的实现子任务。
-version: 1.10.2
-owners:
-  - dachui
-  - sunwencong
+version: 1.11.0
 ---
 
 ## 使用流程
@@ -27,7 +24,7 @@ owners:
 - 新增子任务文件名默认使用短码格式：`<design-code>-<task-slug>-<nn>.md`，序号固定放在最后。
 - 子任务短码使用 `<design-code>-<nn>`，例如 `GPLAY-SUB-04`。
 - `design-code` 来自设计包短码，必须能和同一变更包下其它设计区分，例如 `GPLAY-SUB`、`APPLE-SUB`、`PAY-REFUND`、`WALLET`、`OP-ORDER`。
-- `task-slug` 用 2~5 个英文短词表达任务含义，例如 `provider-adapter`、`measure-handler`、`app-sub-page`。
+- `task-slug` 用 2~5 个英文短词表达任务含义，例如 `provider-adapter`、`event-handler`、`settings-page`。
 - 建议 worktree 使用 `task-<design-code-lower>-<nn>`，建议分支使用 `task/<design-code-lower>-<nn>`。
 - 子任务正文必须保留 `Parent: REQ-XXX`、`Task: <design-code>-<nn>`、`Design: <design-package>`，避免短文件名丢失完整追溯。
 - 已存在的长文件名任务不强制迁移；新拆任务默认使用本规则。

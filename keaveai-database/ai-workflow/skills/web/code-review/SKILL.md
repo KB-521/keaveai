@@ -2,8 +2,6 @@
 name: code-review
 description: 评审前端代码质量、正确性、状态一致性与交互边界。用于用户明确要求的提交前 review、PR 评审与问题定位。
 version: 1.0.0
-owners:
-  - dachui
 ---
 
 # 前端代码评审
