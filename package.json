@@ -19,7 +19,7 @@
   "type": "module",
   "publishConfig": {
     "access": "public",
-    "registry": "http://nexus.metac-inc.com/repository/npm-hosted/"
+    "registry": "https://registry.npmjs.org/"
   },
   "exports": {
     ".": {
