@@ -47,6 +47,7 @@ describe('DatabaseUpdateCommand', () => {
 
   afterEach(async () => {
     vi.restoreAllMocks();
+    vi.unstubAllEnvs();
     await Promise.all(
       createdDirs.splice(0).map((dir) => fs.rm(dir, { recursive: true, force: true }))
     );
@@ -72,5 +73,37 @@ describe('DatabaseUpdateCommand', () => {
       .resolves.toBe('# Init Skill\n');
     expect(await pathExists(path.join(targetDir, 'stale.md'))).toBe(false);
     expect(await pathExists(path.join(targetDir, '.git'))).toBe(false);
+  });
+
+  it.each([
+    ['ai-workflow/skills/common/codex-parallel-execute/SKILL.md', '# Old skill\n'],
+    ['ai-workflow/skills/common/example/SKILL.md', 'Use com.metac.example as the default package.\n'],
+  ])('rejects legacy source asset %s before replacing the target', async (relative, content) => {
+    const testDir = await fs.mkdtemp(path.join(os.tmpdir(), 'keaveai-db-refresh-'));
+    createdDirs.push(testDir);
+    const repoDir = await createDatabaseRepo(testDir);
+    await writeFile(path.join(repoDir, relative), content);
+    git(repoDir, ['add', '.']);
+    git(repoDir, ['commit', '-m', 'add incompatible asset']);
+    const targetDir = path.join(testDir, 'target-database');
+    const existing = path.join(targetDir, 'ai-workflow', 'README.md');
+    await writeFile(existing, '# Existing database\n');
+
+    await expect(new DatabaseUpdateCommand().execute(targetDir, { repo: repoDir }))
+      .rejects.toThrow('Incompatible KeaveAI database asset');
+    await expect(fs.readFile(existing, 'utf8')).resolves.toBe('# Existing database\n');
+  });
+
+  it('requires an explicit source and honors the environment override', async () => {
+    vi.stubEnv('KEAVEAI_DATABASE_REPO_URL', '');
+    await expect(new DatabaseUpdateCommand().execute()).rejects.toThrow('--repo');
+
+    const testDir = await fs.mkdtemp(path.join(os.tmpdir(), 'keaveai-db-env-'));
+    createdDirs.push(testDir);
+    const repoDir = await createDatabaseRepo(testDir);
+    const targetDir = path.join(testDir, 'target-database');
+    vi.stubEnv('KEAVEAI_DATABASE_REPO_URL', repoDir);
+    await new DatabaseUpdateCommand().execute(targetDir);
+    expect(await pathExists(path.join(targetDir, 'ai-workflow', 'README.md'))).toBe(true);
   });
 });

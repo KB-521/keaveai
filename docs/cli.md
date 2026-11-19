@@ -9,7 +9,7 @@ The public KeaveAI CLI currently exposes only the project setup and sync command
 | `keaveai init [path]` | Initialize KeaveAI content in a project |
 | `keaveai update [path]` | Refresh initialized project assets from the bundled database |
 | `keaveai break-change [path]` | Migrate initialized content to the bundled breaking layout |
-| `keaveai database-update [path]` | Refresh the bundled `keaveai-database/` directory from GitLab |
+| `keaveai database-update [path]` | Refresh the bundled `keaveai-database/` directory from an explicitly configured Git source |
 | `keaveai issue` | Push initialized KeaveAI content as a GitLab merge request |
 | `keaveai help [command]` | Show CLI help |
 
@@ -68,7 +68,9 @@ keaveai update .
 ```
 
 The command also ensures the project root has an `agent.config` file.
-It does not pull from GitLab; run `keaveai database-update` first when the bundled database itself needs to be refreshed.
+It does not fetch from Git. Use `keaveai database-update --repo <url>` when the bundled database itself needs a refresh.
+
+For retired skills, `update` removes only copies that exactly match a known old bundled asset. Modified or unrecognized copies are kept and reported for manual review. Project-specific rules, skills, and custom skill indexes are preserved by the retirement cleanup; use `init-skills` to regenerate a custom index if needed.
 
 ## `keaveai break-change`
 
@@ -96,7 +98,7 @@ keaveai break-change .
 
 ## `keaveai database-update`
 
-Refresh the local bundled `keaveai-database/` directory from the GitLab database repository.
+Refresh the local bundled `keaveai-database/` directory from a KeaveAI database Git repository. There is no built-in repository URL. The source is checked for retired default assets and known legacy bindings before the target is replaced.
 
 ```bash
 keaveai database-update [path] [options]
@@ -104,16 +106,16 @@ keaveai database-update [path] [options]
 
 | Option | Description |
 |--------|-------------|
-| `--repo <url>` | KeaveAI database repository URL |
-| `--branch <branch>` | KeaveAI database repository branch |
+| `--repo <url>` | Database Git source; required unless `KEAVEAI_DATABASE_REPO_URL` is set |
+| `--branch <branch>` | Source branch; defaults to `KEAVEAI_DATABASE_REPO_BRANCH` or `main` |
 
 When `path` is omitted, the command updates the package's bundled `keaveai-database/` directory.
 
 Examples:
 
 ```bash
-keaveai database-update
-keaveai database-update ./keaveai-database --branch main
+keaveai database-update --repo https://example.org/team/keaveai-database.git
+keaveai database-update ./keaveai-database --repo /path/to/database-repo --branch main
 ```
 
 ## `keaveai issue`

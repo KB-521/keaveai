@@ -16,6 +16,7 @@ import {
   copyDatabaseRootContents,
   copyLegacyGlobalSkillsToCodex,
   getBundledDatabaseDir,
+  validateDatabaseSource,
 } from './database-assets.js';
 
 const KEAVEAI_SDD_DIR = path.join('keaveai', 'sdd');
@@ -77,7 +78,7 @@ export class BreakChangeCommand {
     const spinner = ora(`Applying break-change migration from bundled database...`).start();
 
     try {
-      await this.ensureDatabaseHasContent(databaseDir);
+      await validateDatabaseSource(databaseDir);
 
       await fs.promises.rm(rootSddDir, { recursive: true, force: true });
       await fs.promises.cp(sourceSddDir, rootSddDir, { recursive: true, force: true });
@@ -94,14 +95,6 @@ export class BreakChangeCommand {
       const message = error instanceof Error ? error.message : String(error);
       spinner.fail(`Break-change migration failed: ${message}`);
       throw new Error(`Failed to apply break-change migration from bundled database: ${message}`);
-    }
-  }
-
-  private async ensureDatabaseHasContent(databaseDir: string): Promise<void> {
-    const entries = await fs.promises.readdir(databaseDir);
-    const contentEntries = entries.filter((entry) => entry !== '.git');
-    if (contentEntries.length === 0) {
-      throw new Error('Bundled KeaveAI database is empty.');
     }
   }
 

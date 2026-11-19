@@ -2,78 +2,57 @@
 
 ## Purpose
 
-Define `keaveai update` behavior for refreshing KeaveAI database assets and globally shared tool skills in an initialized project.
+Define project updates and the separate refresh of the database that supplies bundled workflow assets.
 
 ## Requirements
 
-### Requirement: KeaveAI Database Refresh
+### Requirement: Project Update
 
-The update command SHALL refresh projects initialized with the current `keaveai/` layout.
+`keaveai update [path]` SHALL require an existing `ai-workflow/` directory or legacy `keaveai/` directory in the target project. It SHALL NOT clone a repository.
 
-#### Scenario: Running update
+#### Scenario: Updating from bundled assets
 
-- **GIVEN** a project contains `keaveai/`
-- **WHEN** user runs `keaveai update`
-- **THEN** the system clones the KeaveAI database repository
-- **AND** copies repository `keaveai/` content over the project `keaveai/`
-- **AND** copies repository `global/*` skill directories into detected tool skill roots such as `.codex/skills/*`
-- **AND** does not require or inspect an `openspec/` directory
+- **GIVEN** an initialized project
+- **WHEN** the user runs `keaveai update`
+- **THEN** the system copies bundled `ai-workflow/` assets into the project
+- **AND** syncs shared skills into enabled tool directories already present in the project
+- **AND** uses the provided target path, or the current directory when omitted
 
-#### Scenario: Target project path
+#### Scenario: Missing workflow
 
-- **WHEN** user runs `keaveai update ./some-project`
-- **THEN** the system updates that target project instead of the current working directory
+- **WHEN** neither workflow directory exists in the target project
+- **THEN** the command reports that the user must run `keaveai init` first
 
-### Requirement: Prerequisites
+#### Scenario: Skipping database sync
 
-The update command SHALL require an existing `keaveai/` directory before allowing updates.
+- **WHEN** `KEAVEAI_UPDATE_SKIP_DATABASE_SYNC=1` or a legacy skip-sync flag is set
+- **THEN** the project is checked for initialization, but bundled asset copying and retired-skill cleanup are skipped
 
-#### Scenario: Missing KeaveAI directory
+### Requirement: Safe Retirement of Default Skills
 
-- **GIVEN** the target project does not contain `keaveai/`
-- **WHEN** user runs `keaveai update`
-- **THEN** display error: "No KeaveAI directory found. Run 'keaveai init' first."
-- **AND** do not fall back to legacy `openspec/` update behavior
+The update command SHALL only delete a retired asset if it exactly matches a known bundled version at the expected path.
 
-### Requirement: Repository Configuration
+#### Scenario: Old default copy and project-owned content coexist
 
-The update command SHALL use the configured KeaveAI database source.
+- **GIVEN** a known unchanged retired skill and a project-owned skill or rule under the same parent
+- **WHEN** the user updates the project
+- **THEN** the verified default copy is removed, including verified copies in known historical tool directories
+- **AND** project-owned, modified, or symlinked content is not deleted by cleanup
+- **AND** unrecognized copies at retired paths are reported for manual review
+- **AND** a local skill index that does not match a known bundled version is retained
 
-#### Scenario: Default repository
+### Requirement: Explicit Database Source and Validation
 
-- **WHEN** user runs `keaveai update`
-- **THEN** the system reads from `http://gitlab.metac-inc.com/front/weaveai-database.git`
-- **AND** uses branch `main`
+`keaveai database-update [path]` SHALL refresh its target from a Git source configured by `--repo` or `KEAVEAI_DATABASE_REPO_URL`; it SHALL NOT fall back to a built-in repository URL.
 
-#### Scenario: Environment overrides
+#### Scenario: Source contains retired assets or known legacy bindings
 
-- **WHEN** `KEAVEAI_UPDATE_REPO_URL` or `KEAVEAI_UPDATE_REPO_BRANCH` is set
-- **THEN** the system uses those values for the update clone
+- **GIVEN** a Git source containing retired default assets or known legacy bindings in workflow or shared skill content
+- **WHEN** the user requests a database refresh
+- **THEN** the command rejects the source before replacing the existing database
 
-### Requirement: Tool Skill Sync
+#### Scenario: Source is compatible
 
-The update command SHALL refresh skills only for tools already present in the target project.
-
-#### Scenario: Codex tool present
-
-- **GIVEN** the target project contains `.codex/`
-- **AND** the KeaveAI database repository contains `global/init/SKILL.md`
-- **WHEN** user runs `keaveai update`
-- **THEN** the system copies that skill to `.codex/skills/init/SKILL.md`
-
-#### Scenario: No tools present
-
-- **GIVEN** the target project contains `keaveai/`
-- **AND** no known tool directories are present
-- **WHEN** user runs `keaveai update`
-- **THEN** the system refreshes `keaveai/`
-- **AND** prints that global skills were skipped
-
-### Requirement: Dry Test Escape Hatch
-
-The update command SHALL support an environment flag for local tests and manual validation.
-
-#### Scenario: Skip remote sync
-
-- **WHEN** `KEAVEAI_UPDATE_SKIP_REMOTE_SYNC=1`
-- **THEN** the command validates the target project and exits successfully without cloning or writing remote content
+- **WHEN** the user requests a refresh from a compatible source
+- **THEN** the command uses `--branch`, `KEAVEAI_DATABASE_REPO_BRANCH`, or `main` in that order
+- **AND** replaces the requested database directory, defaulting to the bundled directory

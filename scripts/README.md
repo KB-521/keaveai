@@ -35,3 +35,22 @@ Post-installation script that runs after package installation.
 ## pack-version-check.mjs
 
 Validates package version consistency before publishing.
+
+## 本地发布 npm：`pnpm release:local`
+
+在源码仓库里安装依赖后，用有发布权限的 npm 账号登录（`npm login`），然后运行：
+
+```bash
+pnpm release:local
+```
+
+选择 patch、minor、major 或输入自定义版本。确认后，脚本更新本地版本、构建并打包，然后将同一个 `.tgz` 公开发布到 `registry.npmjs.org`。正式版本使用 `latest`，预发布版本（例如 `1.3.0-rc.1`）使用 `next`。如果 npm 要求双重认证，请按终端提示操作。
+
+仅验证构建和打包，不发布：
+
+```bash
+pnpm release:local --dry-run
+pnpm release:local --version 1.3.0-rc.1 --dry-run
+```
+
+试运行或失败会恢复源版本文件，临时 tarball 会自动清理。成功发布后请自行提交版本文件；脚本不创建 Git 提交或标签。现有 Changesets CI 发布命令 `pnpm release:ci` 不变。

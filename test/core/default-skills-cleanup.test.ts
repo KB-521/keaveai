@@ -1,230 +1,137 @@
-import { describe, it, expect, afterEach } from 'vitest';
-import fs from 'fs/promises';
-import os from 'os';
-import path from 'path';
-import { randomUUID } from 'crypto';
-import {
-  RETIRED_DEFAULT_SKILL_INDEX_MARKERS,
-  RETIRED_DEFAULT_SKILL_PATHS,
-  copyBundledDatabaseAssets,
-  getBundledDatabaseDir,
-  removeRetiredDefaultSkills,
-  syncGlobalSkills,
-} from '../../src/core/database-assets.js';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import fs from 'node:fs/promises';
+import os from 'node:os';
+import path from 'node:path';
+import { copyBundledDatabaseAssets, getBundledDatabaseDir, validateDatabaseSource } from '../../src/core/database-assets.js';
+import { WORKFLOW_INDEX } from '../../src/core/retired-default-skills.js';
 
-const FORBIDDEN_CONTENT_PATTERNS: Array<{ name: string; pattern: RegExp }> = [
-  { name: 'dachui', pattern: /dachui/i },
-  { name: 'sunwencong', pattern: /sunwencong/i },
-  { name: 'xuyang', pattern: /xuyang/i },
-  { name: 'com.metac', pattern: /com\.metac/ },
-  { name: 'my-archetype', pattern: /my-archetype/ },
-  { name: 'sqlmapplus', pattern: /sqlmapplus/i },
-  { name: 'OpenDAO', pattern: /opendao/i },
-];
+const fixture = vi.hoisted(() => ({
+  oldRule: 'ai-workflow/skills/common/init-rules/rules/06-DAO与SQL.md',
+  oldBackend: 'ai-workflow/skills/server/backend-design',
+  ci: '.codex/skills/ci-test-codegen',
+  skillText: '# Old bundled fixture\n',
+  scriptText: '# Old supporting script\n',
+  ruleText: '# Old bundled rule\n',
+  indexText: '| `server/backend-design` | old default |\n',
+}));
 
-const DELETED_SKILL_PATHS = [
-  'ai-workflow/skills/server/pay-starter-impl',
-  'ai-workflow/skills/server/backend-design',
-  'ai-workflow/skills/server/data-model-design',
-  'ai-workflow/skills/server/persistence-impl',
-  'ai-workflow/skills/server/skeleton-codegen',
-  'ai-workflow/skills/server/entry-impl',
-  'ai-workflow/skills/server/req-impl',
-  'ai-workflow/skills/server/test-codegen',
-  'ai-workflow/skills/server/code-review',
-  'ai-workflow/skills/server/init-business',
-  'ai-workflow/skills/server/yapi-mcp-sync',
-  '.codex/skills/ci-test-codegen',
-  'ai-workflow/skills/common/codex-parallel-execute',
-];
+// Use synthetic old assets: CI does not need Git history or the removed content to run these tests.
+vi.mock(import('../../src/core/retired-skill-fingerprints.js'), async (importOriginal) => {
+  const original = await importOriginal();
+  const { createHash } = await import('node:crypto');
+  const hash = (text: string) => createHash('sha256').update(text).digest('hex');
+  return {
+    RETIRED_SKILL_FINGERPRINTS: {
+      ...original.RETIRED_SKILL_FINGERPRINTS,
+      [fixture.oldRule]: hash(fixture.ruleText),
+      [fixture.oldBackend]: hash(`SKILL.md\0${hash(fixture.skillText)}\n`),
+      [fixture.ci]: hash(`SKILL.md\0${hash(fixture.skillText)}\nscripts/\0\nscripts/check.py\0${hash(fixture.scriptText)}\n`),
+    },
+    PREVIOUS_SKILL_INDEX_HASHES: new Set([...original.PREVIOUS_SKILL_INDEX_HASHES, hash(fixture.indexText)]),
+  };
+});
 
-async function pathExists(target: string): Promise<boolean> {
-  try {
-    await fs.access(target);
-    return true;
-  } catch {
-    return false;
-  }
+const roots: string[] = [];
+async function temporaryRoot() {
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), 'keaveai-skill-test-'));
+  roots.push(root);
+  return root;
+}
+async function write(root: string, relative: string, content: string) {
+  const file = path.join(root, relative);
+  await fs.mkdir(path.dirname(file), { recursive: true });
+  await fs.writeFile(file, content);
+}
+async function installCI(root: string, dir: string, script = fixture.scriptText) {
+  await write(root, `${dir}/SKILL.md`, fixture.skillText);
+  await write(root, `${dir}/scripts/check.py`, script);
 }
 
-async function writeFile(filePath: string, content: string): Promise<void> {
-  await fs.mkdir(path.dirname(filePath), { recursive: true });
-  await fs.writeFile(filePath, content);
-}
+const missing = (file: string) => expect(fs.lstat(file)).rejects.toMatchObject({ code: 'ENOENT' });
 
-async function collectFiles(rootDir: string): Promise<string[]> {
-  const files: string[] = [];
+const newSkill = 'ai-workflow/skills/common/backend-tech-solution-design/SKILL.md';
 
-  async function walk(current: string): Promise<void> {
-    const entries = await fs.readdir(current, { withFileTypes: true });
-    for (const entry of entries) {
-      const fullPath = path.join(current, entry.name);
-      if (entry.isDirectory()) {
-        await walk(fullPath);
-      } else {
-        files.push(fullPath);
-      }
-    }
-  }
-
-  if (await pathExists(rootDir)) {
-    await walk(rootDir);
-  }
-  return files;
-}
-
-describe('default skill pack cleanup', () => {
-  const createdDirs: string[] = [];
-
+describe('default skill pack retirement', () => {
   afterEach(async () => {
-    await Promise.all(
-      createdDirs.splice(0).map((dir) => fs.rm(dir, { recursive: true, force: true }))
-    );
+    vi.restoreAllMocks();
+    await Promise.all(roots.splice(0).map((root) => fs.rm(root, { recursive: true, force: true })));
   });
 
-  it('does not keep retired skills in the bundled database', async () => {
-    const bundledDir = getBundledDatabaseDir();
-
-    for (const rel of DELETED_SKILL_PATHS) {
-      expect(await pathExists(path.join(bundledDir, rel)), rel).toBe(false);
-    }
-
-    expect(await pathExists(path.join(bundledDir, 'ai-workflow', 'skills', 'server'))).toBe(false);
-    expect(await pathExists(path.join(bundledDir, 'ai-workflow', 'skills', 'common', 'init-rules', 'rules'))).toBe(false);
-    expect(await pathExists(path.join(bundledDir, 'ai-workflow', 'skills', 'common', 'parallel-execute', 'SKILL.md'))).toBe(true);
-  });
-
-  it('does not list or recommend retired skills in the default index', async () => {
-    const indexPath = path.join(getBundledDatabaseDir(), 'ai-workflow', 'skills', 'INDEX.md');
-    const index = await fs.readFile(indexPath, 'utf-8');
-
-    for (const marker of RETIRED_DEFAULT_SKILL_INDEX_MARKERS) {
-      expect(index, marker).not.toContain(marker);
-    }
-
+  it('ships a clean default pack with the backend design and parallel execution skills indexed', async () => {
+    const source = getBundledDatabaseDir();
+    await expect(validateDatabaseSource(source)).resolves.toBeUndefined();
+    const index = await fs.readFile(path.join(source, WORKFLOW_INDEX), 'utf8');
+    expect(index).toContain('common/backend-tech-solution-design');
     expect(index).toContain('common/parallel-execute');
-    expect(index).not.toContain('`server/');
+    expect(index).not.toContain('codex-parallel-execute');
+    await expect(fs.readFile(path.join(source, newSkill), 'utf8')).resolves.toContain('name: backend-tech-solution-design');
   });
 
-  it('does not leave previous-company names or Java stack bindings in remaining default skills', async () => {
-    const bundledDir = getBundledDatabaseDir();
-    const files = [
-      ...(await collectFiles(path.join(bundledDir, 'ai-workflow'))),
-      ...(await collectFiles(path.join(bundledDir, '.codex'))),
-    ];
+  it('removes verified old assets without deleting local server skills and rules', async () => {
+    const project = await temporaryRoot();
+    const customSkill = 'ai-workflow/skills/server/project-local/SKILL.md';
+    const customRule = 'ai-workflow/skills/common/init-rules/rules/team-local.md';
+    await write(project, `${fixture.oldBackend}/SKILL.md`, fixture.skillText);
+    await write(project, fixture.oldRule, fixture.ruleText);
+    await write(project, customSkill, 'custom skill');
+    await write(project, customRule, 'custom rule');
+    await write(project, WORKFLOW_INDEX, fixture.indexText);
 
-    const hits: string[] = [];
-    for (const filePath of files) {
-      const rel = path.relative(bundledDir, filePath);
-      const content = await fs.readFile(filePath, 'utf-8');
-      for (const { name, pattern } of FORBIDDEN_CONTENT_PATTERNS) {
-        if (pattern.test(content)) {
-          hits.push(`${rel}: ${name}`);
-        }
-      }
-    }
+    await copyBundledDatabaseAssets(project, []);
 
-    expect(hits).toEqual([]);
+    await missing(path.join(project, fixture.oldBackend));
+    await missing(path.join(project, fixture.oldRule));
+    await expect(fs.readFile(path.join(project, customSkill), 'utf8')).resolves.toBe('custom skill');
+    await expect(fs.readFile(path.join(project, customRule), 'utf8')).resolves.toBe('custom rule');
+    const index = await fs.readFile(path.join(project, WORKFLOW_INDEX), 'utf8');
+    expect(index).toContain('common/backend-tech-solution-design');
+    expect(index).not.toContain('server/backend-design');
   });
 
-  it('strips retired skills and index rows during copyBundledDatabaseAssets', async () => {
-    const testDir = path.join(os.tmpdir(), `keaveai-retired-skills-${randomUUID()}`);
-    createdDirs.push(testDir);
+  it('cleans old CI copies even for unselected tools, but preserves and reports a modified copy', async () => {
+    const project = await temporaryRoot();
+    const retired = [fixture.ci, '.cursor/skills/ci-test-codegen', '.claude/skills/ci-test-codegen', 'global/ci-test-codegen'];
+    const modified = '.agents/skills/ci-test-codegen';
+    for (const relative of retired) await installCI(project, relative);
+    await installCI(project, modified, 'local supporting script');
+    await write(project, WORKFLOW_INDEX, 'custom index');
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
-    const sourceDir = path.join(testDir, 'source-database');
-    const projectDir = path.join(testDir, 'project');
+    await copyBundledDatabaseAssets(project, [{ name: 'Codex', value: 'codex', skillsDir: '.codex' }]);
 
-    await writeFile(
-      path.join(sourceDir, 'ai-workflow', 'skills', 'common', 'code-commit', 'SKILL.md'),
-      '---\nname: code-commit\nversion: 1.0.0\n---\nkeep\n'
-    );
-    await writeFile(
-      path.join(sourceDir, 'ai-workflow', 'skills', 'server', 'pay-starter-impl', 'SKILL.md'),
-      '---\nname: pay-starter-impl\n---\nretired\n'
-    );
-    await writeFile(
-      path.join(sourceDir, 'ai-workflow', 'skills', 'common', 'codex-parallel-execute', 'SKILL.md'),
-      '---\nname: codex-parallel-execute\n---\nretired\n'
-    );
-    await writeFile(
-      path.join(sourceDir, 'ai-workflow', 'skills', 'INDEX.md'),
-      [
-        '# Skills 索引',
-        '',
-        '| 目录 | `name` | version | owners | 作用说明 | 典型使用时机 | 主要产出/关注点 |',
-        '| --- | --- | --- | --- | --- | --- | --- |',
-        '| `common/code-commit` | `code-commit` | 1.0.0 | - | keep | keep | keep |',
-        '| `common/codex-parallel-execute` | `codex-parallel-execute` | 1.6.0 | - | retired | retired | retired |',
-        '| `server/pay-starter-impl` | `pay-starter-impl` | 1.0.0 | - | retired | retired | retired |',
-        '',
-      ].join('\n')
-    );
-    await writeFile(
-      path.join(sourceDir, '.codex', 'skills', 'init', 'SKILL.md'),
-      '---\nname: init\n---\nkeep\n'
-    );
-    await writeFile(
-      path.join(sourceDir, '.codex', 'skills', 'ci-test-codegen', 'SKILL.md'),
-      '---\nname: ci-test-codegen\n---\nretired\n'
-    );
-
-    await copyBundledDatabaseAssets(
-      projectDir,
-      [{ value: 'cursor', name: 'Cursor', skillsDir: '.cursor' }],
-      sourceDir
-    );
-
-    expect(await pathExists(path.join(projectDir, 'ai-workflow', 'skills', 'common', 'code-commit', 'SKILL.md'))).toBe(true);
-    expect(await pathExists(path.join(projectDir, 'ai-workflow', 'skills', 'server'))).toBe(false);
-    expect(await pathExists(path.join(projectDir, 'ai-workflow', 'skills', 'common', 'codex-parallel-execute'))).toBe(false);
-    expect(await pathExists(path.join(projectDir, '.cursor', 'skills', 'init', 'SKILL.md'))).toBe(true);
-    expect(await pathExists(path.join(projectDir, '.cursor', 'skills', 'ci-test-codegen'))).toBe(false);
-
-    const copiedIndex = await fs.readFile(
-      path.join(projectDir, 'ai-workflow', 'skills', 'INDEX.md'),
-      'utf-8'
-    );
-    expect(copiedIndex).toContain('common/code-commit');
-    expect(copiedIndex).not.toContain('pay-starter-impl');
-    expect(copiedIndex).not.toContain('codex-parallel-execute');
+    for (const relative of retired) await missing(path.join(project, relative));
+    await expect(fs.readFile(path.join(project, modified, 'SKILL.md'), 'utf8')).resolves.toBe(fixture.skillText);
+    await expect(fs.readFile(path.join(project, modified, 'scripts/check.py'), 'utf8')).resolves.toBe('local supporting script');
+    await expect(fs.readFile(path.join(project, WORKFLOW_INDEX), 'utf8')).resolves.toBe('custom index');
+    expect(warn).toHaveBeenCalledWith(expect.stringContaining(modified));
+    expect(warn).toHaveBeenCalledWith(expect.stringContaining(WORKFLOW_INDEX));
   });
 
-  it('skips retired global skills when syncing tool skill directories', async () => {
-    const testDir = path.join(os.tmpdir(), `keaveai-retired-global-skills-${randomUUID()}`);
-    createdDirs.push(testDir);
+  it('does not follow a symlink to an otherwise matching retired skill', async () => {
+    const project = await temporaryRoot();
+    const other = await temporaryRoot();
+    const target = path.join(other, fixture.ci);
+    const link = path.join(project, fixture.ci);
+    await installCI(other, fixture.ci);
+    await fs.mkdir(path.dirname(link), { recursive: true });
+    await fs.symlink(target, link, 'junction');
+    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
 
-    const sourceDir = path.join(testDir, 'source-database');
-    const projectDir = path.join(testDir, 'project');
-    await writeFile(path.join(sourceDir, 'ai-workflow', 'README.md'), '# workflow\n');
-    await writeFile(path.join(sourceDir, '.codex', 'skills', 'init', 'SKILL.md'), '# init\n');
-    await writeFile(path.join(sourceDir, '.codex', 'skills', 'ci-test-codegen', 'SKILL.md'), '# retired\n');
+    await copyBundledDatabaseAssets(project, []);
 
-    await syncGlobalSkills(
-      sourceDir,
-      projectDir,
-      [{ value: 'cursor', name: 'Cursor', skillsDir: '.cursor' }]
-    );
-
-    expect(await pathExists(path.join(projectDir, '.cursor', 'skills', 'init', 'SKILL.md'))).toBe(true);
-    expect(await pathExists(path.join(projectDir, '.cursor', 'skills', 'ci-test-codegen'))).toBe(false);
+    expect((await fs.lstat(link)).isSymbolicLink()).toBe(true);
+    await expect(fs.readFile(path.join(target, 'SKILL.md'), 'utf8')).resolves.toBe(fixture.skillText);
+    expect(warn).toHaveBeenCalledWith(expect.stringContaining(fixture.ci));
   });
 
-  it('removeRetiredDefaultSkills deletes retired paths and scrubs index rows', async () => {
-    const testDir = path.join(os.tmpdir(), `keaveai-remove-retired-${randomUUID()}`);
-    createdDirs.push(testDir);
+  it('rejects an outdated override source before touching the project', async () => {
+    const project = await temporaryRoot();
+    const source = await temporaryRoot();
+    await write(source, `${fixture.oldBackend}/SKILL.md`, fixture.skillText);
+    await write(project, fixture.oldRule, fixture.ruleText);
 
-    await writeFile(path.join(testDir, 'ai-workflow', 'skills', 'server', 'req-impl', 'SKILL.md'), 'retired\n');
-    await writeFile(
-      path.join(testDir, 'ai-workflow', 'skills', 'INDEX.md'),
-      '| `common/prd-review` | `prd-review` | 1.1.0 | - | keep | keep | keep |\n| `server/req-impl` | `req-impl` | 2.0.0 | - | retired | retired | retired |\n'
-    );
+    await expect(copyBundledDatabaseAssets(project, [], source)).rejects.toThrow(fixture.oldBackend);
 
-    await removeRetiredDefaultSkills(testDir);
-
-    expect(await pathExists(path.join(testDir, 'ai-workflow', 'skills', 'server'))).toBe(false);
-    const index = await fs.readFile(path.join(testDir, 'ai-workflow', 'skills', 'INDEX.md'), 'utf-8');
-    expect(index).toContain('common/prd-review');
-    expect(index).not.toContain('server/req-impl');
-    expect(RETIRED_DEFAULT_SKILL_PATHS.length).toBeGreaterThan(0);
+    await expect(fs.readFile(path.join(project, fixture.oldRule), 'utf8')).resolves.toBe(fixture.ruleText);
   });
 });

@@ -65,4 +65,4 @@ description: 负责架构决策与设计,如技术方案、系统架构、技术
 
 ## 使用的技能
 
-从 `ai-workflow/skills/INDEX.md` 读取 skills 索引，并按当前任务需求引用具体 skill
+从 `ai-workflow/skills/INDEX.md` 读取 skills 索引，并按当前任务需求引用具体 skill。后端技术方案使用 `common/backend-tech-solution-design`；需要生成评审文档时使用 `common/tech-design-review-template`。

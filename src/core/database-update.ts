@@ -3,8 +3,8 @@ import chalk from 'chalk';
 import ora from 'ora';
 import {
   DEFAULT_KEAVEAI_DATABASE_BRANCH,
-  DEFAULT_KEAVEAI_DATABASE_REPO,
   refreshBundledDatabaseAssets,
+  requireDatabaseRepo,
 } from './database-assets.js';
 
 export interface DatabaseUpdateOptions {
@@ -14,8 +14,8 @@ export interface DatabaseUpdateOptions {
 
 export class DatabaseUpdateCommand {
   async execute(targetPath?: string, options: DatabaseUpdateOptions = {}): Promise<void> {
-    const repoUrl = options.repo ?? DEFAULT_KEAVEAI_DATABASE_REPO;
-    const branch = options.branch ?? DEFAULT_KEAVEAI_DATABASE_BRANCH;
+    const repoUrl = requireDatabaseRepo(options.repo);
+    const branch = options.branch ?? process.env.KEAVEAI_DATABASE_REPO_BRANCH ?? DEFAULT_KEAVEAI_DATABASE_BRANCH;
     const targetDir = targetPath ? path.resolve(targetPath) : undefined;
     const spinner = ora(`Refreshing bundled KeaveAI database from ${repoUrl}...`).start();
 
