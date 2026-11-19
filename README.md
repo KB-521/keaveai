@@ -33,6 +33,20 @@ keaveai init . --tools codex
 | `$req-dev 为订单列表增加状态筛选，先梳理需求和验收标准` | 进入需求工作流；也可用 `$req-dev` 继续设计、实现或评审。 |
 | `$archive add-order-status-filter` | 归档已完成的 SDD 变更包。将示例中的 ID 换成项目里的实际变更 ID。 |
 
+### `init` 后面的 `[path]` 怎么填？
+
+`[path]` 是要初始化的**本地目录**，方括号不用输入。可以省略，也可以指定相对路径或绝对路径。目标目录不存在时会创建；已有文件不能作为目标。不支持从 Git 仓库 URL 初始化，请先克隆，再传本地目录。
+
+| 写法 | 初始化位置 |
+| --- | --- |
+| `keaveai init` 或 `keaveai init .` | 当前目录。 |
+| `keaveai init ./my-project` | 当前目录下的 `my-project`。 |
+| `keaveai init ../my-project` | 当前目录上一级里的 `my-project`。 |
+| `keaveai init /Users/me/projects/my-project` | 指定的绝对路径。 |
+| `keaveai init "$HOME/projects/My Project"` | 用户主目录下的项目；路径里有空格时加引号。 |
+
+路径后可跟选项，例如 `keaveai init ./my-project --tools codex`。`--tools codex` 安装 Codex 入口技能，`--tools none` 只安装工作流，`--tools all` 安装所有当前支持的工具（目前只有 Codex）。省略路径也可以直接写 `keaveai init --tools codex`。其他选项见 `keaveai help init`。
+
 ## 常用命令
 
 | 命令 | 用途 |
@@ -44,9 +58,21 @@ keaveai init . --tools codex
 | `keaveai issue` | 将初始化生成的内容提交为 GitLab 合并请求（MR）；先用 `keaveai issue --dry-run` 预览。 |
 | `keaveai help [command]` | 查看帮助，例如 `keaveai help init`。 |
 
-### 更新项目工作流
+## 已初始化的项目怎么升级？
 
-升级 CLI 后，在已初始化的项目根目录执行 `keaveai update .`，把新版内置资源同步到项目。若要改用团队维护的数据库，先确认本机已安装 Git、能访问该仓库，再执行：
+升级 CLI 不会自动更新各个项目。项目已经有 `ai-workflow/` 时，不用重新 `init`；先提交或备份自定义文件，再在项目根目录运行：
+
+```bash
+keaveai update .
+```
+
+也可以在任意目录运行 `keaveai update /path/to/old-project`。更新会同步 CLI 内置的工作流和已检测到的工具技能，不拉取远程数据库。若你改过与默认资源同路径的文件，更新后用 `git diff` 检查。**如果还在用 `1.2.6`，请先升级到 `1.2.7` 或更新版本再执行 `update`**，以免旧版清理误删自建后端技能或团队规则。
+
+如果待迁移的需求文档还在旧的 `keaveai/sdd/`，请先备份，再执行一次 `keaveai break-change .`。它会把 SDD 迁到 `ai-workflow/sdd/`，但会重建部分工具目录并移除旧的 `AGENTS.md`。已使用新目录结构的项目不需要这一步。
+
+### 使用团队维护的数据库
+
+若要改用团队维护的数据库，先确认本机已安装 Git、能访问该仓库，再执行：
 
 ```bash
 keaveai database-update --repo https://gitlab.example.com/team/keaveai-database.git --branch main
@@ -54,3 +80,7 @@ keaveai update .
 ```
 
 请将示例 URL 替换成实际仓库地址。`database-update` 会整体替换目标数据库目录；不传 `[path]` 时，默认刷新当前 CLI 安装内的 `keaveai-database/`。不要把项目根目录作为数据库更新目标。
+
+## 维护者：本地发布 npm
+
+在源码仓库运行 `pnpm release:local`，选择或输入版本号，确认后自动构建、打包并发布。只验证打包可运行 `pnpm release:local --dry-run`。登录和发布说明见 [scripts/README.md](scripts/README.md)。
