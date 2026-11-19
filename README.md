@@ -84,3 +84,7 @@ keaveai update .
 ## 维护者：本地发布 npm
 
 在源码仓库运行 `pnpm release:local`，选择或输入版本号，确认后自动构建、打包并发布。只验证打包可运行 `pnpm release:local --dry-run`。登录和发布说明见 [scripts/README.md](scripts/README.md)。
+
+## 许可证
+
+本项目采用 [MIT 许可证](LICENSE)。
