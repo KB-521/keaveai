@@ -46,6 +46,8 @@ import { getProfileWorkflows, CORE_WORKFLOWS, ALL_WORKFLOWS } from './profiles.j
 import { getAvailableTools } from './available-tools.js';
 import { migrateIfNeeded } from './migration.js';
 import { ensureAgentConfigFile } from './agent-config.js';
+import { chooseProjectGit, ensureAgentConfigExample, type InitGitOptions } from './init-project-git.js';
+import { writeProjectGit } from './project-git.js';
 import {
   KEAVEAI_DATABASE_CONTENT_DIR,
   copyBundledDatabaseAssets,
@@ -83,7 +85,7 @@ const WORKFLOW_TO_SKILL_DIR: Record<string, string> = {
 // Types
 // -----------------------------------------------------------------------------
 
-type InitCommandOptions = {
+export type InitCommandOptions = InitGitOptions & {
   tools?: string;
   force?: boolean;
   interactive?: boolean;
@@ -100,7 +102,7 @@ export class InitCommand {
   private readonly interactiveOption?: boolean;
   private readonly profileOverride?: string;
 
-  constructor(options: InitCommandOptions = {}) {
+  constructor(private readonly options: InitCommandOptions = {}) {
     this.toolsArg = options.tools;
     this.force = options.force ?? false;
     this.interactiveOption = options.interactive;
@@ -125,10 +127,15 @@ export class InitCommand {
     const selectedToolIds = await this.getSelectedTools(toolStates, extendMode, detectedTools, projectPath);
     const validatedTools = this.validateTools(selectedToolIds, toolStates);
 
+    const gitConfig = await chooseProjectGit(projectPath, this.options, this.canPromptInteractively());
+
     // Copy bundled KeaveAI database assets to the target project.
     await this.syncKeaveAIDatabase(projectPath, validatedTools);
     await ensureAgentConfigFile(projectPath);
+    if (gitConfig) await writeProjectGit(projectPath, gitConfig);
+    await ensureAgentConfigExample(projectPath);
     this.displayDatabaseSyncSuccess(validatedTools);
+    if (gitConfig) console.log(`Git delivery: ${gitConfig.provider}, ${gitConfig.remote} → ${gitConfig.target} (agent.config)`);
   }
 
   // ═══════════════════════════════════════════════════════════

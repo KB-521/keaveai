@@ -17,6 +17,8 @@ import { ShowCommand } from '../commands/show.js';
 import { CompletionCommand } from '../commands/completion.js';
 import { FeedbackCommand } from '../commands/feedback.js';
 import { IssueCommand } from '../commands/issue.js';
+import { registerDeliveryCommand } from '../commands/delivery.js';
+import type { InitCommandOptions } from '../core/init.js';
 import { registerConfigCommand } from '../commands/config.js';
 import { registerSchemaCommand } from '../commands/schema.js';
 import {
@@ -38,7 +40,7 @@ import { maybeShowTelemetryNotice, trackCommand, shutdown } from '../telemetry/i
 const program = new Command();
 const require = createRequire(import.meta.url);
 const { version } = require('../../package.json');
-const VISIBLE_COMMANDS = new Set(['init', 'update', 'break-change', 'database-update', 'issue', 'help']);
+const VISIBLE_COMMANDS = new Set(['init', 'update', 'break-change', 'database-update', 'issue', 'delivery', 'help']);
 
 /**
  * Get the full command path for nested commands.
@@ -100,7 +102,10 @@ program
   .option('--tools <tools>', toolsOptionDescription)
   .option('--force', 'Auto-cleanup legacy files without prompting')
   .option('--profile <profile>', 'Override global config profile (core or custom)')
-  .action(async (targetPath = '.', options?: { tools?: string; force?: boolean; profile?: string }) => {
+  .option('--git-provider <name>', 'Git delivery provider: github or gongfeng')
+  .option('--git-remote <name>', 'Existing named Git remote')
+  .option('--git-target <branch>', 'Target Git branch for code delivery')
+  .action(async (targetPath = '.', options?: InitCommandOptions) => {
     try {
       // Validate that the path is a valid directory
       const resolvedPath = path.resolve(targetPath);
@@ -122,11 +127,7 @@ program
       }
 
       const { InitCommand } = await import('../core/init.js');
-      const initCommand = new InitCommand({
-        tools: options?.tools,
-        force: options?.force,
-        profile: options?.profile,
-      });
+      const initCommand = new InitCommand(options);
       await initCommand.execute(targetPath);
     } catch (error) {
       console.log(); // Empty line for spacing
@@ -420,6 +421,8 @@ program
       process.exit(1);
     }
   });
+
+registerDeliveryCommand(program);
 
 // Completion command with subcommands
 const completionCmd = program

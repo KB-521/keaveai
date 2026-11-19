@@ -1,0 +1,10 @@
+# KeaveAI Git delivery: choose github or gongfeng.
+# Use an existing named Git remote and the actual target branch.
+KEAVEAI_GIT_PROVIDER=github
+KEAVEAI_GIT_REMOTE=origin
+KEAVEAI_GIT_TARGET=main
+
+# Tencent Gongfeng: change KEAVEAI_GIT_PROVIDER to gongfeng.
+# Keep credentials out of this file. For API publishing, set GH_TOKEN
+# (or GITHUB_TOKEN) for GitHub, or GONGFENG_TOKEN for Tencent Gongfeng.
+# Git fetch/push use your existing Git credentials.

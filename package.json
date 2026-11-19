@@ -35,6 +35,7 @@
     "bin",
     "schemas",
     "keaveai-database",
+    "agent.config.example",
     "scripts/postinstall.js",
     "!dist/**/*.test.js",
     "!dist/**/__tests__",

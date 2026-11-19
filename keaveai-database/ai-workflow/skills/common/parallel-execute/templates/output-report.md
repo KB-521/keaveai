@@ -23,8 +23,7 @@
 ## Worktree 命令
 
 ```bash
-# 使用仓库或当前工具的 worktree 管理脚本（若有），否则：
-git worktree add -b task-<task-id> .worktrees/task-<task-id> <base-branch>
+keaveai delivery start <task-id> --allow <paths> --context <baseline-files>
 ```
 
 ## Worker 提示词
@@ -39,12 +38,12 @@ git worktree add -b task-<task-id> .worktrees/task-<task-id> <base-branch>
 
 1. 先启动共享契约任务或无依赖任务。
 2. 再启动同组内边界互不重叠的任务。
-3. 等待 worker 完成后，由主工作区负责集成。
+3. 等待 worker 完成后，逐任务独立审查和交付；主会话汇总集成风险，不直接合并。
 
-## Worker 执行结果
+## Worker 与交付结果
 
-| task-id | worktree | worker | 状态 | 修改文件 | 集成注意事项 |
-| --- | --- | --- | --- | --- | --- |
+| task-id | worktree / base | 编码 agent | 审查 agent / 状态 | 验证证据 | 提交 / MR | 集成注意事项 |
+| --- | --- | --- | --- | --- | --- | --- |
 
 ## 阻塞或冲突
 

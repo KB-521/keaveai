@@ -67,6 +67,17 @@ describe('default skill pack retirement', () => {
     await expect(fs.readFile(path.join(source, newSkill), 'utf8')).resolves.toContain('name: backend-tech-solution-design');
   });
 
+  it('installs the Codex delivery entry, reviewer and evidence template together', async () => {
+    const project = await temporaryRoot();
+    await copyBundledDatabaseAssets(project, [{ name: 'Codex', value: 'codex', skillsDir: '.codex' }]);
+    const content = (file: string) => fs.readFile(path.join(project, file), 'utf8');
+    await expect(content('.codex/skills/req-dev/SKILL.md')).resolves.toContain('common/task-delivery/SKILL.md');
+    await expect(content(WORKFLOW_INDEX)).resolves.toContain('common/task-delivery');
+    await expect(content('ai-workflow/skills/common/task-delivery/SKILL.md')).resolves.toContain('keaveai delivery commit');
+    await expect(content('ai-workflow/agent/review-executor.md')).resolves.toContain('changes-requested');
+    expect(JSON.parse(await content('ai-workflow/skills/common/task-delivery/templates/review.json'))).toHaveProperty('tree');
+  });
+
   it('removes verified old assets without deleting local server skills and rules', async () => {
     const project = await temporaryRoot();
     const customSkill = 'ai-workflow/skills/server/project-local/SKILL.md';

@@ -22,6 +22,7 @@ describe('telemetry/index', () => {
   let tempDir: string;
   let originalEnv: NodeJS.ProcessEnv;
   let consoleLogSpy: ReturnType<typeof vi.spyOn>;
+  let consoleErrorSpy: ReturnType<typeof vi.spyOn>;
 
   beforeEach(() => {
     // Create unique temp directory for each test using UUID
@@ -37,8 +38,8 @@ describe('telemetry/index', () => {
     // Clear all mocks
     vi.clearAllMocks();
 
-    // Spy on console.log for notice tests
     consoleLogSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+    consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
   });
 
   afterEach(() => {
@@ -94,6 +95,17 @@ describe('telemetry/index', () => {
       await maybeShowTelemetryNotice();
 
       expect(consoleLogSpy).not.toHaveBeenCalled();
+      expect(consoleErrorSpy).not.toHaveBeenCalled();
+    });
+
+    it('writes the first-run notice to stderr without polluting JSON stdout', async () => {
+      delete process.env.KEAVEAI_TELEMETRY;
+      delete process.env.DO_NOT_TRACK;
+      delete process.env.CI;
+      await maybeShowTelemetryNotice();
+      await maybeShowTelemetryNotice();
+      expect(consoleLogSpy).not.toHaveBeenCalled();
+      expect(consoleErrorSpy).toHaveBeenCalledExactlyOnceWith(expect.stringContaining('anonymous usage stats'));
     });
   });
 

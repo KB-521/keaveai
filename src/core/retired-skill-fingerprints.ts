@@ -34,6 +34,7 @@ export const RETIRED_SKILL_FINGERPRINTS: Readonly<Record<string, string>> = {
 
 // These indexes can be replaced with the current bundled index without losing local entries.
 export const PREVIOUS_SKILL_INDEX_HASHES = new Set([
+  '6f09f4a566d86484c891984111db5d9fcc4be644f637d3645b76d7a5d58d2508',
   '022d047759197332644604f182b77b24d79e87d3a421b573c17fa89cf8ab9069',
   'fdf03d4cac68d8d172badc8ffb47efc6f191aa09490752712086af6d041f4a21',
 ]);

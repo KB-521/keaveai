@@ -1,7 +1,7 @@
 ---
 name: req-dev
-description: AI 任务统一入口与执行门禁（强制流程）。适用于 KeaveAI 支持的各类 AI 编程工具，不把单一工具当作唯一门禁。
-version: 1.5.0
+description: AI 任务统一入口；实现类任务由主会话分发到独立 worktree，经编码、自审和独立审查后交付。
+version: 1.6.0
 ---
 
 # 目标
@@ -33,15 +33,22 @@ User Task
 1. 读取 `ai-workflow/agent/phase-router.md`。
 2. 根据 Router 判断：意图、复杂度、目标 Agent。
 3. 读取目标 Agent 文件（如 `ai-workflow/agent/requirement-manager.md`）。
+4. 动手前阅读适用的根/子项目 `AGENTS.md` 及其指向的必读规则；不能把仓库规范复制进 Memory 作为另一份真源。
+
+# 实现交付门禁
+
+- 当任务真的进入实现、缺陷修复或重构阶段（包括只有一个任务），必须加载 `ai-workflow/skills/common/task-delivery/SKILL.md`。主会话只编排，一个任务、一个分支、一个 worktree；编码和独立审查用不同的真实子 agent。
+- 先精简和作者自审，再送固定快照独立审查。结果未通过、基线/快照变化、子 agent 或必要上下文不可用时，不提交也不绕过门禁。
+- 审过后按用户范围提交；只在用户授权后按 `agent.config` 选择的远端与目标自动创建 GitHub PR 或腾讯工蜂 MR，不合并。需求、设计和只读评审本身不建 worktree、不提交或发布。
 
 # 并行任务入口门禁
 
 当语义判断用户目标是让同一并行组内的多个子任务同时推进时，才判定为并行执行意图。
 
-- 普通执行意图下，即使父需求 `INDEX.md` 中某组标为可并行，也只说明具备并行可能，不自动启动多个 subagents。
+- 普通执行意图下，即使父需求 `INDEX.md` 中某组标为可并行，也不自动并发多个编码任务；单个任务仍使用 `task-delivery` 的独立编码与审查。
 - 判定为并行执行意图后，必须交给 `ai-workflow/skills/common/parallel-execute/SKILL.md` 执行具体并行校验、worktree 准备、worker 提示词与调度。
 - 若 `parallel-execute` 未命中、缺失或不可读，禁止启动正式业务并行，只能说明 fallback 与影响。
-- 并行边界、任务基线、worktree、subagent/worker、串行 fallback 等细则由 `parallel-execute` 维护，`req-dev` 只保留入口级门禁。
+- `parallel-execute` 管理并行组资格、共享基线与依赖；每个子任务的 worktree、精简、自审、审查和提交仍使用 `task-delivery`。
 - 并行执行应使用当前会话中的 AI 编程工具（Codex、Cursor、Claude 等只是可选实现，不是唯一门禁）。
 
 # 执行门禁（Gate）

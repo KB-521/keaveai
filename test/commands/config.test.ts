@@ -102,6 +102,7 @@ describe('visible shell completion registry', () => {
       'break-change',
       'database-update',
       'issue',
+      'delivery',
     ]);
   });
 });

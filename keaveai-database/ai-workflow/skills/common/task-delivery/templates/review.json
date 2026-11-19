@@ -1,0 +1,17 @@
+{
+  "taskId": "replace-with-task-id",
+  "base": "replace-with-base-object-id",
+  "tree": "replace-with-reviewed-tree-object-id",
+  "implementer": "replace-with-native-implementation-agent-id",
+  "reviewer": "replace-with-native-review-agent-id",
+  "verdict": "replace-with-review-agent-verdict",
+  "authorReview": "替换为作者精简范围、自审结果、问题及处理",
+  "reviewSummary": "替换为独立审查 agent 的结论、证据与剩余风险",
+  "checks": [
+    {
+      "command": "替换为实际命令或计划检查",
+      "status": "not-run",
+      "reason": "替换为真实的未运行原因；如果实际运行，则移除 reason 并提供 passed/failed 与 evidence"
+    }
+  ]
+}

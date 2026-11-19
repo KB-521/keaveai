@@ -28,7 +28,7 @@ const COMMON_FLAGS = {
   } as FlagDefinition,
 } as const;
 
-const VISIBLE_COMMAND_NAMES = new Set(['init', 'update', 'break-change', 'database-update', 'issue']);
+const VISIBLE_COMMAND_NAMES = new Set(['init', 'update', 'break-change', 'database-update', 'issue', 'delivery']);
 
 /**
  * Registry of all KeaveAI CLI commands with their flags and metadata.
@@ -56,6 +56,9 @@ const ALL_COMMAND_REGISTRY: CommandDefinition[] = [
         takesValue: true,
         values: ['core', 'custom'],
       },
+      { name: 'git-provider', description: 'Git delivery provider', takesValue: true, values: ['github', 'gongfeng'] },
+      { name: 'git-remote', description: 'Existing Git remote name', takesValue: true },
+      { name: 'git-target', description: 'Target branch for code delivery', takesValue: true },
     ],
   },
   {
@@ -246,6 +249,40 @@ const ALL_COMMAND_REGISTRY: CommandDefinition[] = [
       {
         name: 'dry-run',
         description: 'Show the planned commit and push without changing git state',
+      },
+    ],
+  },
+  {
+    name: 'delivery',
+    description: 'Prepare, review and publish an isolated code task',
+    flags: [],
+    subcommands: [
+      {
+        name: 'start', description: 'Create a task branch and worktree', acceptsPositional: true,
+        flags: [
+          { name: 'allow', description: 'Allowed repository paths', takesValue: true },
+          { name: 'context', description: 'Required baseline context files', takesValue: true },
+          { name: 'worktree-root', description: 'External worktree parent directory', takesValue: true },
+          { name: 'branch-prefix', description: 'Repository branch prefix', takesValue: true },
+        ],
+      },
+      {
+        name: 'snapshot', description: 'Identify the staged tree for independent review', acceptsPositional: true,
+        flags: [{ name: 'refresh-base', description: 'Adopt the new remote base and invalidate the old review' }],
+      },
+      {
+        name: 'commit', description: 'Commit a reviewed snapshot', acceptsPositional: true,
+        flags: [
+          { name: 'review', description: 'Review record JSON file', takesValue: true },
+          { name: 'message', description: 'Commit message', takesValue: true },
+        ],
+      },
+      {
+        name: 'publish', description: 'Open a GitHub PR or Tencent Gongfeng MR without merging', acceptsPositional: true,
+        flags: [
+          { name: 'title', description: 'PR/MR title', takesValue: true },
+          { name: 'confirm', description: 'Authorize the push and PR/MR creation' },
+        ],
       },
     ],
   },

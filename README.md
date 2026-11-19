@@ -23,14 +23,14 @@ cd /path/to/your-project
 keaveai init . --tools codex
 ```
 
-`init` 会将安装包内置的工作流复制到 `ai-workflow/`，并将入口技能安装到 `.codex/skills/`。如果要在终端里交互式选择 AI 工具，运行 `keaveai init`；如果只需要工作流文件，不安装工具技能，运行 `keaveai init . --tools none`。用 `keaveai help init` 查看可选工具。
+`init` 会将安装包内置的工作流复制到 `ai-workflow/`，并将入口技能安装到 `.codex/skills/`。在已有 Git 远端的项目里，运行 `keaveai init` 可交互选择 AI 工具、Git 平台（GitHub 或腾讯工蜂）、远端和目标分支；Git 设置写入 `agent.config`，同时生成 `agent.config.example`。如果只需要工作流文件，不安装工具技能，运行 `keaveai init . --tools none`。用 `keaveai help init` 查看可选工具。
 
 初始化后，重新打开项目的 Codex 会话。下面的示例应输入 **Codex 对话框**，不是终端：
 
 | 输入示例 | 用途 |
 | --- | --- |
 | `$init 初始化项目` | 生成或更新 `AGENTS.md`、业务文档、规则文档和技能索引。 |
-| `$req-dev 为订单列表增加状态筛选，先梳理需求和验收标准` | 进入需求工作流；也可用 `$req-dev` 继续设计、实现或评审。 |
+| `$req-dev 为订单列表增加状态筛选，先梳理需求和验收标准` | 进入需求工作流；实际进入实现时，主会话分发到独立 worktree，由编码与审查子 agent 交付。 |
 | `$archive add-order-status-filter` | 归档已完成的 SDD 变更包。将示例中的 ID 换成项目里的实际变更 ID。 |
 
 ### `init` 后面的 `[path]` 怎么填？
@@ -47,6 +47,10 @@ keaveai init . --tools codex
 
 路径后可跟选项，例如 `keaveai init ./my-project --tools codex`。`--tools codex` 安装 Codex 入口技能，`--tools none` 只安装工作流，`--tools all` 安装所有当前支持的工具（目前只有 Codex）。省略路径也可以直接写 `keaveai init --tools codex`。其他选项见 `keaveai help init`。
 
+### 代码任务怎么交付？
+
+进入实现阶段后，`$req-dev` 使用**一个任务、一个分支、一个 worktree**。编码 agent 先精简和自审，另一个 agent 审查固定快照；审过才提交。读取 `agent.config` 中的仓库设置；只有明确授权时才推送任务分支并创建 GitHub PR 或腾讯工蜂 MR，不会自动合并。适用条件、示例和检查结果说明见 [隔离式任务交付](docs/task-delivery.md)。
+
 ## 常用命令
 
 | 命令 | 用途 |
@@ -56,6 +60,7 @@ keaveai init . --tools codex
 | `keaveai break-change [path]` | 迁移旧目录结构，保留已有 SDD 到 `ai-workflow/sdd/`，同步 `.codex/skills/`。迁移会重建部分目录，并移除旧的 `AGENTS.md`；请先提交或备份自定义内容。 |
 | `keaveai database-update [path] --repo <url>` | 从指定 Git 仓库刷新本地数据库资源，不会直接更新项目。 |
 | `keaveai issue` | 将初始化生成的内容提交为 GitLab 合并请求（MR）；先用 `keaveai issue --dry-run` 预览。 |
+| `keaveai delivery` | 登记任务 worktree、冻结待审快照、提交审过的代码，并按授权创建 GitHub PR 或腾讯工蜂 MR。 |
 | `keaveai help [command]` | 查看帮助，例如 `keaveai help init`。 |
 
 ## 已初始化的项目怎么升级？

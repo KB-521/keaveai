@@ -1,6 +1,6 @@
 # CLI Reference
 
-The public KeaveAI CLI currently exposes only the project setup and sync commands below. Legacy workflow commands remain hidden from top-level help and shell completion while the CLI surface is being narrowed.
+The public KeaveAI CLI exposes project setup, sync, and isolated task delivery. Legacy workflow commands remain hidden from top-level help and shell completion.
 
 ## Commands
 
@@ -11,6 +11,7 @@ The public KeaveAI CLI currently exposes only the project setup and sync command
 | `keaveai break-change [path]` | Migrate initialized content to the bundled breaking layout |
 | `keaveai database-update [path]` | Refresh the bundled `keaveai-database/` directory from an explicitly configured Git source |
 | `keaveai issue` | Push initialized KeaveAI content as a GitLab merge request |
+| `keaveai delivery` | Prepare isolated worktrees, commit reviewed snapshots, and request a code MR |
 | `keaveai help [command]` | Show CLI help |
 
 ## Global Options
@@ -34,6 +35,9 @@ keaveai init [path] [options]
 | `--tools <tools>` | Configure AI tools non-interactively. Use `all`, `none`, or comma-separated tool IDs |
 | `--force` | Auto-cleanup legacy files without prompting |
 | `--profile <profile>` | Override global config profile (`core` or `custom`) |
+| `--git-provider <name>` | Set the Git delivery platform (`github` or `gongfeng`) |
+| `--git-remote <name>` | Select an existing named remote |
+| `--git-target <branch>` | Set the target branch; supply all three `--git-*` options together |
 
 Current supported tool ID:
 
@@ -50,7 +54,7 @@ keaveai init . --tools none
 keaveai init . --force
 ```
 
-The command also ensures the project root has an `agent.config` file.
+Interactive `keaveai init` with a named Git remote lets you select the platform, remote and target branch, or skip setup. With `--tools` or without a TTY, provide the three Git flags, or leave existing settings alone. Settings go in `agent.config`; `agent.config.example` is copied if missing. Initialization does not add remotes, fetch, or store credentials.
 It installs content from the bundled `keaveai-database/` directory and does not pull from GitLab during normal initialization.
 
 ## `keaveai update`
@@ -149,6 +153,17 @@ Examples:
 keaveai issue --dry-run
 keaveai issue
 ```
+
+## `keaveai delivery`
+
+Used by `$req-dev` to deliver a code task, independently of `keaveai issue`. Subcommands emit JSON results; `publish` exits with code 2 if the branch was pushed but the PR/MR could not be confirmed. Check the remote before retrying manually. See the [task delivery guide](task-delivery.md) for the roles, review template, and usage.
+
+| Command | Purpose |
+|---------|---------|
+| `keaveai delivery start <id> --allow <paths...>` | Read Git settings from `agent.config`, fetch the target and create one task worktree. Optional `--context <files...>` checks baseline documents, `--worktree-root <path>` uses an existing external directory, and `--branch-prefix <prefix>` overrides the branch prefix. |
+| `keaveai delivery snapshot <id>` | Return the staged tree, base and file list. An explicitly restaged task on a new remote base can use `--refresh-base` to invalidate the old approval. |
+| `keaveai delivery commit <id> --review <file> --message <text>` | Run Git hooks and record the commit only if it matches the independently reviewed snapshot. |
+| `keaveai delivery publish <id> --title <text> --confirm` | Push the approved commit to a new task branch and create a GitHub PR or Tencent Gongfeng MR. Uses the settings pinned at task start. Does not merge or update the target branch. |
 
 ## `keaveai help`
 

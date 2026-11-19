@@ -7,7 +7,9 @@
 - change-id: <change-id>
 - task-id: <task-id>
 - task doc: <task-doc-path>
-- worktree: <worktree-path>
+- worktree: <绝对 worktree 路径>
+- branch / base: <branch> / <base>
+- 任务上下文、验收条件与测试授权: <实际内容>
 
 执行要求：
 1. 只实现该子任务文档中的内容。
@@ -17,8 +19,8 @@
 5. 不回滚其他人或其他 worker 的改动。
 6. 如果发现边界冲突，停止并报告，不要自行扩大范围。
 7. 只能在分配给自己的 worktree 中修改文件。
-8. 执行完成后只输出改动摘要、涉及文件和需要主线程集成注意的事项。
-9. 不自动执行单元测试、集成测试或 code review，除非用户明确要求。
+8. 按 `ai-workflow/agent/implementation-executor.md` 做提交前精简和作者自审，记录实际验证状态。
+9. 不提交、不推送、不审查自己的交付；返回改动路径、验收证据、`authorReview` 与 `checks` 后停止写入。
 
-请先读取任务文档和仓库规范，再开始实现。
+请先核对指定 worktree、分支、基线，再读取任务文档和仓库规范。
 ````

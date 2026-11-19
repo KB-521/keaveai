@@ -402,6 +402,7 @@ describe('schema command shell completion registry', () => {
       'break-change',
       'database-update',
       'issue',
+      'delivery',
     ]);
   });
 });

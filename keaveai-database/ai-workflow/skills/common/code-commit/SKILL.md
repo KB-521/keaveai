@@ -6,7 +6,7 @@ version: 1.0.0
 
 # 代码提交
 
-创建结构清晰、信息明确的 git 提交。
+提供结构清晰、信息明确的 Git 提交说明。通过 `$req-dev` 交付的代码，只有主会话能在独立审查通过后使用 `keaveai delivery commit`；本 skill 不授权编码 agent 直接提交或跳过钩子。
 
 ## 格式
 

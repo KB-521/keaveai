@@ -130,8 +130,8 @@ export async function maybeShowTelemetryNotice(): Promise<void> {
       return;
     }
 
-    // Display notice
-    console.log(
+    // Keep stdout available for machine-readable command output.
+    console.error(
       'Note: KeaveAI collects anonymous usage stats. Opt out: KEAVEAI_TELEMETRY=0'
     );
 
