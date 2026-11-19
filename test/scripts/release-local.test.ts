@@ -49,10 +49,11 @@ describe('local npm release', () => {
     const test = fixture();
     releasePackage({ ...test, version, dryRun: false });
     const args = test.runNpm.mock.calls.map(([, args]) => args);
-    expect(args.map(([action]) => action)).toEqual(['version', 'run', 'pack', 'publish']);
-    expect(args[0]).toContain('--no-git-tag-version');
-    expect(args[1]).toEqual(['run', 'build']);
-    expect(args[3]).toEqual(['publish', test.tarball(), '--registry', 'https://registry.npmjs.org/', '--access', 'public', '--tag', tag, '--ignore-scripts']);
+    expect(args.map(([action]) => action)).toEqual(['whoami', 'version', 'run', 'pack', 'publish']);
+    expect(args[0]).toEqual(['whoami', '--registry', 'https://registry.npmjs.org/']);
+    expect(args[1]).toContain('--no-git-tag-version');
+    expect(args[2]).toEqual(['run', 'build']);
+    expect(args[4]).toEqual(['publish', test.tarball(), '--registry', 'https://registry.npmjs.org/', '--access', 'public', '--tag', tag, '--ignore-scripts']);
     expect(test.readManifests()).toEqual(Array(2).fill(JSON.stringify({ name, version })));
     expect(fs.existsSync(test.tarball())).toBe(false);
   });
@@ -68,9 +69,16 @@ describe('local npm release', () => {
   it('does not publish a tarball with a mismatched version', () => {
     const test = fixture({ packVersion: '1.2.6' });
     expect(() => releasePackage({ ...test, version: '1.3.0', dryRun: false })).toThrow('不一致');
-    expect(test.runNpm.mock.calls.map(([, args]) => args[0])).toEqual(['version', 'run', 'pack']);
+    expect(test.runNpm.mock.calls.map(([, args]) => args[0])).toEqual(['whoami', 'version', 'run', 'pack']);
     expect(test.readManifests()).toEqual([original, original]);
     expect(fs.existsSync(test.tarball())).toBe(false);
+  });
+
+  it('checks official registry authentication before changing versions or building', () => {
+    const test = fixture({ fail: 'whoami' });
+    expect(() => releasePackage({ ...test, version: '1.3.0', dryRun: false })).toThrow('npm login --registry=https://registry.npmjs.org/');
+    expect(test.runNpm.mock.calls.map(([, args]) => args[0])).toEqual(['whoami']);
+    expect(test.readManifests()).toEqual([original, original]);
   });
 
   it('restores manifests and advises checking the registry on a publish error', () => {

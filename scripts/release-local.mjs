@@ -36,6 +36,13 @@ function npm(cwd, args, { capture = false } = {}) {
 export function releasePackage({ root, version, dryRun, runNpm = npm }) {
   const { prerelease } = parseVersion(version);
   const tag = prerelease ? 'next' : 'latest';
+  if (!dryRun) {
+    try {
+      runNpm(root, ['whoami', '--registry', registry]);
+    } catch (error) {
+      throw new Error(`无法验证 npm 官方仓库的登录状态，未改版本或打包。请先运行 npm login --registry=${registry}，并确认该账号有发布权限。`, { cause: error });
+    }
+  }
   const manifests = ['package.json', 'package-lock.json', 'npm-shrinkwrap.json']
     .map((name) => path.join(root, name))
     .filter((file) => existsSync(file))
@@ -68,7 +75,7 @@ export function releasePackage({ root, version, dryRun, runNpm = npm }) {
     console.log(`已发布 ${name}@${version}（${tag}）。请提交版本文件；本命令不创建 Git 提交或标签。`);
   } catch (error) {
     if (publishAttempted) {
-      throw new Error(`${error.message} 请先用 npm view ${name}@${version} version 确认该版本是否已上传，再重试。`, { cause: error });
+      throw new Error(`${error.message} 请用 npm view ${name}@${version} version --registry=${registry} 确认该版本是否已上传；若 npm 返回 401/403/404，也请确认账号或令牌有该包的发布权限。`, { cause: error });
     }
     throw error;
   } finally {
