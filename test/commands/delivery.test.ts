@@ -66,7 +66,7 @@ async function changed(worktree: string, value = 2) {
 }
 
 async function reviewRecord(f: Awaited<ReturnType<typeof fixture>>, overrides: Partial<DeliveryReview> = {}) {
-  const snapshot = await f.cmd.snapshot(ID);
+  const snapshot = await f.cmd.snapshot(overrides.taskId ?? ID);
   git(snapshot.worktree, 'diff', '--check', snapshot.base, snapshot.tree);
   const review: DeliveryReview = {
     taskId: ID,
@@ -183,6 +183,82 @@ describe('isolated task delivery against real local Git repositories', () => {
     await expect(f.cmd.merge(ID, { confirm: true })).rejects.toThrow(/local target branch moved/);
     expect(git(f.repo, 'rev-parse', 'HEAD')).toBe(target);
     expect(remoteSource(f.remote)).toBe('');
+  });
+
+  it('only reports a recorded local merge again while the target still contains the approved commit', async () => {
+    const f = await fixture();
+    await fs.unlink(path.join(f.repo, 'agent.config'));
+    const { base, commit, worktree } = await approved(f);
+    const fromTask = new DeliveryTaskCommand(worktree);
+    await expect(fromTask.merge(ID, { confirm: true })).rejects.toThrow(/original worktree/);
+    const merged = { status: 'merged-local', branch: 'trunk', commit };
+    await expect(f.cmd.merge(ID, { confirm: true })).resolves.toEqual(merged);
+    await expect(f.cmd.merge(ID, { confirm: true })).resolves.toEqual(merged);
+    git(f.repo, 'commit', '--allow-empty', '-m', 'advance after the merge');
+    const advanced = git(f.repo, 'rev-parse', 'HEAD');
+    await expect(f.cmd.merge(ID, { confirm: true })).resolves.toEqual(merged);
+    expect(git(f.repo, 'rev-parse', 'HEAD')).toBe(advanced);
+    git(f.repo, 'reset', '--hard', base);
+    await expect(f.cmd.merge(ID, { confirm: true })).rejects.toThrow(/recorded merge is no longer present/);
+    expect(git(f.repo, 'rev-parse', 'HEAD')).toBe(base);
+  });
+
+  it('removes only the clean worktree after a verified local merge and keeps its branch and record', async () => {
+    const f = await fixture();
+    await fs.unlink(path.join(f.repo, 'agent.config'));
+    const { base, branch, commit, worktree } = await approved(f);
+    await expect(f.cmd.cleanup(ID, {})).rejects.toThrow(/authorization/);
+    await expect(f.cmd.cleanup(ID, { confirm: true })).rejects.toThrow(/No recorded local merge/);
+    await f.cmd.merge(ID, { confirm: true });
+    await expect(new DeliveryTaskCommand(worktree).cleanup(ID, { confirm: true })).rejects.toThrow(/original worktree/);
+    git(f.repo, 'reset', '--hard', base);
+    await expect(f.cmd.cleanup(ID, { confirm: true })).rejects.toThrow(/recorded merge is no longer present/);
+    git(f.repo, 'merge', '--ff-only', commit);
+    await write(worktree, 'notes.tmp', 'keep my notes\n');
+    await expect(f.cmd.cleanup(ID, { confirm: true })).rejects.toThrow(/changes or local files/);
+    await fs.unlink(path.join(worktree, 'notes.tmp'));
+    await fs.appendFile(path.join(f.repo, '.git', 'info', 'exclude'), '\nlocal-cache/\n');
+    await write(worktree, 'local-cache/files.txt', 'also keep ignored files\n');
+    await expect(f.cmd.cleanup(ID, { confirm: true })).rejects.toThrow(/including ignored files/);
+    await fs.rm(path.join(worktree, 'local-cache'), { recursive: true });
+    git(f.repo, 'worktree', 'lock', worktree);
+    await expect(f.cmd.cleanup(ID, { confirm: true })).rejects.toThrow(/locked/);
+    git(f.repo, 'worktree', 'unlock', worktree);
+    expect(git(f.repo, 'worktree', 'list')).toContain(ID);
+    const cli = fileURLToPath(new URL('../../bin/keaveai.js', import.meta.url));
+    const result = execFileSync(process.execPath, [cli, 'delivery', 'cleanup', ID, '--confirm'], {
+      cwd: f.repo, encoding: 'utf8', env: { ...process.env, KEAVEAI_TELEMETRY: '0' },
+    });
+    expect(JSON.parse(result)).toEqual({ status: 'cleaned-local', worktree, branch, commit });
+    await expect(fs.stat(worktree)).rejects.toMatchObject({ code: 'ENOENT' });
+    expect(git(f.repo, 'worktree', 'list')).not.toContain(ID);
+    expect(git(f.repo, 'rev-parse', branch)).toBe(commit);
+    await expect(fs.readFile(path.join(f.repo, '.git', 'keaveai', 'delivery', ID, 'task.json'), 'utf8')).resolves.toContain(commit);
+    expect(git(f.repo, 'rev-parse', 'HEAD')).toBe(commit);
+  });
+
+  it('refreshes the next local task before its first review when two worktrees share a target', async () => {
+    const f = await fixture();
+    await fs.unlink(path.join(f.repo, 'agent.config'));
+    const first = await approved(f);
+    const secondId = 'update-outside';
+    const second = await f.cmd.start(secondId, { allow: ['outside.ts'] });
+    expect(second.base).toBe(first.base);
+    await write(second.worktree, 'outside.ts', 'export const safety = false;\n');
+    git(second.worktree, 'add', '--', 'outside.ts');
+    await f.cmd.merge(ID, { confirm: true });
+    // Bring the new base into the existing worktree without discarding the candidate.
+    git(second.worktree, 'reset', '--keep', first.commit);
+    git(second.worktree, 'add', '--', 'outside.ts');
+    const snapshot = await f.cmd.snapshot(secondId, { refreshBase: true });
+    expect(snapshot).toMatchObject({ base: first.commit, files: ['outside.ts'], worktree: second.worktree });
+    const review = await reviewRecord(f, {
+      taskId: secondId, implementer: 'worker-two', reviewer: 'reviewer-two',
+    });
+    const { commit } = await f.cmd.commit(secondId, { review, message: 'Update outside' });
+    await expect(f.cmd.merge(secondId, { confirm: true })).resolves.toEqual({ status: 'merged-local', branch: 'trunk', commit });
+    expect(git(f.repo, 'rev-parse', 'HEAD^')).toBe(first.commit);
+    expect(git(f.repo, 'status', '--porcelain')).toBe('');
   });
 
   it('rejects unshared context and leaves the caller changes intact', async () => {

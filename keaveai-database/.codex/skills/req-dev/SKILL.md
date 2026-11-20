@@ -1,7 +1,7 @@
 ---
 name: req-dev
 description: AI 任务统一入口；实现类任务由主会话分发到独立 worktree，经编码、自审和独立审查后交付。
-version: 1.6.0
+version: 1.7.0
 ---
 
 # 目标
@@ -37,9 +37,10 @@ User Task
 
 # 实现交付门禁
 
-- 当任务真的进入实现、缺陷修复或重构阶段（包括只有一个任务），必须加载 `ai-workflow/skills/common/task-delivery/SKILL.md`。主会话只编排，一个任务、一个分支、一个 worktree；编码和独立审查用不同的真实子 agent。
+- 当任务真的进入实现、缺陷修复或重构阶段（包括只有一个任务），必须加载 `ai-workflow/skills/common/task-delivery/SKILL.md`。主会话只编排，一个任务、一个分支、一个 worktree；编码子 agent 数量不限，按需要分工；每个 worktree 单独配一个未参与该任务编码的审查兼交付 agent，负责本 worktree 的审查、复审、提交和合并，不跨 worktree 共享，不另开验收或合并 agent。只做原始验收所需的改动，不自行扩范围。
 - 先精简和作者自审，再送固定快照独立审查。结果未通过、基线/快照变化、子 agent 或必要上下文不可用时，不提交也不绕过门禁。
 - 审过后按用户范围提交；未配置链接则在原工作区快进合并到发起时的分支，不推送。已链接项目只在授权后创建 GitHub PR 或腾讯工蜂 MR，不执行远端合并。需求、设计和只读评审本身不建 worktree、不提交或发布。
+- 验收（含异步子 agent 回传）通过后，主会话必须继续 `task-delivery` 的提交与交付，不等用户催促。本地逐任务确认 `merged-local` 才算交付；随后由同一个专属审查 agent 按 `task-delivery` 清理该任务的源 worktree，报告已清理或保留原因。不能继续交付时，明确报告未完成步骤、具体阻塞和下一步。
 
 # 并行任务入口门禁
 

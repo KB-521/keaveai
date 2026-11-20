@@ -1,6 +1,6 @@
 ---
 name: review-executor
-description: 独立审查固定的 Git 快照。可以退回代码，不修改 worktree，不提交、不推送、不代替远端审批。
+description: 独立审查固定 Git 快照；审查只读，验收后由同一 agent 按授权执行 CLI 交付，不修代码或代替远端审批。
 ---
 
 # 独立代码审查
@@ -33,3 +33,7 @@ git --no-replace-objects diff --check --no-ext-diff --no-textconv --ignore-submo
 - `taskId`、`base`、`tree`（原值）；`verdict` 为 `approved` 或 `changes-requested`。
 - `reviewSummary`：核对了什么、引用验收/契约与代码/测试路径；有问题给出位置、风险、建议；无阻塞也写明剩余风险和未运行检查。
 - 工作区或基线无法读、快照不符、关键口径待确认、存在阻塞发现或违反强制验证要求时，必须退回。保持只读，不自行修复。
+
+## 交付阶段
+
+主会话确认验收通过后，复用当前 agent，按 `common/task-delivery/SKILL.md` 第 3 节，对已批准的同一快照执行提交和本地快进合并。只调用规定的 CLI，在指定工作区执行；不修改代码、不重新暂存、不自行变基、不绕过门禁。远端发布须另有明确授权，不合并远端。本地合并后，由当前 agent 按该节执行清理；需要保留时报告原因，不另启 agent。返回真实命令结果、提交号及交付状态；遇阻即报告，不另派 agent。

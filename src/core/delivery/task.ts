@@ -104,6 +104,22 @@ async function remoteDestination(source: string, config: ProjectGitConfig) {
   return { provider: config.provider, remote: config.remote, remoteIdentity: identity, configWorktree: source, base };
 }
 
+async function requireLocalTarget(cwd: string, task: Extract<DeliveryTask, { mode: 'local' }>, action: 'merge' | 'cleanup') {
+  const root = await fs.realpath(await gitValue(cwd, 'rev-parse', '--show-toplevel'));
+  if (root !== task.targetWorktree || await gitValue(root, 'symbolic-ref', '--quiet', 'HEAD') !== branchRef(task.target)) {
+    throw new Error(`Run the ${action} from the original worktree with '${task.target}' checked out.`);
+  }
+  await requireNoOperation(root);
+  return root;
+}
+
+async function requireMergePresent(root: string, target: string, commit: string) {
+  const { code } = await git(root, ['merge-base', '--is-ancestor', commit, branchRef(target)], { codes: [0, 1] });
+  if (code !== 0) {
+    throw new Error('The recorded merge is no longer present on the local target branch. Inspect its history before retrying.');
+  }
+}
+
 export class DeliveryTaskCommand {
   constructor(private readonly cwd = process.cwd()) {}
 
@@ -226,11 +242,7 @@ export class DeliveryTaskCommand {
     return withTask(this.cwd, id, async (task, dir) => {
       if (!('mode' in task)) throw new Error('This task is linked to a remote; use delivery publish.');
       if (!task.approval) throw new Error('No approved commit to merge.');
-      const root = await fs.realpath(await gitValue(this.cwd, 'rev-parse', '--show-toplevel'));
-      if (root !== task.targetWorktree || await gitValue(root, 'symbolic-ref', '--quiet', 'HEAD') !== branchRef(task.target)) {
-        throw new Error(`Run the merge from the original worktree with '${task.target}' checked out.`);
-      }
-      await requireNoOperation(root);
+      const root = await requireLocalTarget(this.cwd, task, 'merge');
       const actual = await branchTip(task.worktree);
       if (actual.commit !== task.approval.commit || actual.parents.length !== 1 || actual.parents[0] !== task.base ||
           (await status(task.worktree)).length) {
@@ -238,7 +250,10 @@ export class DeliveryTaskCommand {
       }
       assertReview(task.approval.review, task, actual.tree);
       const result = { status: 'merged-local', branch: task.target, commit: actual.commit } as const;
-      if (task.merged === actual.commit) return result;
+      if (task.merged === actual.commit) {
+        await requireMergePresent(root, task.target, actual.commit);
+        return result;
+      }
       if (await gitValue(root, 'rev-parse', 'HEAD') !== task.base) {
         throw new Error('The local target branch moved. Update the task base and review again before merging.');
       }
@@ -251,6 +266,27 @@ export class DeliveryTaskCommand {
       }
       await saveTask(dir, { ...task, merged: actual.commit });
       return result;
+    });
+  }
+
+  async cleanup(id: string, options: { confirm?: boolean }) {
+    if (!options.confirm) throw new Error('Worktree cleanup requires explicit authorization with --confirm.');
+    return withTask(this.cwd, id, async task => {
+      if (!('mode' in task)) throw new Error('This cleanup command only supports locally merged delivery tasks.');
+      if (!task.approval || task.merged !== task.approval.commit) {
+        throw new Error('No recorded local merge. Keep the task worktree until it has been merged.');
+      }
+      const root = await requireLocalTarget(this.cwd, task, 'cleanup');
+      await requireMergePresent(root, task.target, task.merged);
+      await requireNoOperation(task.worktree);
+      const actual = await branchTip(task.worktree);
+      if (actual.commit !== task.merged) throw new Error('The task branch has changed since merging. Keep its worktree.');
+      const { stdout } = await git(task.worktree, ['status', '--porcelain=v1', '-z', '--untracked-files=all',
+        '--ignored=matching', '--ignore-submodules=none']);
+      if (stdout) throw new Error('The task worktree has changes or local files, including ignored files. Keep its worktree.');
+      // Never force removal. Git also protects locked worktrees and rechecks their contents.
+      await git(root, ['worktree', 'remove', '--', task.worktree]);
+      return { status: 'cleaned-local' as const, worktree: task.worktree, branch: task.branch, commit: task.merged };
     });
   }
 

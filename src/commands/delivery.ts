@@ -39,6 +39,11 @@ export function registerDeliveryCommand(program: Command): void {
     .option('--confirm', 'Authorize this local branch update')
     .action((id: string, options: { confirm?: boolean }) => output(() => new DeliveryTaskCommand().merge(id, options)));
 
+  delivery.command('cleanup <task-id>')
+    .description('Remove the clean task worktree after a verified local merge; keep its branch and record')
+    .option('--confirm', 'Authorize removing this task worktree')
+    .action((id: string, options: { confirm?: boolean }) => output(() => new DeliveryTaskCommand().cleanup(id, options)));
+
   delivery.command('publish <task-id>')
     .description('Push the approved branch and open a GitHub PR or Tencent Gongfeng MR; never merges')
     .requiredOption('--title <text>', 'Single-line PR/MR title')

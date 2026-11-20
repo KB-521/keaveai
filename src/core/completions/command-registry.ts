@@ -282,6 +282,10 @@ const ALL_COMMAND_REGISTRY: CommandDefinition[] = [
         flags: [{ name: 'confirm', description: 'Authorize the local branch update' }],
       },
       {
+        name: 'cleanup', description: 'Remove a clean task worktree after local merge', acceptsPositional: true,
+        flags: [{ name: 'confirm', description: 'Authorize removing the task worktree' }],
+      },
+      {
         name: 'publish', description: 'Open a GitHub PR or Tencent Gongfeng MR without merging', acceptsPositional: true,
         flags: [
           { name: 'title', description: 'PR/MR title', takesValue: true },

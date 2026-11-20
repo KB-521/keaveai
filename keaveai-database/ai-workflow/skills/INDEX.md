@@ -22,7 +22,7 @@
 | `common/req-create` | `req-create` | 1.1.0 | - | 从用户想法创建结构化需求文档。 | 需要把新想法落成当前变更包里的结构化需求时。 | 需求索引条目、in-progress 需求文档与执行摘要。 |
 | `common/skill-creator` | `skill-creator` | 1.1.0 | - | 创建或更新扩展当前 AI 编程工具能力的技能。 | 需要新增 skill 或改造现有 skill 时。 | skill 结构规范、SKILL.md 设计要点与配套资源建议。 |
 | `common/backend-tech-solution-design` | `backend-tech-solution-design` | 1.0.0 | - | 将后端需求转化为可评审的技术方案。 | 接口变更、服务能力、数据迁移或跨系统协作进入实现前。 | 接口契约、数据与状态、风险取舍、验收场景与待确认项。 |
-| `common/task-delivery` | `task-delivery` | 1.1.0 | - | 一任务一分支一 worktree；审查快照后提交，获授权按项目 Git 配置创建 PR/MR。 | 单任务实现，或校验后的并行子任务。 | worktree、精简、自审、独立审查、验证证据、提交和 MR 状态。 |
+| `common/task-delivery` | `task-delivery` | 1.2.0 | - | 一任务一分支一 worktree；验收后继续提交与本地合并，或获授权创建 PR/MR。 | 单任务实现，或校验后的并行子任务。 | worktree、审查、验收证据、提交与实际交付状态。 |
 | `common/task-split` | `task-split` | 1.11.0 | - | 将技术方案按复杂度和任务类型拆分为可开发、可验收、可并行执行的实现子任务。 | 技术方案评审后、进入实现前需要拆任务时。 | 通用任务结构、模板公共块、短码子任务命名、自适应粒度、子任务复杂度预算、SQL 目录命名空间、前端页面拆分与并行边界。 |
 | `common/tech-design-review-template` | `tech-design-review-template` | 1.0.0 | - | 基于技术方案文档生成 Review 模版。 | 技术方案完成后、正式评审前需要建立 review 文档时。 | 技术方案 review 模版与问题追踪结构。 |
 | `web/api-impl` | `api-impl` | 1.2.0 | - | 基于可插拔 API 文档来源（如 OpenAPI）按项目规范实现前端 API 接口。 | 前端已有接口定义，需要落地请求文件时。 | 前端 API 请求文件、类型命名、导出约定与代码示例。 |
