@@ -33,7 +33,7 @@ version: 1.1.0
 1. 等到独立审查 agent 明确给出 `approved`，且回复中的 `taskId`、`base`、`tree` 与送审快照一致。主会话将**真实**工具返回的两个 agent ID、自审、验证和审查结论整理成 JSON（见 [review.json 模板](templates/review.json)），保存到任务 worktree 之外。不得自己补审批或捏造验证结果。失败项、缺失的必需验证或假设不清楚时先修复/确认。用户要求「不提交」则停在已审快照。
 2. 运行 `keaveai delivery commit <task-id> --review <绝对路径> --message <提交说明>`。不绕过 Git 钩子，不直接用 `git commit` 绕过交付门禁。钩子改动或快照变化时停止，保留改动，重新自审和送审。目标变化不自动变基；需要按仓库规则更新基线并重新审查。
 3. 若登记结果为 `mode: local`，默认在发起任务的工作区执行 `keaveai delivery merge <task-id> --confirm`，只快进到审过的提交、不推送；用户要求仅提交或不合并时停止。必须仍在原始目标分支，目标有未保存改动或已推进时报告阻塞，不自动暂存、变基或合并冲突。
-4. 若登记结果为 `mode: remote`，用户**明确授权已登记的远端和目标对外发布**后才运行 `keaveai delivery publish <task-id> --title <标题> --confirm`。按任务登记时的设置创建 GitHub PR 或腾讯工蜂 MR。发布需已有 Git 凭据，以及进程环境中的 `GH_TOKEN`/`GITHUB_TOKEN` 或 `GONGFENG_TOKEN`；不读取或展示令牌值，只报告是否缺配置。不用 `keaveai issue`，不向目标分支推送，不执行合并或自动合并。
+4. 若登记结果为 `mode: remote`，用户**明确授权已登记的远端和目标对外发布**后才运行 `keaveai delivery publish <task-id> --title <标题> --confirm`。按任务登记时的设置创建 GitHub PR 或腾讯工蜂 MR。发布需已有 Git 凭据，以及被 Git 忽略的本地 `agent.config` 中的 `GITHUB_TOKEN` 或 `GONGFENG_TOKEN`（空值时回退到进程环境）；不读取或展示令牌值，只报告是否缺配置。不用 `keaveai issue`，不向目标分支推送，不执行合并或自动合并。
 5. 区分 `merged-local`（已合并到本地目标分支）、`opened`（有 MR 链接）、`requested-unconfirmed`（分支已推、MR 未确认）和失败/未执行；未确认时查远端，不盲目重推或声称已开 MR。远端审批与 CI 由仓库处理。确认 MR 已合并或关闭后才按仓库规则清理，不删除其他任务或有未保存改动的 worktree。
 
 ## 最小报告

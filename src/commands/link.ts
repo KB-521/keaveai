@@ -1,6 +1,7 @@
 import type { Command } from 'commander';
 import path from 'node:path';
-import { chooseProjectGit, ensureAgentConfigExample, type InitGitOptions } from '../core/init-project-git.js';
+import { ensureTokenFields } from '../core/agent-config.js';
+import { chooseProjectGit, type InitGitOptions } from '../core/init-project-git.js';
 import { gitValue } from '../core/delivery/git.js';
 import { writeProjectGit } from '../core/project-git.js';
 import { isInteractive } from '../utils/interactive.js';
@@ -20,12 +21,12 @@ export function registerLinkCommand(program: Command): void {
         const interactive = isInteractive();
         if (!options.local && !explicit && !interactive) throw new Error('Pass all three --git-* options or --local outside an interactive terminal.');
         const config = options.local ? undefined : await chooseProjectGit(root, options, interactive);
+        await ensureTokenFields(root);
         if (!config && !options.local) {
           console.log('Git link unchanged. Add a supported named remote if none is configured.');
           return;
         }
         await writeProjectGit(root, config);
-        await ensureAgentConfigExample(root);
         console.log(config ? `Git delivery: ${config.provider}, ${config.remote} → ${config.target} (agent.config)`
           : 'Remote Git link removed. New tasks use local delivery.');
       } catch (error) {

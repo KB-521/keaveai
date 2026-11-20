@@ -23,7 +23,7 @@ cd /path/to/your-project
 keaveai init . --tools codex
 ```
 
-`init` 会将安装包内置的工作流复制到 `ai-workflow/`，并将入口技能安装到 `.codex/skills/`。在已有 Git 远端的项目里，运行 `keaveai init` 可交互选择 AI 工具、Git 平台（GitHub 或腾讯工蜂）、远端和目标分支；Git 设置写入 `agent.config`，同时生成 `agent.config.example`。如果只需要工作流文件，不安装工具技能，运行 `keaveai init . --tools none`。用 `keaveai help init` 查看可选工具。
+`init` 会将安装包内置的工作流复制到 `ai-workflow/`，并将入口技能安装到 `.codex/skills/`。在已有 Git 远端的项目里，运行 `keaveai init` 可交互选择 AI 工具、Git 平台（GitHub 或腾讯工蜂）、远端和目标分支；Git 设置写入本地 `agent.config`，并预留 `GITHUB_TOKEN=` 和 `GONGFENG_TOKEN=`；不再生成示例文件。如果只需要工作流文件，不安装工具技能，运行 `keaveai init . --tools none`。用 `keaveai help init` 查看可选工具。
 
 初始化后，重新打开项目的 Codex 会话。下面的示例应输入 **Codex 对话框**，不是终端：
 

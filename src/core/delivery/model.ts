@@ -40,7 +40,7 @@ const taskFields = {
 
 const taskSchema = z.union([
   z.strictObject({ ...taskFields, mode: z.literal('local'), targetWorktree: z.string(), merged: objectId.optional() }),
-  z.strictObject({ ...taskFields, provider: gitProviderSchema, remote: z.string(), remoteIdentity: z.string(),
+  z.strictObject({ ...taskFields, provider: gitProviderSchema, remote: z.string(), remoteIdentity: z.string(), configWorktree: z.string().optional(),
     publication: z.discriminatedUnion('status', [
     z.strictObject({ status: z.literal('opened'), commit: objectId, url: z.url() }),
     z.strictObject({ status: z.literal('requested-unconfirmed'), commit: objectId, branch: z.string(), reason: z.string() }),

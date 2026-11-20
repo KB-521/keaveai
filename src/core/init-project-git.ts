@@ -1,6 +1,3 @@
-import { constants, promises as fs } from 'node:fs';
-import path from 'node:path';
-import { getPackageRoot } from './database-assets.js';
 import { deliveryRemote, gitValue } from './delivery/git.js';
 import {
   gitProviderSchema, gitSetupDefaults, hostedProject, projectGitInput, readProjectGit, validateProjectGit, type ProjectGitConfig,
@@ -57,13 +54,4 @@ export async function chooseProjectGit(dir: string, options: InitGitOptions, int
   const config = projectGitInput(provider, remote, target);
   await validateProjectGit(dir, config);
   return config;
-}
-
-export async function ensureAgentConfigExample(dir: string): Promise<void> {
-  const example = 'agent.config.example';
-  try {
-    await fs.copyFile(path.join(getPackageRoot(), example), path.join(dir, example), constants.COPYFILE_EXCL);
-  } catch (error) {
-    if ((error as NodeJS.ErrnoException).code !== 'EEXIST') throw error;
-  }
 }

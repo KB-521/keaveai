@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import type { GitProvider } from '../project-git.js';
+import { configuredToken } from '../agent-config.js';
 
 const reviewResponse = z.object({
   html_url: z.string().nullish(), web_url: z.string().nullish(), number: z.number().optional(), iid: z.number().optional(),
@@ -9,12 +10,12 @@ const reviewResponse = z.object({
   sha: z.string().nullish(), diff_refs: z.object({ head_sha: z.string().nullish() }).nullish(),
 });
 
-export function publicationToken(provider: GitProvider): string {
-  const token = provider === 'github' ? process.env.GH_TOKEN || process.env.GITHUB_TOKEN : process.env.GONGFENG_TOKEN;
+export async function publicationToken(provider: GitProvider, projectPath?: string): Promise<string> {
+  const key = provider === 'github' ? 'GITHUB_TOKEN' : 'GONGFENG_TOKEN';
+  const token = (projectPath && await configuredToken(projectPath, key)) || process.env[key] ||
+    (provider === 'github' ? process.env.GH_TOKEN : undefined);
   if (!token?.trim() || /\s/.test(token)) {
-    throw new Error(provider === 'github'
-      ? 'Set GH_TOKEN or GITHUB_TOKEN before publishing a GitHub PR.'
-      : 'Set GONGFENG_TOKEN before publishing a Tencent Gongfeng MR.');
+    throw new Error(`Set ${key} in local agent.config or the environment before publishing.`);
   }
   return token;
 }

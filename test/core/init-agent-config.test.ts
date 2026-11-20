@@ -28,7 +28,7 @@ describe('InitCommand agent.config', () => {
     );
   });
 
-  it('creates an empty agent.config file in the project root when missing', async () => {
+  it('creates agent.config with empty token entries and no example file', async () => {
     const projectDir = path.join(os.tmpdir(), `keaveai-init-agent-config-${randomUUID()}`);
     createdDirs.push(projectDir);
     await fs.mkdir(projectDir, { recursive: true });
@@ -37,8 +37,8 @@ describe('InitCommand agent.config', () => {
     await new InitCommand({ tools: 'none' }).execute(projectDir);
 
     await expect(fs.readFile(path.join(projectDir, 'agent.config'), 'utf-8'))
-      .resolves.toBe('');
-    await expect(fs.readFile(path.join(projectDir, 'agent.config.example'), 'utf8')).resolves.toContain('KEAVEAI_GIT_PROVIDER=github');
+      .resolves.toBe('GITHUB_TOKEN=\nGONGFENG_TOKEN=\n');
+    await expect(fs.stat(path.join(projectDir, 'agent.config.example'))).rejects.toMatchObject({ code: 'ENOENT' });
   });
 
   it('does not overwrite an existing agent.config file', async () => {
@@ -51,7 +51,7 @@ describe('InitCommand agent.config', () => {
     await new InitCommand({ tools: 'none' }).execute(projectDir);
 
     await expect(fs.readFile(path.join(projectDir, 'agent.config'), 'utf-8'))
-      .resolves.toBe('existing config\n');
+      .resolves.toBe('existing config\nGITHUB_TOKEN=\nGONGFENG_TOKEN=\n');
   });
 
   async function gitProject() {
@@ -84,7 +84,7 @@ describe('InitCommand agent.config', () => {
     await command.execute(dir);
     await command.execute(dir);
     await expect(fs.readFile(file, 'utf8')).resolves.toBe(unrelated +
-      'KEAVEAI_GIT_PROVIDER=gongfeng\r\nKEAVEAI_GIT_REMOTE=team\r\nKEAVEAI_GIT_TARGET=trunk\r\n');
+      'GITHUB_TOKEN=\r\nGONGFENG_TOKEN=\r\nKEAVEAI_GIT_PROVIDER=gongfeng\r\nKEAVEAI_GIT_REMOTE=team\r\nKEAVEAI_GIT_TARGET=trunk\r\n');
     await expect(readProjectGit(dir)).resolves.toEqual({ provider: 'gongfeng', remote: 'team', target: 'trunk' });
     await expect(fs.readFile(path.join(dir, 'agent.config.example'), 'utf8')).resolves.toBe('# Custom example\n');
   });

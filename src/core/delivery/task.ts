@@ -70,6 +70,7 @@ async function snapshot(task: DeliveryTask, allowEmpty = false) {
   const tree = await gitValue(worktree, 'write-tree');
   const files = splitNul(await gitValue(worktree, 'diff', '--name-only', '--no-renames', '--no-ext-diff',
     '--ignore-submodules=none', '-z', base, tree, '--'));
+  if (files.includes('agent.config')) throw new Error('agent.config is local configuration and cannot be delivered.');
   if (!files.length && !allowEmpty) throw new Error('No staged code changes to review.');
   const outside = files.filter(file => !task.allowedPaths.some(allowed => file === allowed || file.startsWith(`${allowed}/`)));
   if (outside.length) throw new Error(`Staged changes outside the task boundary: ${outside.map(file => JSON.stringify(file)).join(', ')}.`);
@@ -100,7 +101,7 @@ async function remoteDestination(source: string, config: ProjectGitConfig) {
   const { url, identity } = await validateProjectGit(source, config);
   const pinned = await pinRemote(source, config.remote, url);
   const base = await fetchBase(source, config.remote, config.target, pinned);
-  return { provider: config.provider, remote: config.remote, remoteIdentity: identity, base };
+  return { provider: config.provider, remote: config.remote, remoteIdentity: identity, configWorktree: source, base };
 }
 
 export class DeliveryTaskCommand {
@@ -271,7 +272,8 @@ export class DeliveryTaskCommand {
       assertReview(approval.review, task, actual.tree);
       const url = await requireSameRemote(task);
       if (task.publication) return task.publication;
-      const token = publicationToken(provider);
+      const configRoot = task.configWorktree ?? (await worktreePaths(worktree))[0];
+      const token = await publicationToken(provider, configRoot);
       const { repository } = hostedProject(provider, url);
       const pinned = await pinRemote(worktree, remote, url);
 

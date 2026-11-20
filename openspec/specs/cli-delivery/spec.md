@@ -8,7 +8,7 @@
 
 ### Requirement: 隔离工作区和任务基线
 
-系统 MUST 允许在 `init` 选择 GitHub 或腾讯工蜂、已配置远端和目标分支，把设置写入 `agent.config` 而不写入令牌，并在缺失时提供 `agent.config.example`。实现任务按项目设置登记任务分支与 worktree，保留其基线与允许修改范围。
+系统 MUST 允许在 `init` 选择 GitHub 或腾讯工蜂、已配置远端和目标分支，把设置写入 `agent.config`，补齐两个平台缺失的空令牌字段，不生成示例文件。发布时只从被 Git 忽略的本地配置文件读取令牌，空值可回退到环境变量。实现任务按项目设置登记任务分支与 worktree，保留其基线与允许修改范围。
 
 #### Scenario: 从共享 clone 分发任务
 

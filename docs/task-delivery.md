@@ -12,7 +12,7 @@ keaveai link . --git-provider gongfeng --git-remote origin --git-target main
 keaveai link --local  # 清除链接，保留已有 Git 远端和其他设置
 ```
 
-设置保存在项目根目录的 `agent.config`，格式见 [agent.config.example](../agent.config.example)。`init` 不会修改 Git 远端或访问托管服务。配置更新对新登记的任务生效，不改变已登记任务的发布目标。
+设置保存在项目根目录的 `agent.config`；`init` 和 `link` 会补齐缺失的 `GITHUB_TOKEN=`、`GONGFENG_TOKEN=`，不生成示例文件。`init` 不会修改 Git 远端或访问托管服务。配置更新对新登记的任务生效，不改变已登记任务的发布目标。
 
 初始化后重开 Codex。项目需具备可访问指定目录的原生子 agent 能力，以及目标分支上可用的工作流、`AGENTS.md` 和适用规则。若项目刚初始化，先按团队流程把这些基线文件纳入目标分支；交付流程不会把共享 clone 的未提交文件拷到 worktree。
 
@@ -23,7 +23,7 @@ $req-dev 修复订单列表切换筛选后页码没有重置的问题；验收�
 使用 agent.config 中的交付仓库。允许执行该模块的本地测试，只做本地交付，不推送。
 ```
 
-如果要自动开 PR/MR，明确补充：`允许把通过审查的任务分支推送到 agent.config 指定的远端，并向配置的目标分支创建 PR/MR，不合并。` 发布前准备 Git 本身的凭据，并给 CLI 进程提供 API 令牌：GitHub 使用 `GH_TOKEN`（或 `GITHUB_TOKEN`），腾讯工蜂使用 `GONGFENG_TOKEN`。令牌不要写入 `agent.config`、命令参数或仓库。仓库要求其他分支命名或 worktree 目录时，交给主会话使用 `--branch-prefix`、`--worktree-root`；不会默认套用某家公司的目录或审批角色。
+如果要自动开 PR/MR，明确补充：`允许把通过审查的任务分支推送到 agent.config 指定的远端，并向配置的目标分支创建 PR/MR，不合并。` 发布前准备 Git 本身的凭据，再在本地且被 Git 忽略的 `agent.config` 填 `GITHUB_TOKEN` 或 `GONGFENG_TOKEN`，只填所用平台。配置文件未填值时回退到环境变量（GitHub 也支持 `GH_TOKEN`）。`init` 和 `link` 会把未跟踪的文件加入仓库本地忽略规则；文件已经被 Git 跟踪时，请保持令牌为空并改用环境变量。不要把令牌提交到仓库、写到命令参数或贴到对话中。仓库要求其他分支命名或 worktree 目录时，交给主会话使用 `--branch-prefix`、`--worktree-root`；不会默认套用某家公司的目录或审批角色。
 
 | 角色 | 职责 |
 | --- | --- |
