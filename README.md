@@ -73,10 +73,6 @@ keaveai update .
 
 请将示例 URL 替换成实际仓库地址。`database-update` 会整体替换目标数据库目录；不传 `[path]` 时，默认刷新当前 CLI 安装内的 `keaveai-database/`。不要把项目根目录作为数据库更新目标。
 
-## 维护者：本地发布 npm
-
-在源码仓库运行 `pnpm release:local`，选择或输入版本号，确认后自动构建、打包并发布。只验证打包可运行 `pnpm release:local --dry-run`。登录和发布说明见 [scripts/README.md](scripts/README.md)。
-
 ## 许可证
 
 本项目采用 [MIT 许可证](LICENSE)。
