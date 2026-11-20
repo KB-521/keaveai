@@ -28,7 +28,7 @@ const COMMON_FLAGS = {
   } as FlagDefinition,
 } as const;
 
-const VISIBLE_COMMAND_NAMES = new Set(['init', 'update', 'break-change', 'database-update', 'issue', 'delivery']);
+const VISIBLE_COMMAND_NAMES = new Set(['init', 'update', 'break-change', 'database-update', 'issue', 'delivery', 'link']);
 
 /**
  * Registry of all KeaveAI CLI commands with their flags and metadata.
@@ -278,12 +278,25 @@ const ALL_COMMAND_REGISTRY: CommandDefinition[] = [
         ],
       },
       {
+        name: 'merge', description: 'Fast-forward the original local branch', acceptsPositional: true,
+        flags: [{ name: 'confirm', description: 'Authorize the local branch update' }],
+      },
+      {
         name: 'publish', description: 'Open a GitHub PR or Tencent Gongfeng MR without merging', acceptsPositional: true,
         flags: [
           { name: 'title', description: 'PR/MR title', takesValue: true },
           { name: 'confirm', description: 'Authorize the push and PR/MR creation' },
         ],
       },
+    ],
+  },
+  {
+    name: 'link', description: 'Configure optional remote Git delivery', acceptsPositional: true, positionalType: 'path',
+    flags: [
+      { name: 'git-provider', description: 'Git platform', takesValue: true, values: ['github', 'gongfeng'] },
+      { name: 'git-remote', description: 'Existing named Git remote', takesValue: true },
+      { name: 'git-target', description: 'Target branch', takesValue: true },
+      { name: 'local', description: 'Remove the remote delivery link' },
     ],
   },
   {

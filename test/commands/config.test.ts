@@ -103,6 +103,7 @@ describe('visible shell completion registry', () => {
       'database-update',
       'issue',
       'delivery',
+      'link',
     ]);
   });
 });

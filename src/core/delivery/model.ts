@@ -26,24 +26,27 @@ export const reviewSchema = z.strictObject({
 
 export type DeliveryReview = z.infer<typeof reviewSchema>;
 
-const taskSchema = z.strictObject({
+const taskFields = {
   id: z.string(),
   worktree: z.string(),
   branch: z.string(),
   branchPrefix: z.string().optional(),
-  provider: gitProviderSchema,
-  remote: z.string(),
   target: z.string(),
-  remoteIdentity: z.string(),
   base: objectId,
   allowedPaths: z.array(z.string()).min(1),
   contextPaths: z.array(z.string()),
   approval: z.strictObject({ commit: objectId, review: reviewSchema }).optional(),
-  publication: z.discriminatedUnion('status', [
+};
+
+const taskSchema = z.union([
+  z.strictObject({ ...taskFields, mode: z.literal('local'), targetWorktree: z.string(), merged: objectId.optional() }),
+  z.strictObject({ ...taskFields, provider: gitProviderSchema, remote: z.string(), remoteIdentity: z.string(),
+    publication: z.discriminatedUnion('status', [
     z.strictObject({ status: z.literal('opened'), commit: objectId, url: z.url() }),
     z.strictObject({ status: z.literal('requested-unconfirmed'), commit: objectId, branch: z.string(), reason: z.string() }),
-  ]).optional(),
-});
+    ]).optional(),
+  }),
+]);
 
 export type DeliveryTask = z.infer<typeof taskSchema>;
 

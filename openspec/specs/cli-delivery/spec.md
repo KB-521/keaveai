@@ -16,6 +16,16 @@
 - **THEN** 新 worktree 基于抓取的目标提交，必要上下文与共享 clone 一致
 - **AND** 不更改共享 clone 的代码或当前分支；缺少上下文或已存在同任务时不启动编码
 
+### Requirement: 可选链接与本地快进交付
+
+`keaveai link` SHALL 独立设置或移除远端交付链接而不改变 Git 远端；`update` 不管理链接。
+
+#### Scenario: 没有链接的项目
+
+- **GIVEN** 项目未链接远端，且工作区在已有提交的分支上
+- **WHEN** 主会话启动任务并通过独立审查后运行 `delivery merge --confirm`
+- **THEN** 仅在原工作区仍处于原分支和登记的基线时快进到已审查的提交，不推送或覆盖用户改动
+
 ### Requirement: 审查绑定实际提交
 
 主会话 MUST 等待编码 agent 完成精简、自审和验证记录，再交另一独立 agent 审查完整快照。CLI MUST 在提交前验证审批的任务、基线、tree 和验证状态，并在 Git 更新分支前验证实际 tree 与父提交。

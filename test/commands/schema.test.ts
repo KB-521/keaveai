@@ -403,6 +403,7 @@ describe('schema command shell completion registry', () => {
       'database-update',
       'issue',
       'delivery',
+      'link',
     ]);
   });
 });

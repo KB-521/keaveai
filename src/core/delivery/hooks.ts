@@ -33,6 +33,9 @@ if [ "$1" = prepared ] && [ -s "$refs" ]; then
   while IFS=' ' read -r old new ref; do
     case "$ref" in
       HEAD|"$KEAVEAI_HOOKS_REF") ;;
+      ORIG_HEAD)
+        [ -n "$KEAVEAI_HOOKS_COMMIT" ] && [ "$new" = "$KEAVEAI_HOOKS_BASE" ] || exit 1
+        continue ;;
       AUTO_MERGE)
         # Normal Git cleanup after a commit, never a branch update.
         case "$new" in ''|*[!0]*) exit 1 ;; esac
@@ -40,6 +43,7 @@ if [ "$1" = prepared ] && [ -s "$refs" ]; then
       *) echo 'KeaveAI: commit would update a non-task ref.' >&2; exit 1 ;;
     esac
     if [ "$old" != "$KEAVEAI_HOOKS_BASE" ] ||
+       { [ -n "$KEAVEAI_HOOKS_COMMIT" ] && [ "$new" != "$KEAVEAI_HOOKS_COMMIT" ]; } ||
        [ "$(git --no-replace-objects show -s --no-show-signature --format='%T %P' "$new^{commit}" --)" != "$KEAVEAI_HOOKS_TREE $KEAVEAI_HOOKS_BASE" ]; then
       echo 'KeaveAI: commit tree or base changed during hooks; edits preserved. Stage and review the new snapshot.' >&2
       exit 1
@@ -62,8 +66,18 @@ export async function configuredHooks(cwd: string): Promise<string> {
   return original;
 }
 
-export async function commitWithReviewGuard(task: DeliveryTask, dir: string, tree: string, message: string): Promise<boolean> {
-  const original = await configuredHooks(task.worktree);
+export function commitWithReviewGuard(task: DeliveryTask, dir: string, tree: string, message: string): Promise<boolean> {
+  return guardedRefUpdate(task.worktree, task.branch, task.base, tree, dir, ['commit', '-m', message]);
+}
+
+export function mergeWithReviewGuard(worktree: string, task: DeliveryTask, dir: string, tree: string, commit: string): Promise<boolean> {
+  return guardedRefUpdate(worktree, task.target, task.base, tree, dir,
+    ['-c', 'submodule.recurse=false', 'merge', '--ff-only', '--no-squash', '--no-autostash', '--no-overwrite-ignore', `${commit}^{commit}`], commit);
+}
+
+async function guardedRefUpdate(worktree: string, branch: string, base: string, tree: string, dir: string,
+  command: string[], expectedCommit = ''): Promise<boolean> {
+  const original = await configuredHooks(worktree);
   const overlay = await fs.mkdtemp(path.join(dir, 'hooks-'));
   let hasTransaction = false;
   try {
@@ -80,13 +94,14 @@ export async function commitWithReviewGuard(task: DeliveryTask, dir: string, tre
       }
     }
     await fs.writeFile(path.join(overlay, 'reference-transaction'), verifyTransaction, { mode: 0o700 });
-    await git(task.worktree, ['-c', `core.hooksPath=${overlay}`, '-c', 'maintenance.auto=false', 'commit', '-m', message], { env: {
+    await git(worktree, ['-c', `core.hooksPath=${overlay}`, '-c', 'maintenance.auto=false', ...command], { env: {
       KEAVEAI_HOOKS_ORIGINAL: original,
       KEAVEAI_HOOKS_OVERLAY: overlay,
       KEAVEAI_HOOKS_HAS_TRANSACTION: hasTransaction ? '1' : '0',
-      KEAVEAI_HOOKS_REF: branchRef(task.branch),
+      KEAVEAI_HOOKS_REF: branchRef(branch),
       KEAVEAI_HOOKS_TREE: tree,
-      KEAVEAI_HOOKS_BASE: task.base,
+      KEAVEAI_HOOKS_COMMIT: expectedCommit,
+      KEAVEAI_HOOKS_BASE: base,
       KEAVEAI_HOOKS_HAD_PARAMS: process.env.GIT_CONFIG_PARAMETERS === undefined ? '0' : '1',
       KEAVEAI_HOOKS_SAVED_PARAMS: process.env.GIT_CONFIG_PARAMETERS ?? '',
     } });

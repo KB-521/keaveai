@@ -4,11 +4,12 @@ KeaveAI 把实现类任务交给独立的编码 agent；主会话负责分发、
 
 ## 在 Codex 中使用
 
-先升级 KeaveAI。在已配置 Git 远端的项目根目录运行 `keaveai init`，选择 **GitHub** 或 **腾讯工蜂**、已存在的远端名称和目标分支，也可以跳过。已初始化的项目也可重新运行 `init` 配置 Git，默认保留已有设置。非交互示例：
+先升级 KeaveAI。在已配置 Git 远端的项目根目录运行 `keaveai init`，选择 **GitHub** 或 **腾讯工蜂**、已存在的远端名称和目标分支，也可以跳过。老项目用 `keaveai link` 单独配置；`update` 只更新工作流资产。跳过链接也能用，默认只做本地合并。非交互示例：
 
 ```sh
 keaveai init . --tools codex --git-provider github --git-remote origin --git-target main
-# 工蜂项目使用 --git-provider gongfeng，并替换成项目实际远端名称和目标分支。
+keaveai link . --git-provider gongfeng --git-remote origin --git-target main
+keaveai link --local  # 清除链接，保留已有 Git 远端和其他设置
 ```
 
 设置保存在项目根目录的 `agent.config`，格式见 [agent.config.example](../agent.config.example)。`init` 不会修改 Git 远端或访问托管服务。配置更新对新登记的任务生效，不改变已登记任务的发布目标。
@@ -51,7 +52,10 @@ git -C <worktree> --no-replace-objects diff --no-ext-diff --no-textconv --no-ren
 # 独立审批结果与快照相符才提交；review JSON 放 worktree 外
 keaveai delivery commit fix-order-filter --review <review.json> --message 'fix: reset order pagination'
 
-# 仅在用户明确授权这个目标时
+# 本地任务：从发起任务的工作区、在原来的分支上运行
+keaveai delivery merge fix-order-filter --confirm
+
+# 已链接的远端任务：仅在用户明确授权这个目标时
 keaveai delivery publish fix-order-filter --title '修复订单筛选页码' --confirm
 ```
 
@@ -59,6 +63,7 @@ keaveai delivery publish fix-order-filter --title '修复订单筛选页码' --c
 - [审查 JSON 模板](../keaveai-database/ai-workflow/skills/common/task-delivery/templates/review.json) 只用于记录真实的 agent 结果，不是自动审批凭证。CLI 校验任务、基线、tree、角色 ID 不同、审查结论和验证字段；独立身份与证据来自调度工具，不能由 CLI 单凭 JSON 认证。仓库钩子、受保护分支和远端审批仍是独立的约束。
 - 通过/失败项附实际检查命令和结果证据；未运行附原因。当前快照有失败项时不能当作通过；缺少仓库强制验证时应该退回，不靠填「未运行」绕过。
 - 按仓库规则在任务 worktree 安装依赖和必需钩子。提交和推送会运行仓库钩子；提交时 KeaveAI 在 Git 更新分支前校验实际提交的 tree 和父提交，不修改仓库的钩子配置。若钩子改了内容，分支不更新，改动保留用于重新暂存、验证与审查。旧审批不能用于别的 tree、基线或已改动的提交。
+- 不需要配置链接或令牌就能做本地交付，但本地仓库需要有初始提交。`merge` 只把原工作区、原分支快进到审过的提交；有其他未保存的改动、切换了分支或目标已推进时不合并，不执行暂存、变基或推送。
 - `publish` 在推送前检查目标是否推进；发现推进就停止，不自动变基。该检查不锁远端目标，最终合并仍由远端审批与 CI 把关。按仓库规则，仅在**原任务 worktree、未推送、已保存改动**的条件下把任务改动放到核实后的新基线之上，且让 `HEAD` 指向该基线、任务改动留在暂存区。重读新基线的规则与任务文档，再用 `keaveai delivery snapshot <task-id> --refresh-base` 取得新的待审快照，重新验证、批准和提交。
 - 代码交付支持 `github.com` 的 PR 和 `git.code.tencent.com` 的 MR，不支持独立 GitLab。确认新分支后调用对应的创建 API；只有返回可确认的请求链接或编号才标为 `opened`。`requested-unconfirmed`（退出码 `2`）表示分支已推，但 PR/MR 是否创建未确认；请到远端核对，不自动重推或重复创建。只在确认 MR 已关闭或合并后按仓库规则清理无未保存改动的任务 worktree。`keaveai issue` 仍用于同步初始化产物，与代码交付无关。
 - 命令异常中断后如提示任务仍锁定，先确认锁记录的进程和 Git/钩子已停止，再核对本地分支、远端分支与 MR。只有确认是残留锁时，才手工移除 Git 公共目录下 `keaveai/delivery/<task-id>/lock`；不要重建或强推同一任务分支。

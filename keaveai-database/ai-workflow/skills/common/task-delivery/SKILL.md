@@ -1,6 +1,6 @@
 ---
 name: task-delivery
-description: 主会话分发编码至独立 worktree，先精简和作者自审，再由另一子 agent 审查固定快照，审过才提交并按授权创建 MR。
+description: 主会话分发编码至独立 worktree，先精简和作者自审，再由另一子 agent 审查固定快照，审过才提交，再按模式在本地合并或获授权创建 PR/MR。
 version: 1.1.0
 ---
 
@@ -11,8 +11,8 @@ version: 1.1.0
 ## 1. 主会话准备并分发
 
 1. 主会话只做任务说明、路由、验收、Git 交付和状态记录，不直接编码。先读根和受影响子目录的 `AGENTS.md` 及对应的仓库规则（必须打开链接）；确认验收依据、改动边界及已完成的审批。先解决关键口径冲突。
-2. 确认实际工具可启动至少两个独立子 agent，且能指定/访问任务 worktree（编码可写，审查只读）。例如 Codex 使用其原生子 agent 调度，等待工具返回该子 agent 的真实 ID 和结果。工具缺失、目录不可访问、CLI 不支持 `delivery` 或没有可确认的 Git 远端/目标时，报告阻塞和计划，不由主会话代写、代审。
-3. 以项目根目录 `agent.config` 的 `KEAVEAI_GIT_PROVIDER`、`KEAVEAI_GIT_REMOTE`、`KEAVEAI_GIT_TARGET` 为准。仅核对这三项，不读取或输出其他配置值；缺少设置时请用户先运行 `keaveai init`，不要猜 `origin/main` 或擅自改配置。从共享 clone 调用：
+2. 确认实际工具可启动至少两个独立子 agent，且能指定/访问任务 worktree（编码可写，审查只读）。例如 Codex 使用其原生子 agent 调度，等待工具返回该子 agent 的真实 ID 和结果。工具缺失、目录不可访问、CLI 不支持 `delivery` 或没有可用的 Git 分支及基线时，报告阻塞和计划，不由主会话代写、代审。
+3. 以项目根目录 `agent.config` 的 `KEAVEAI_GIT_PROVIDER`、`KEAVEAI_GIT_REMOTE`、`KEAVEAI_GIT_TARGET` 为准。仅核对这三项，不读取或输出其他配置值；没有链接配置时默认本地交付，以发起任务时用户当前分支为目标；不猜远端，不擅自改配置。部分配置无效时请用户运行 `keaveai link` 修正或 `keaveai link --local` 清除。从用户发起任务的工作区调用：
 
    ```sh
    keaveai delivery start <task-id> \
@@ -28,12 +28,13 @@ version: 1.1.0
 2. 执行 `keaveai delivery snapshot <task-id>`，取得 `base`、`tree`（Git tree 对象 ID）和文件清单。一旦送审，编码 agent 停止写入；有新改动必须重新暂存并取快照。
 3. 启动另一个全新子 agent，加载 `ai-workflow/agent/review-executor.md`。交付固定快照和原始验收、规则、契约与验证记录；不能只转述作者结论。退回时把发现交给同一个编码 agent，在同一个 worktree 修复，再取新快照送审。
 
-## 3. 审过才提交；只在授权后创建 MR
+## 3. 审过才提交；按登记模式交付
 
 1. 等到独立审查 agent 明确给出 `approved`，且回复中的 `taskId`、`base`、`tree` 与送审快照一致。主会话将**真实**工具返回的两个 agent ID、自审、验证和审查结论整理成 JSON（见 [review.json 模板](templates/review.json)），保存到任务 worktree 之外。不得自己补审批或捏造验证结果。失败项、缺失的必需验证或假设不清楚时先修复/确认。用户要求「不提交」则停在已审快照。
 2. 运行 `keaveai delivery commit <task-id> --review <绝对路径> --message <提交说明>`。不绕过 Git 钩子，不直接用 `git commit` 绕过交付门禁。钩子改动或快照变化时停止，保留改动，重新自审和送审。目标变化不自动变基；需要按仓库规则更新基线并重新审查。
-3. 用户**明确授权已登记的远端和目标对外发布**后才运行 `keaveai delivery publish <task-id> --title <标题> --confirm`。按任务登记时的设置创建 GitHub PR 或腾讯工蜂 MR。发布需已有 Git 凭据，以及进程环境中的 `GH_TOKEN`/`GITHUB_TOKEN` 或 `GONGFENG_TOKEN`；不读取或展示令牌值，只报告是否缺配置。不用 `keaveai issue`，不向目标分支推送，不执行合并或自动合并。
-4. 区分 `opened`（有 MR 链接）、`requested-unconfirmed`（分支已推、MR 未确认）和失败/未执行；未确认时查远端，不盲目重推或声称已开 MR。远端审批与 CI 由仓库处理。确认 MR 已合并或关闭后才按仓库规则清理，不删除其他任务或有未保存改动的 worktree。
+3. 若登记结果为 `mode: local`，默认在发起任务的工作区执行 `keaveai delivery merge <task-id> --confirm`，只快进到审过的提交、不推送；用户要求仅提交或不合并时停止。必须仍在原始目标分支，目标有未保存改动或已推进时报告阻塞，不自动暂存、变基或合并冲突。
+4. 若登记结果为 `mode: remote`，用户**明确授权已登记的远端和目标对外发布**后才运行 `keaveai delivery publish <task-id> --title <标题> --confirm`。按任务登记时的设置创建 GitHub PR 或腾讯工蜂 MR。发布需已有 Git 凭据，以及进程环境中的 `GH_TOKEN`/`GITHUB_TOKEN` 或 `GONGFENG_TOKEN`；不读取或展示令牌值，只报告是否缺配置。不用 `keaveai issue`，不向目标分支推送，不执行合并或自动合并。
+5. 区分 `merged-local`（已合并到本地目标分支）、`opened`（有 MR 链接）、`requested-unconfirmed`（分支已推、MR 未确认）和失败/未执行；未确认时查远端，不盲目重推或声称已开 MR。远端审批与 CI 由仓库处理。确认 MR 已合并或关闭后才按仓库规则清理，不删除其他任务或有未保存改动的 worktree。
 
 ## 最小报告
 

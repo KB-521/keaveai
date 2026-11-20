@@ -11,7 +11,8 @@ The public KeaveAI CLI exposes project setup, sync, and isolated task delivery. 
 | `keaveai break-change [path]` | Migrate initialized content to the bundled breaking layout |
 | `keaveai database-update [path]` | Refresh the bundled `keaveai-database/` directory from an explicitly configured Git source |
 | `keaveai issue` | Push initialized KeaveAI content as a GitLab merge request |
-| `keaveai delivery` | Prepare isolated worktrees, commit reviewed snapshots, and request a code MR |
+| `keaveai link [path]` | Configure or remove the optional Git delivery link |
+| `keaveai delivery` | Deliver a reviewed task by local fast-forward or remote PR/MR |
 | `keaveai help [command]` | Show CLI help |
 
 ## Global Options
@@ -154,15 +155,20 @@ keaveai issue --dry-run
 keaveai issue
 ```
 
+## `keaveai link`
+
+Set up GitHub or Tencent Gongfeng delivery independently of `init` or `update`. Select an existing named remote and target interactively, or pass all three `--git-*` options from `init`. `keaveai link --local` removes only Git delivery settings and leaves Git remotes intact. Changes affect new tasks only. No fetch or push is performed.
+
 ## `keaveai delivery`
 
 Used by `$req-dev` to deliver a code task, independently of `keaveai issue`. Subcommands emit JSON results; `publish` exits with code 2 if the branch was pushed but the PR/MR could not be confirmed. Check the remote before retrying manually. See the [task delivery guide](task-delivery.md) for the roles, review template, and usage.
 
 | Command | Purpose |
 |---------|---------|
-| `keaveai delivery start <id> --allow <paths...>` | Read Git settings from `agent.config`, fetch the target and create one task worktree. Optional `--context <files...>` checks baseline documents, `--worktree-root <path>` uses an existing external directory, and `--branch-prefix <prefix>` overrides the branch prefix. |
-| `keaveai delivery snapshot <id>` | Return the staged tree, base and file list. An explicitly restaged task on a new remote base can use `--refresh-base` to invalidate the old approval. |
+| `keaveai delivery start <id> --allow <paths...>` | Use the linked target from `agent.config` or the current local branch, and create one task worktree. Optional `--context <files...>` checks baseline documents, `--worktree-root <path>` uses an existing external directory, and `--branch-prefix <prefix>` overrides the branch prefix. |
+| `keaveai delivery snapshot <id>` | Return the staged tree, base and file list. An explicitly restaged task on a new target base can use `--refresh-base` to invalidate the old approval. |
 | `keaveai delivery commit <id> --review <file> --message <text>` | Run Git hooks and record the commit only if it matches the independently reviewed snapshot. |
+| `keaveai delivery merge <id> --confirm` | In local mode, fast-forward the original branch in its original worktree to the approved commit. No push or automatic stash/rebase. |
 | `keaveai delivery publish <id> --title <text> --confirm` | Push the approved commit to a new task branch and create a GitHub PR or Tencent Gongfeng MR. Uses the settings pinned at task start. Does not merge or update the target branch. |
 
 ## `keaveai help`

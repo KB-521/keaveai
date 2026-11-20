@@ -51,7 +51,7 @@ export async function readProjectGit(dir: string): Promise<ProjectGitConfig | un
   return projectGitInput(values.get(keys.provider), values.get(keys.remote), values.get(keys.target));
 }
 
-export async function writeProjectGit(dir: string, config: ProjectGitConfig): Promise<void> {
+export async function writeProjectGit(dir: string, config?: ProjectGitConfig): Promise<void> {
   const file = path.join(dir, AGENT_CONFIG_FILE);
   let mode = 0o600;
   try {
@@ -63,11 +63,11 @@ export async function writeProjectGit(dir: string, config: ProjectGitConfig): Pr
   }
   const current = await readConfig(dir);
   const newline = current.includes('\r\n') ? '\r\n' : '\n';
-  const assignments = Object.entries(keys).map(([field, key]) => `${key}=${config[field as keyof ProjectGitConfig]}`);
+  const assignments = config ? Object.entries(keys).map(([field, key]) => `${key}=${config[field as keyof ProjectGitConfig]}`) : [];
   // Replace only owned keys, retaining the formatting of everything else.
   const rest = current.split(/(?<=\n)/).filter(line => !assignment.test(line.replace(/\r?\n$/, ''))).join('');
   const separator = rest && !rest.endsWith('\n') ? newline : '';
-  const updated = rest + separator + assignments.join(newline) + newline;
+  const updated = assignments.length ? rest + separator + assignments.join(newline) + newline : rest;
   if (updated === current) return;
   const temporary = path.join(dir, `.${AGENT_CONFIG_FILE}.${randomUUID()}.tmp`);
   await fs.writeFile(temporary, updated, { flag: 'wx', mode });

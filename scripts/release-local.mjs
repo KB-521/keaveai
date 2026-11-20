@@ -23,13 +23,19 @@ export function parseVersion(version) {
 }
 
 function npm(cwd, args, { capture = false } = {}) {
+  const checkAuth = args[0] === 'whoami';
   const result = spawnSync('npm', args, {
     cwd,
     encoding: 'utf8',
-    stdio: capture ? ['ignore', 'pipe', 'inherit'] : 'inherit',
+    stdio: checkAuth ? ['ignore', 'inherit', 'pipe'] : capture ? ['ignore', 'pipe', 'inherit'] : 'inherit',
   });
+  if (result.stderr) process.stderr.write(result.stderr);
   if (result.error) throw result.error;
-  if (result.status !== 0) throw new Error(`npm ${args[0]} 失败（${result.signal ?? `退出码 ${result.status}`}）。`);
+  if (result.status !== 0) {
+    const error = new Error(`npm ${args[0]} 失败（${result.signal ?? `退出码 ${result.status}`}）。`);
+    error.code = result.stderr?.match(/^npm (?:error|ERR!) code (E401|ENEEDAUTH)\s*$/m)?.[1];
+    throw error;
+  }
   return result.stdout;
 }
 
@@ -38,9 +44,17 @@ export function releasePackage({ root, version, dryRun, runNpm = npm }) {
   const tag = prerelease ? 'next' : 'latest';
   if (!dryRun) {
     try {
-      runNpm(root, ['whoami', '--registry', registry]);
+      const whoami = ['whoami', '--registry', registry];
+      try {
+        runNpm(root, whoami);
+      } catch (error) {
+        if (error.code !== 'E401' && error.code !== 'ENEEDAUTH') throw error;
+        console.log('npm 登录已失效或尚未登录，正在启动 npm 官方仓库登录…');
+        runNpm(root, ['login', `--registry=${registry}`]);
+        runNpm(root, whoami);
+      }
     } catch (error) {
-      throw new Error(`无法验证 npm 官方仓库的登录状态，未改版本或打包。请先运行 npm login --registry=${registry}，并确认该账号有发布权限。`, { cause: error });
+      throw new Error(`无法验证 npm 官方仓库的登录状态，未改版本或打包。${error.message} 如需手动登录，请运行 npm login --registry=${registry}，并确认该账号有发布权限。`, { cause: error });
     }
   }
   const manifests = ['package.json', 'package-lock.json', 'npm-shrinkwrap.json']

@@ -38,7 +38,7 @@ Validates package version consistency before publishing.
 
 ## 本地发布 npm：`pnpm release:local`
 
-在源码仓库里安装依赖后，用有发布权限的账号登录 npm 官方仓库（`npm login --registry=https://registry.npmjs.org/`），然后运行：
+在源码仓库里安装依赖后，运行以下命令。确认发布后，如果 npm 官方仓库报告未登录或登录失效，脚本会自动运行 `npm login --registry=https://registry.npmjs.org/`。请用有发布权限的账号完成登录；脚本复查通过后才会继续。
 
 ```bash
 pnpm release:local

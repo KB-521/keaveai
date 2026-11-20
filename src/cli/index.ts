@@ -18,6 +18,7 @@ import { CompletionCommand } from '../commands/completion.js';
 import { FeedbackCommand } from '../commands/feedback.js';
 import { IssueCommand } from '../commands/issue.js';
 import { registerDeliveryCommand } from '../commands/delivery.js';
+import { registerLinkCommand } from '../commands/link.js';
 import type { InitCommandOptions } from '../core/init.js';
 import { registerConfigCommand } from '../commands/config.js';
 import { registerSchemaCommand } from '../commands/schema.js';
@@ -40,7 +41,7 @@ import { maybeShowTelemetryNotice, trackCommand, shutdown } from '../telemetry/i
 const program = new Command();
 const require = createRequire(import.meta.url);
 const { version } = require('../../package.json');
-const VISIBLE_COMMANDS = new Set(['init', 'update', 'break-change', 'database-update', 'issue', 'delivery', 'help']);
+const VISIBLE_COMMANDS = new Set(['init', 'update', 'break-change', 'database-update', 'issue', 'delivery', 'link', 'help']);
 
 /**
  * Get the full command path for nested commands.
@@ -423,6 +424,7 @@ program
   });
 
 registerDeliveryCommand(program);
+registerLinkCommand(program);
 
 // Completion command with subcommands
 const completionCmd = program

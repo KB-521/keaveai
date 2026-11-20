@@ -137,6 +137,53 @@ describe('isolated task delivery against real local Git repositories', () => {
     expect(git(f.repo, 'status', '--porcelain')).toBe('?? agent.config\n?? shared-untracked.txt');
   });
 
+  it('unlinks without changing Git remotes and fast-forwards the original branch after review', async () => {
+    const f = await fixture();
+    const cli = fileURLToPath(new URL('../../bin/keaveai.js', import.meta.url));
+    const link = (...args: string[]) => execFileSync(process.execPath, [cli, 'link', ...args], {
+      cwd: f.repo, encoding: 'utf8', env: { ...process.env, KEAVEAI_TELEMETRY: '0' },
+    });
+    await fs.appendFile(path.join(f.repo, 'agent.config'), 'OTHER=keep\n');
+    link('--local');
+    await expect(fs.readFile(path.join(f.repo, 'agent.config'), 'utf8')).resolves.toBe('OTHER=keep\n');
+    expect(git(f.repo, 'remote', 'get-url', 'team')).toBe(f.endpoint);
+    expect(await fs.stat(path.join(f.repo, 'agent.config.example'))).toBeDefined();
+    const { worktree, base } = await f.start();
+    await expect(f.cmd.merge(ID, { confirm: true })).rejects.toThrow(/No approved commit/);
+    await changed(worktree);
+    const review = await reviewRecord(f);
+    const { mode, commit } = await f.cmd.commit(ID, { review, message: 'fix: update example' });
+    expect(mode).toBe('local');
+    expect(git(f.repo, 'rev-parse', 'HEAD')).toBe(base);
+    await expect(f.cmd.publish(ID, publication)).rejects.toThrow(/use delivery merge/);
+    await expect(f.cmd.merge(ID, {})).rejects.toThrow(/authorization/);
+    await write(f.repo, 'src/example.ts', 'local edits\n');
+    await expect(f.cmd.merge(ID, { confirm: true })).rejects.toThrow(/worktree has changes/);
+    git(f.repo, 'restore', '--', 'src/example.ts');
+    git(f.repo, 'checkout', '-b', 'other');
+    await expect(f.cmd.merge(ID, { confirm: true })).rejects.toThrow(/original worktree/);
+    git(f.repo, 'checkout', 'trunk');
+    await expect(f.cmd.merge(ID, { confirm: true })).resolves.toEqual({ status: 'merged-local', branch: 'trunk', commit });
+    expect(git(f.repo, 'rev-parse', 'HEAD')).toBe(commit);
+    expect(git(f.repo, 'rev-parse', 'other')).toBe(base);
+    expect(remoteSource(f.remote)).toBe('');
+    expect(f.api).not.toHaveBeenCalled();
+    link('--git-provider', 'github', '--git-remote', 'team', '--git-target', 'trunk');
+    await expect(fs.readFile(path.join(f.repo, 'agent.config'), 'utf8')).resolves.toContain('KEAVEAI_GIT_PROVIDER=github');
+  });
+
+  it('stops local merge when the original target branch has moved', async () => {
+    const f = await fixture();
+    await fs.unlink(path.join(f.repo, 'agent.config'));
+    git(f.repo, 'remote', 'remove', 'team');
+    await approved(f);
+    git(f.repo, 'commit', '--allow-empty', '-m', 'advance local target');
+    const target = git(f.repo, 'rev-parse', 'HEAD');
+    await expect(f.cmd.merge(ID, { confirm: true })).rejects.toThrow(/local target branch moved/);
+    expect(git(f.repo, 'rev-parse', 'HEAD')).toBe(target);
+    expect(remoteSource(f.remote)).toBe('');
+  });
+
   it('rejects unshared context and leaves the caller changes intact', async () => {
     const f = await fixture();
     await write(f.repo, 'docs/task.md', 'not on trunk yet\n');

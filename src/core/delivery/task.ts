@@ -3,8 +3,8 @@ import path from 'node:path';
 import {
   branchRef, deliveryRemote, exists, fetchBase, git, gitValue, isWithin, pinRemote, remoteHeads, splitNul, status, worktreePaths,
 } from './git.js';
-import { commitWithReviewGuard, configuredHooks } from './hooks.js';
-import { readProjectGit, hostedProject, validateProjectGit } from '../project-git.js';
+import { commitWithReviewGuard, configuredHooks, mergeWithReviewGuard } from './hooks.js';
+import { readProjectGit, hostedProject, validateProjectGit, type ProjectGitConfig } from '../project-git.js';
 import { assertReview, type DeliveryTask, reviewDescription, parseReview, repoPath, taskBranch } from './model.js';
 import { createdBranch, openReviewRequest, publicationToken } from './publication.js';
 import { assertWorktree, commonDir, reserveTask, saveTask, stateDir, withTask } from './store.js';
@@ -19,8 +19,10 @@ export interface StartDeliveryOptions {
 const ROOT_RULES = ['AGENTS.md', 'AGENTS.override.md', 'AGENTS.MD', 'CLAUDE.md', 'CLAUDE.MD'];
 
 function taskSummary(task: DeliveryTask) {
-  const { id, worktree, branch, provider, remote, target, base, allowedPaths, contextPaths } = task;
-  return { id, worktree, branch, provider, remote, target, base, allowedPaths, contextPaths };
+  const { id, worktree, branch, target, base, allowedPaths, contextPaths } = task;
+  const destination = 'mode' in task ? { mode: task.mode, targetWorktree: task.targetWorktree }
+    : { mode: 'remote' as const, provider: task.provider, remote: task.remote };
+  return { id, worktree, branch, target, base, allowedPaths, contextPaths, ...destination };
 }
 
 function filePaths(files: string[]): string[] {
@@ -60,10 +62,7 @@ async function snapshot(task: DeliveryTask, allowEmpty = false) {
   if (await gitValue(worktree, 'rev-parse', 'HEAD') !== base) {
     throw new Error('Task HEAD is not at its recorded base. A commit or rebase cannot reuse the old review.');
   }
-  const gitDir = await gitValue(worktree, 'rev-parse', '--absolute-git-dir');
-  for (const marker of ['MERGE_HEAD', 'CHERRY_PICK_HEAD', 'REVERT_HEAD', 'rebase-merge', 'rebase-apply', 'sequencer']) {
-    if (await exists(path.join(gitDir, marker))) throw new Error('Finish or abort the in-progress Git operation first.');
-  }
+  await requireNoOperation(worktree);
   const entries = await status(worktree);
   if (entries.some(entry => entry[1] !== ' ')) {
     throw new Error('The worktree has unstaged or untracked changes. Stage only the explicit task files before review.');
@@ -77,7 +76,14 @@ async function snapshot(task: DeliveryTask, allowEmpty = false) {
   return { ...taskSummary(task), tree, files };
 }
 
-async function requireSameRemote(task: DeliveryTask): Promise<string> {
+async function requireNoOperation(worktree: string) {
+  const gitDir = await gitValue(worktree, 'rev-parse', '--absolute-git-dir');
+  for (const marker of ['MERGE_HEAD', 'CHERRY_PICK_HEAD', 'REVERT_HEAD', 'rebase-merge', 'rebase-apply', 'sequencer']) {
+    if (await exists(path.join(gitDir, marker))) throw new Error('Finish or abort the in-progress Git operation first.');
+  }
+}
+
+async function requireSameRemote(task: Extract<DeliveryTask, { remote: string }>): Promise<string> {
   const { url, identity } = await deliveryRemote(task.worktree, task.remote);
   if (identity !== task.remoteIdentity) {
     throw new Error('The task remote URL no longer matches the original destination. Nothing was published.');
@@ -90,6 +96,13 @@ async function branchTip(worktree: string) {
   return { commit, tree, parents };
 }
 
+async function remoteDestination(source: string, config: ProjectGitConfig) {
+  const { url, identity } = await validateProjectGit(source, config);
+  const pinned = await pinRemote(source, config.remote, url);
+  const base = await fetchBase(source, config.remote, config.target, pinned);
+  return { provider: config.provider, remote: config.remote, remoteIdentity: identity, base };
+}
+
 export class DeliveryTaskCommand {
   constructor(private readonly cwd = process.cwd()) {}
 
@@ -100,11 +113,10 @@ export class DeliveryTaskCommand {
     const contextPaths = filePaths(options.context ?? []);
     const source = await fs.realpath(await gitValue(this.cwd, 'rev-parse', '--show-toplevel'));
     const config = await readProjectGit(source);
-    if (!config) throw new Error('Configure this project’s Git repository with keaveai init (agent.config).');
-    const { provider, remote, target } = config;
+    const target = config?.target ?? await gitValue(source, 'symbolic-ref', '--quiet', 'HEAD').then(ref => ref.slice('refs/heads/'.length))
+      .catch(() => { throw new Error('Local delivery requires a checked-out branch, not detached HEAD.'); });
     if (branch === target) throw new Error('The source and target branches must be different.');
-    const { url, identity } = await validateProjectGit(source, config);
-    const pinned = await pinRemote(source, remote, url);
+    if (!config) await requireNoOperation(source);
     const common = await commonDir(source);
     await git(source, ['check-ref-format', branchRef(branch)]);
     const sourcePaths = (await worktreePaths(source)).map(file => path.resolve(file));
@@ -130,10 +142,11 @@ export class DeliveryTaskCommand {
     await reserveTask(dir, id);
     let task: DeliveryTask | undefined;
     try {
-      const base = await fetchBase(source, remote, target, pinned);
-      task = {
-        id, worktree, branch, branchPrefix: options.branchPrefix, provider, remote, target, remoteIdentity: identity, base, allowedPaths, contextPaths,
-      };
+      const destination = config ? await remoteDestination(source, config) : { mode: 'local' as const, targetWorktree: source,
+        base: await gitValue(source, 'rev-parse', '--verify', `${branchRef(target)}^{commit}`)
+          .catch(() => { throw new Error('Local delivery requires an initial commit on the current branch.'); }) };
+      const { base } = destination;
+      task = { id, worktree, branch, branchPrefix: options.branchPrefix, target, allowedPaths, contextPaths, ...destination };
       await git(source, ['worktree', 'add', '-b', branch, '--', worktree, base]);
       await assertWorktree(task, common);
       if ((await status(worktree)).length) throw new Error('A new task worktree must start clean.');
@@ -163,11 +176,17 @@ export class DeliveryTaskCommand {
   async snapshot(id: string, options: { refreshBase?: boolean } = {}) {
     return withTask(this.cwd, id, async (task, dir) => {
       if (!options.refreshBase) return snapshot(task);
-      if (task.publication) throw new Error('An already published task cannot change its review base.');
-      const pinned = await pinRemote(task.worktree, task.remote, await requireSameRemote(task));
-      const heads = await remoteHeads(task.worktree, task.remote, [task.branch], pinned);
-      if (heads.has(branchRef(task.branch))) throw new Error('An already pushed task cannot change its review base.');
-      const base = await fetchBase(task.worktree, task.remote, task.target, pinned);
+      let base: string;
+      if ('mode' in task) {
+        if (task.merged) throw new Error('An already merged task cannot change its review base.');
+        base = await gitValue(task.worktree, 'rev-parse', '--verify', `${branchRef(task.target)}^{commit}`);
+      } else {
+        if (task.publication) throw new Error('An already published task cannot change its review base.');
+        const pinned = await pinRemote(task.worktree, task.remote, await requireSameRemote(task));
+        const heads = await remoteHeads(task.worktree, task.remote, [task.branch], pinned);
+        if (heads.has(branchRef(task.branch))) throw new Error('An already pushed task cannot change its review base.');
+        base = await fetchBase(task.worktree, task.remote, task.target, pinned);
+      }
       const refreshed = { ...task, base, approval: undefined };
       for (const relative of task.contextPaths) await requireContextAtBase(refreshed, relative);
       const result = await snapshot(refreshed, true);
@@ -201,6 +220,39 @@ export class DeliveryTaskCommand {
     });
   }
 
+  async merge(id: string, options: { confirm?: boolean }) {
+    if (!options.confirm) throw new Error('Local merge requires explicit authorization with --confirm.');
+    return withTask(this.cwd, id, async (task, dir) => {
+      if (!('mode' in task)) throw new Error('This task is linked to a remote; use delivery publish.');
+      if (!task.approval) throw new Error('No approved commit to merge.');
+      const root = await fs.realpath(await gitValue(this.cwd, 'rev-parse', '--show-toplevel'));
+      if (root !== task.targetWorktree || await gitValue(root, 'symbolic-ref', '--quiet', 'HEAD') !== branchRef(task.target)) {
+        throw new Error(`Run the merge from the original worktree with '${task.target}' checked out.`);
+      }
+      await requireNoOperation(root);
+      const actual = await branchTip(task.worktree);
+      if (actual.commit !== task.approval.commit || actual.parents.length !== 1 || actual.parents[0] !== task.base ||
+          (await status(task.worktree)).length) {
+        throw new Error('The reviewed task commit or worktree has changed. Re-review before merging.');
+      }
+      assertReview(task.approval.review, task, actual.tree);
+      const result = { status: 'merged-local', branch: task.target, commit: actual.commit } as const;
+      if (task.merged === actual.commit) return result;
+      if (await gitValue(root, 'rev-parse', 'HEAD') !== task.base) {
+        throw new Error('The local target branch moved. Update the task base and review again before merging.');
+      }
+      if ((await status(root)).some(entry => entry !== '?? agent.config' && entry !== '?? agent.config.example')) {
+        throw new Error('The target worktree has changes. Save them before local merge; KeaveAI will not stash or overwrite them.');
+      }
+      if (!await mergeWithReviewGuard(root, task, dir, actual.tree, actual.commit) ||
+          await gitValue(root, 'rev-parse', 'HEAD') !== actual.commit) {
+        throw new Error('Could not verify the local merge. Inspect the target before retrying.');
+      }
+      await saveTask(dir, { ...task, merged: actual.commit });
+      return result;
+    });
+  }
+
   async publish(id: string, options: { confirm?: boolean; title: string }) {
     const title = options.title.trim();
     if (!options.confirm) throw new Error('Publishing requires explicit authorization with --confirm.');
@@ -208,6 +260,7 @@ export class DeliveryTaskCommand {
       throw new Error('Use a single-line merge request title of at most 255 characters.');
     }
     return withTask(this.cwd, id, async (task, dir) => {
+      if ('mode' in task) throw new Error('This task uses local delivery; use delivery merge.');
       const { worktree, branch, base, provider, remote, target, approval } = task;
       if (!approval) throw new Error('No approved commit to publish.');
       const actual = await branchTip(worktree);
@@ -246,7 +299,7 @@ export class DeliveryTaskCommand {
       await saveTask(dir, { ...task, publication: pending });
       const result = await openReviewRequest({ provider, repository, branch, target, commit: actual.commit,
         title, description: reviewDescription(actual.commit, approval.review) }, token);
-      let publication: NonNullable<DeliveryTask['publication']>;
+      let publication: NonNullable<Extract<DeliveryTask, { remote: string }>['publication']>;
       if ('reason' in result) {
         publication = { ...pending, reason: result.reason };
       } else {

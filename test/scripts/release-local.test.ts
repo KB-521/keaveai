@@ -81,6 +81,24 @@ describe('local npm release', () => {
     expect(test.readManifests()).toEqual([original, original]);
   });
 
+  it.each(['E401', 'ENEEDAUTH'])('logs in on %s and verifies the new login before releasing', (code) => {
+    const test = fixture();
+    test.runNpm.mockImplementationOnce(() => { throw Object.assign(new Error('auth failed'), { code }); });
+    releasePackage({ ...test, version: '1.3.0', dryRun: false });
+    const args = test.runNpm.mock.calls.map(([, args]) => args);
+    expect(args.map(([action]) => action)).toEqual(['whoami', 'login', 'whoami', 'version', 'run', 'pack', 'publish']);
+    expect(args[1]).toEqual(['login', '--registry=https://registry.npmjs.org/']);
+    expect(args[2]).toEqual(args[0]);
+  });
+
+  it.each(['login', 'whoami'])('stops without changing manifests when recovery fails at %s', (fail) => {
+    const test = fixture({ fail });
+    test.runNpm.mockImplementationOnce(() => { throw Object.assign(new Error('auth failed'), { code: 'E401' }); });
+    expect(() => releasePackage({ ...test, version: '1.3.0', dryRun: false })).toThrow('未改版本或打包');
+    expect(test.runNpm.mock.calls.map(([, args]) => args[0])).toEqual(fail === 'login' ? ['whoami', 'login'] : ['whoami', 'login', 'whoami']);
+    expect(test.readManifests()).toEqual([original, original]);
+  });
+
   it('restores manifests and advises checking the registry on a publish error', () => {
     const test = fixture({ fail: 'publish' });
     expect(() => releasePackage({ ...test, version: '1.3.0', dryRun: false })).toThrow('npm view');
