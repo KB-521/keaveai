@@ -55,7 +55,7 @@ keaveai init . --tools none
 keaveai init . --force
 ```
 
-Interactive `keaveai init` with a named Git remote lets you select the platform, remote and target branch, or skip setup. With `--tools` or without a TTY, provide the three Git flags, or leave existing settings alone. Settings go in local `agent.config`; `GITHUB_TOKEN=` and `GONGFENG_TOKEN=` are added if missing, and no example file is created. Initialization does not add remotes, fetch, or ask for credentials. Fill in only the selected provider's token, and never track a file containing tokens.
+Interactive `keaveai init` with a named Git remote lets you select the platform, remote and target branch, or skip setup. With `--tools` or without a TTY, provide the three Git flags, or leave existing settings alone. Settings go in local `agent.config`; no token fields or example file are created. Initialization does not add remotes, fetch, or ask for credentials. Publishing reads the selected provider’s token only from the process environment: `GITHUB_TOKEN` (falling back to `GH_TOKEN`) or `GONGFENG_TOKEN`. Remove any old token entries from `agent.config`.
 It installs content from the bundled `keaveai-database/` directory and does not pull from GitLab during normal initialization.
 
 ## `keaveai update`

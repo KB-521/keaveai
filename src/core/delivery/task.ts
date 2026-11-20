@@ -308,8 +308,7 @@ export class DeliveryTaskCommand {
       assertReview(approval.review, task, actual.tree);
       const url = await requireSameRemote(task);
       if (task.publication) return task.publication;
-      const configRoot = task.configWorktree ?? (await worktreePaths(worktree))[0];
-      const token = await publicationToken(provider, configRoot);
+      const token = publicationToken(provider);
       const { repository } = hostedProject(provider, url);
       const pinned = await pinRemote(worktree, remote, url);
 

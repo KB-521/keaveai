@@ -45,7 +45,7 @@ import { getGlobalConfig, type Delivery, type Profile } from './global-config.js
 import { getProfileWorkflows, CORE_WORKFLOWS, ALL_WORKFLOWS } from './profiles.js';
 import { getAvailableTools } from './available-tools.js';
 import { migrateIfNeeded } from './migration.js';
-import { ensureTokenFields } from './agent-config.js';
+import { ensureLocalAgentConfig } from './agent-config.js';
 import { chooseProjectGit, type InitGitOptions } from './init-project-git.js';
 import { writeProjectGit } from './project-git.js';
 import {
@@ -131,7 +131,7 @@ export class InitCommand {
 
     // Copy bundled KeaveAI database assets to the target project.
     await this.syncKeaveAIDatabase(projectPath, validatedTools);
-    await ensureTokenFields(projectPath);
+    await ensureLocalAgentConfig(projectPath);
     if (gitConfig) await writeProjectGit(projectPath, gitConfig);
     this.displayDatabaseSyncSuccess(validatedTools);
     if (gitConfig) console.log(`Git delivery: ${gitConfig.provider}, ${gitConfig.remote} → ${gitConfig.target} (agent.config)`);

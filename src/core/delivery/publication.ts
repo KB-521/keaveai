@@ -1,6 +1,5 @@
 import { z } from 'zod';
 import type { GitProvider } from '../project-git.js';
-import { configuredToken } from '../agent-config.js';
 
 const reviewResponse = z.object({
   html_url: z.string().nullish(), web_url: z.string().nullish(), number: z.number().optional(), iid: z.number().optional(),
@@ -10,12 +9,12 @@ const reviewResponse = z.object({
   sha: z.string().nullish(), diff_refs: z.object({ head_sha: z.string().nullish() }).nullish(),
 });
 
-export async function publicationToken(provider: GitProvider, projectPath?: string): Promise<string> {
+export function publicationToken(provider: GitProvider): string {
   const key = provider === 'github' ? 'GITHUB_TOKEN' : 'GONGFENG_TOKEN';
-  const token = (projectPath && await configuredToken(projectPath, key)) || process.env[key] ||
-    (provider === 'github' ? process.env.GH_TOKEN : undefined);
-  if (!token?.trim() || /\s/.test(token)) {
-    throw new Error(`Set ${key} in local agent.config or the environment before publishing.`);
+  const token = process.env[key] || (provider === 'github' ? process.env.GH_TOKEN : undefined);
+  if (!token || /\s/.test(token)) {
+    const names = provider === 'github' ? `${key} or GH_TOKEN` : key;
+    throw new Error(`Set ${names} in the process environment before publishing. Tokens in agent.config are ignored.`);
   }
   return token;
 }

@@ -145,7 +145,7 @@ describe('isolated task delivery against real local Git repositories', () => {
     });
     await fs.appendFile(path.join(f.repo, 'agent.config'), 'OTHER=keep\n');
     configureGit('--local');
-    await expect(fs.readFile(path.join(f.repo, 'agent.config'), 'utf8')).resolves.toBe('OTHER=keep\nGITHUB_TOKEN=\nGONGFENG_TOKEN=\n');
+    await expect(fs.readFile(path.join(f.repo, 'agent.config'), 'utf8')).resolves.toBe('OTHER=keep\n');
     expect(git(f.repo, 'remote', 'get-url', 'team')).toBe(f.endpoint);
     await expect(fs.stat(path.join(f.repo, 'agent.config.example'))).rejects.toMatchObject({ code: 'ENOENT' });
     expect(git(f.repo, 'check-ignore', 'agent.config')).toBe('agent.config');
@@ -414,12 +414,13 @@ describe('isolated task delivery against real local Git repositories', () => {
     });
     await expect(f.cmd.publish(ID, { ...publication, confirm: false })).rejects.toThrow(/explicit authorization/);
     vi.stubEnv(tokenKey, undefined);
-    await expect(f.cmd.publish(ID, publication)).rejects.toThrow(/TOKEN/);
+    await fs.appendFile(path.join(f.repo, '.git/info/exclude'), '\n/agent.config\n');
+    await fs.appendFile(path.join(f.repo, 'agent.config'), `${github ? 'GITHUB_TOKEN' : tokenKey}=legacy-token\n`);
+    await expect(f.cmd.publish(ID, publication)).rejects.toThrow(/in the process environment/);
     expect(remoteSource(f.remote)).toBe('');
     expect(f.api).not.toHaveBeenCalled();
     await expect(fs.stat(path.join(f.tmp, 'pre-push-ran'))).rejects.toMatchObject({ code: 'ENOENT' });
-    await fs.appendFile(path.join(f.repo, '.git/info/exclude'), '\n/agent.config\n');
-    await fs.appendFile(path.join(f.repo, 'agent.config'), `${github ? 'GITHUB_TOKEN' : tokenKey}=fixture-token\n`);
+    vi.stubEnv(tokenKey, 'fixture-token');
     const result = await f.cmd.publish(ID, publication);
     expect(result).toEqual({ status: 'opened', url, commit });
     expect(await fs.stat(path.join(f.tmp, 'pre-push-ran'))).toBeDefined();
@@ -436,15 +437,15 @@ describe('isolated task delivery against real local Git repositories', () => {
     expect(f.api).toHaveBeenCalledTimes(1);
   });
 
-  it('refuses a token from a tracked or unignored agent.config before any push', async () => {
-    const f = await fixture();
+  it('prefers GITHUB_TOKEN over GH_TOKEN and ignores legacy entries in tracked agent.config', async () => {
+    const f = await fixture('github');
     await approved(f);
-    await fs.appendFile(path.join(f.repo, 'agent.config'), 'GITHUB_TOKEN=fixture-token\n');
-    await expect(f.cmd.publish(ID, publication)).rejects.toThrow(/Ignore agent.config/);
+    vi.stubEnv('GITHUB_TOKEN', 'github-env-token');
+    vi.stubEnv('GH_TOKEN', 'gh-env-token');
+    await fs.appendFile(path.join(f.repo, 'agent.config'), 'GITHUB_TOKEN=legacy-token\nGITHUB_TOKEN=duplicate-token\n');
     git(f.repo, 'add', '--', 'agent.config');
-    await expect(f.cmd.publish(ID, publication)).rejects.toThrow(/tracked agent.config/);
-    expect(remoteSource(f.remote)).toBe('');
-    expect(f.api).not.toHaveBeenCalled();
+    await expect(f.cmd.publish(ID, publication)).resolves.toMatchObject({ status: 'requested-unconfirmed' });
+    expect(f.api.mock.calls[0][1].headers).toMatchObject({ Authorization: 'Bearer github-env-token' });
   });
 
   it('reports an unconfirmed request without claiming an MR or overwriting the remote branch', async () => {
