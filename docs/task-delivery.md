@@ -4,12 +4,12 @@ KeaveAI 把实现类任务交给独立的编码 agent；主会话负责分发、
 
 ## 在 Codex 中使用
 
-先升级 KeaveAI。在已配置 Git 远端的项目根目录运行 `keaveai init`，选择 **GitHub** 或 **腾讯工蜂**、已存在的远端名称和目标分支，也可以跳过。老项目用 `keaveai link` 单独配置；`update` 只更新工作流资产。跳过链接也能用，默认只做本地合并。非交互示例：
+先升级 KeaveAI。在已配置 Git 远端的项目根目录运行 `keaveai init`，选择 **GitHub** 或 **腾讯工蜂**、已存在的远端名称和目标分支，也可以跳过。老项目用 `keaveai git` 单独配置；`update` 只更新工作流资产。跳过链接也能用，默认只做本地合并。非交互示例：
 
 ```sh
 keaveai init . --tools codex --git-provider github --git-remote origin --git-target main
-keaveai link . --git-provider gongfeng --git-remote origin --git-target main
-keaveai link --local  # 清除链接，保留已有 Git 远端和其他设置
+keaveai git . --git-provider gongfeng --git-remote origin --git-target main
+keaveai git --local  # 清除链接，保留已有 Git 远端和其他设置
 ```
 
 设置保存在项目根目录的 `agent.config`；`init` 和 `link` 会补齐缺失的 `GITHUB_TOKEN=`、`GONGFENG_TOKEN=`，不生成示例文件。`init` 不会修改 Git 远端或访问托管服务。配置更新对新登记的任务生效，不改变已登记任务的发布目标。

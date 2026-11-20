@@ -46,7 +46,7 @@ keaveai init . --tools codex
 | `keaveai break-change [path]` | 迁移旧目录结构，保留已有 SDD 到 `ai-workflow/sdd/`，同步 `.codex/skills/`。迁移会重建部分目录，并移除旧的 `AGENTS.md`；请先提交或备份自定义内容。 |
 | `keaveai database-update [path] --repo <url>` | 从指定 Git 仓库刷新本地数据库资源，不会直接更新项目。 |
 | `keaveai issue` | 将初始化生成的内容提交为 GitLab 合并请求（MR）；先用 `keaveai issue --dry-run` 预览。 |
-| `keaveai link [path]` | 单独配置 GitHub 或腾讯工蜂远端；`--local` 清除链接，切换为本地交付。 |
+| `keaveai git [path]` | 单独配置 GitHub 或腾讯工蜂远端；`--local` 清除链接，切换为本地交付。 |
 | `keaveai delivery` | 登记任务 worktree、审查和提交，按配置走本地合并或远端 PR/MR。 |
 | `keaveai help [command]` | 查看帮助，例如 `keaveai help init`。 |
 

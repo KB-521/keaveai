@@ -11,7 +11,7 @@ The public KeaveAI CLI exposes project setup, sync, and isolated task delivery. 
 | `keaveai break-change [path]` | Migrate initialized content to the bundled breaking layout |
 | `keaveai database-update [path]` | Refresh the bundled `keaveai-database/` directory from an explicitly configured Git source |
 | `keaveai issue` | Push initialized KeaveAI content as a GitLab merge request |
-| `keaveai link [path]` | Configure or remove the optional Git delivery link |
+| `keaveai git [path]` | Configure or remove the optional Git delivery link |
 | `keaveai delivery` | Deliver a reviewed task by local fast-forward or remote PR/MR |
 | `keaveai help [command]` | Show CLI help |
 
@@ -155,9 +155,9 @@ keaveai issue --dry-run
 keaveai issue
 ```
 
-## `keaveai link`
+## `keaveai git`
 
-Set up GitHub or Tencent Gongfeng delivery independently of `init` or `update`. Select an existing named remote and target interactively, or pass all three `--git-*` options from `init`. `keaveai link --local` removes only Git delivery settings and leaves Git remotes intact. Changes affect new tasks only. No fetch or push is performed.
+Set up GitHub or Tencent Gongfeng delivery independently of `init` or `update`. Select an existing named remote and target interactively, or pass all three `--git-*` options from `init`. `keaveai git --local` removes only Git delivery settings and leaves Git remotes intact. Changes affect new tasks only. No fetch or push is performed.
 
 ## `keaveai delivery`
 

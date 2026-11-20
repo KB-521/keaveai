@@ -18,7 +18,7 @@
 
 ### Requirement: 可选链接与本地快进交付
 
-`keaveai link` SHALL 独立设置或移除远端交付链接而不改变 Git 远端；`update` 不管理链接。
+`keaveai git` SHALL 独立设置或移除远端交付链接而不改变 Git 远端；`update` 不管理链接。
 
 #### Scenario: 没有链接的项目
 

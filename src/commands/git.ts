@@ -6,8 +6,8 @@ import { gitValue } from '../core/delivery/git.js';
 import { writeProjectGit } from '../core/project-git.js';
 import { isInteractive } from '../utils/interactive.js';
 
-export function registerLinkCommand(program: Command): void {
-  program.command('link [path]')
+export function registerGitCommand(program: Command): void {
+  program.command('git [path]')
     .description('Link an existing Git remote for delivery, or switch to local delivery')
     .option('--git-provider <name>', 'GitHub (github) or Tencent Gongfeng (gongfeng)')
     .option('--git-remote <name>', 'Existing named Git remote')

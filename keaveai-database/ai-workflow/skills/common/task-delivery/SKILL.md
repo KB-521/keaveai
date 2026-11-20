@@ -12,7 +12,7 @@ version: 1.1.0
 
 1. 主会话只做任务说明、路由、验收、Git 交付和状态记录，不直接编码。先读根和受影响子目录的 `AGENTS.md` 及对应的仓库规则（必须打开链接）；确认验收依据、改动边界及已完成的审批。先解决关键口径冲突。
 2. 确认实际工具可启动至少两个独立子 agent，且能指定/访问任务 worktree（编码可写，审查只读）。例如 Codex 使用其原生子 agent 调度，等待工具返回该子 agent 的真实 ID 和结果。工具缺失、目录不可访问、CLI 不支持 `delivery` 或没有可用的 Git 分支及基线时，报告阻塞和计划，不由主会话代写、代审。
-3. 以项目根目录 `agent.config` 的 `KEAVEAI_GIT_PROVIDER`、`KEAVEAI_GIT_REMOTE`、`KEAVEAI_GIT_TARGET` 为准。仅核对这三项，不读取或输出其他配置值；没有链接配置时默认本地交付，以发起任务时用户当前分支为目标；不猜远端，不擅自改配置。部分配置无效时请用户运行 `keaveai link` 修正或 `keaveai link --local` 清除。从用户发起任务的工作区调用：
+3. 以项目根目录 `agent.config` 的 `KEAVEAI_GIT_PROVIDER`、`KEAVEAI_GIT_REMOTE`、`KEAVEAI_GIT_TARGET` 为准。仅核对这三项，不读取或输出其他配置值；没有链接配置时默认本地交付，以发起任务时用户当前分支为目标；不猜远端，不擅自改配置。部分配置无效时请用户运行 `keaveai git` 修正或 `keaveai git --local` 清除。从用户发起任务的工作区调用：
 
    ```sh
    keaveai delivery start <task-id> \

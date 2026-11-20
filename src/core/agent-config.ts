@@ -34,7 +34,7 @@ export async function configuredToken(projectPath: string, key: TokenKey): Promi
     throw new Error('Do not store tokens in a tracked agent.config. Remove the token from the file and use an environment variable instead.');
   }
   if ((await git(projectPath, ['check-ignore', '--quiet', '--', AGENT_CONFIG_FILE], { codes: [0, 1] })).code === 1) {
-    throw new Error('Ignore agent.config before storing tokens in it. Run keaveai link or add /agent.config to your Git exclude file.');
+    throw new Error('Ignore agent.config before storing tokens in it. Run keaveai git or add /agent.config to your Git exclude file.');
   }
   return token;
 }

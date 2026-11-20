@@ -140,11 +140,11 @@ describe('isolated task delivery against real local Git repositories', () => {
   it('unlinks without changing Git remotes and fast-forwards the original branch after review', async () => {
     const f = await fixture();
     const cli = fileURLToPath(new URL('../../bin/keaveai.js', import.meta.url));
-    const link = (...args: string[]) => execFileSync(process.execPath, [cli, 'link', ...args], {
+    const configureGit = (...args: string[]) => execFileSync(process.execPath, [cli, 'git', ...args], {
       cwd: f.repo, encoding: 'utf8', env: { ...process.env, KEAVEAI_TELEMETRY: '0' },
     });
     await fs.appendFile(path.join(f.repo, 'agent.config'), 'OTHER=keep\n');
-    link('--local');
+    configureGit('--local');
     await expect(fs.readFile(path.join(f.repo, 'agent.config'), 'utf8')).resolves.toBe('OTHER=keep\nGITHUB_TOKEN=\nGONGFENG_TOKEN=\n');
     expect(git(f.repo, 'remote', 'get-url', 'team')).toBe(f.endpoint);
     await expect(fs.stat(path.join(f.repo, 'agent.config.example'))).rejects.toMatchObject({ code: 'ENOENT' });
@@ -169,7 +169,7 @@ describe('isolated task delivery against real local Git repositories', () => {
     expect(git(f.repo, 'rev-parse', 'other')).toBe(base);
     expect(remoteSource(f.remote)).toBe('');
     expect(f.api).not.toHaveBeenCalled();
-    link('--git-provider', 'github', '--git-remote', 'team', '--git-target', 'trunk');
+    configureGit('--git-provider', 'github', '--git-remote', 'team', '--git-target', 'trunk');
     await expect(fs.readFile(path.join(f.repo, 'agent.config'), 'utf8')).resolves.toContain('KEAVEAI_GIT_PROVIDER=github');
   });
 

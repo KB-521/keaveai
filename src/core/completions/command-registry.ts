@@ -28,7 +28,7 @@ const COMMON_FLAGS = {
   } as FlagDefinition,
 } as const;
 
-const VISIBLE_COMMAND_NAMES = new Set(['init', 'update', 'break-change', 'database-update', 'issue', 'delivery', 'link']);
+const VISIBLE_COMMAND_NAMES = new Set(['init', 'update', 'break-change', 'database-update', 'issue', 'delivery', 'git']);
 
 /**
  * Registry of all KeaveAI CLI commands with their flags and metadata.
@@ -291,7 +291,7 @@ const ALL_COMMAND_REGISTRY: CommandDefinition[] = [
     ],
   },
   {
-    name: 'link', description: 'Configure optional remote Git delivery', acceptsPositional: true, positionalType: 'path',
+    name: 'git', description: 'Configure optional remote Git delivery', acceptsPositional: true, positionalType: 'path',
     flags: [
       { name: 'git-provider', description: 'Git platform', takesValue: true, values: ['github', 'gongfeng'] },
       { name: 'git-remote', description: 'Existing named Git remote', takesValue: true },
